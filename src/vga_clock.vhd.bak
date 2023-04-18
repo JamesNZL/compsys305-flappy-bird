@@ -10,7 +10,6 @@ end entity;
 
 architecture bhv of vga_clock is
 
-
 begin
 
 end architecture bhv;

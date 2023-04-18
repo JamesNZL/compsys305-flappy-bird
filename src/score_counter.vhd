@@ -18,7 +18,7 @@ begin
 
  begin
   if rising_edge(Clk) then
-    
+
     if (Enable = '1' or Reset(0) = '0') then
      if (Reset(0) = '0') then
       t_Q := "000000";

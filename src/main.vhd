@@ -99,6 +99,9 @@ score_Tens <= '0' & scoreAll(5 downto 3);
 
 -------------------------------VGA----------------------------------
 
+--We attempt to draw a sprite every pixel, and if it is found we draw that sprite pixel
+--ELSE, draw the respective background position.
+
 drawBird : process(vgaClk)
 begin
 end process;
@@ -120,6 +123,8 @@ begin
  if rising_edge(vgaClk) then
 
  if ResetAndPause(0) = '0' then
+  --MOUSE BUTTON CLICK
+  --CHANGE TO SIGNED INTEGER
   velocity <= "1010";
  end if;
 

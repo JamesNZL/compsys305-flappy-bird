@@ -9,24 +9,24 @@ z2
 cModel Technology
 Z0 dC:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/Nicholas/VHD Files
 Emain
-w1681712416
+w1681712302
 DPx4 ieee 18 std_logic_unsigned 0 22 ;eZjO2D4ZDz<]0>8AL<ne1
 DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
 DPx4 ieee 14 std_logic_1164 0 22 cVAk:aDinOX8^VGI1ekP<3
-!i122 8
+!i122 7
 R0
 8C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/Nicholas/VHD Files/main.vhd
 FC:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/Nicholas/VHD Files/main.vhd
 l0
 L21 1
-V85]bZ:XhY^7^BhI:oXZgn1
-!s100 R;g?2Bi`CYJGaJ_OBD`5d0
+VT7Ll^_VL7m5<MQQV=mHkU3
+!s100 FEJ5cY;WLFLFHfhdajEmo0
 OE;C;2020.2;71
 32
-!s110 1681712417
+!s110 1681712304
 !i10b 1
-!s108 1681712417.000000
+!s108 1681712304.000000
 !s90 -reportprogress|300|-work|work|C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/Nicholas/VHD Files/main.vhd|
 !s107 C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/Nicholas/VHD Files/main.vhd|
 !i113 0

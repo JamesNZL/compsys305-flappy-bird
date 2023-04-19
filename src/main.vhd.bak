@@ -24,6 +24,7 @@ entity main is
 	ResetAndPause : in std_logic_vector(3 downto 0); --> KEY
 	VGA_R, VGA_G, VGA_B : out std_logic_vector(3 downto 0);
 	VGA_HS, VGA_VS : out std_logic;
+	PS2_CLK, PS2_DAT : out std_logic
 	Difficulty : out std_logic_vector(9 downto 0); --> LEDR
 	scoreTens : out std_logic_vector(6 downto 0); --> HEX1
 	scoreOnes : out std_logic_vector(6 downto 0)); --> HEX0
@@ -44,6 +45,8 @@ signal sseg_tens_OUT : std_logic_vector(6 downto 0);
 signal obstaclePassed : std_logic;
 signal velocity : std_logic_vector(3 downto 0);
 signal bird_y : std_logic_vector(9 downto 0) := "0100101100"; --300
+signal rClickEvent, lClickEvent : std_logic;
+signal mPosX, mPosY : std_logic_vector(9 downto 0);
 
 component MOUSE is
 	port(clock_25Mhz, reset : in std_logic;
@@ -71,7 +74,6 @@ component char_rom is
 	clock : in std_logic;
 	rom_mux_output : out std_logic);
 end component;
-X"F"
 
 component VGA_SYNC is
 	port(clock_25Mhz, red, green, blue : in	std_logic;
@@ -89,6 +91,8 @@ score : score_counter port map(Clk, scoreUP, ResetAndPause, scoreAll);
 
 sseg_ones : BCD_to_SevenSeg port map(score_Ones, sseg_ones_OUT);
 sseg_tens : BCD_to_SevenSeg port map(score_Tens, sseg_tens_OUT);
+
+mouseTracker : MOUSE port map(vgaClk, ResetAndPause, PS2_DAT, PS2_CLK, lClickEvent, rClickEvent, mPosY, mPosX); 
 
 newClock : vga_clock port map(Clk, vgaClk);
 vgaInst : VGA_SYNC port map(vgaClk, paintR, paintG, paintB, VGA_R, VGA_G, VGA_B, VGA_HS, VGA_VS, currentY, currentX);
@@ -123,8 +127,7 @@ fly : process(vgaClk)
 begin
  if rising_edge(vgaClk) then
 
- if ResetAndPause(0) = '0' then
-  --MOUSE BUTTON CLICK
+ if lClickEvent = '1' then
   --CHANGE TO SIGNED INTEGER
   velocity <= "1010";
  end if;

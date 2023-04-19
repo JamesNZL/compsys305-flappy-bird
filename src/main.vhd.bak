@@ -34,6 +34,7 @@ constant objectVelocity : std_logic_vector(3 downto 0) := "0110";
 
 signal vgaClk : std_logic;
 signal paintR, paintG, paintB : std_logic_vector(3 downto 0);
+signal rOut, gOut, bOut : std_logic_vector(3 downto 0);
 signal currentX, currentY : std_logic_vector (9 downto 0);
 signal score_Ones, score_Tens : std_logic_vector(3 downto 0);
 signal scoreAll : std_logic_vector(5 downto 0);
@@ -44,6 +45,7 @@ signal sseg_tens_OUT : std_logic_vector(6 downto 0);
 signal obstaclePassed : std_logic;
 signal velocity : std_logic_vector(3 downto 0);
 signal bird_y : std_logic_vector(9 downto 0) := "0100101100"; --300
+signal death, medKit, godMode : std_logic;
 
 component MOUSE is
 	port(clock_25Mhz, reset : in std_logic;
@@ -71,7 +73,6 @@ component char_rom is
 	clock : in std_logic;
 	rom_mux_output : out std_logic);
 end component;
-X"F"
 
 component VGA_SYNC is
 	port(clock_25Mhz, red, green, blue : in	std_logic;
@@ -91,7 +92,7 @@ sseg_ones : BCD_to_SevenSeg port map(score_Ones, sseg_ones_OUT);
 sseg_tens : BCD_to_SevenSeg port map(score_Tens, sseg_tens_OUT);
 
 newClock : vga_clock port map(Clk, vgaClk);
-vgaInst : VGA_SYNC port map(vgaClk, paintR, paintG, paintB, VGA_R, VGA_G, VGA_B, VGA_HS, VGA_VS, currentY, currentX);
+vgaInst : VGA_SYNC port map(vgaClk, paintR, paintG, paintB, rOut, gOut, bOut, VGA_HS, VGA_VS, currentY, currentX);
 
 scoreUP <= '1' when obstaclePassed = '1' else '0';
 
@@ -136,25 +137,20 @@ begin
  end if;
 end process;
 
-collisions : process(vgaClk)
-begin
-
 --To detect collisions, we will draw a small black outline on every object.
 --On the objects, this black color will not be 0x000, it will have an unnoticeable green
---tinge 0x010. On the bird, this outline will have a red tinge 0x100. When the color of
---ANY pixel is 0x101, meaning red and green is set to one at the same time, then the bird
---must have collided with something.
+--tinge 0x010. On the bird, this outline will be completely black 0x000. When the program
+--tries to paint an offblack pixel to completely black, then the bird
+--must have collided with something. The grass and top will also have this outline
 --We can also have an elseif statement if we want to detect what kind of collision it is.
 --Maybe gifts have a blue outline and obstacles have a green one... Detect which combination
 --occurs.
+--So long as we draw the bird first, this should always work
+--Might want to add some additional checks for enable etc... so we dont keep setting death to 1
 
- if rising_edge(vgaClk) then
-  if (paintR = "0001" and paintG = "0001") then
-   collision <= '1';
-  end if;
- end if;
-
-end process;
+death <= '1' when (gOut = x"1" and paintG = x"0") else '0';
+medKit <= '1' when (bOut = x"1" and paintB = x"0") else '0';
+godMode <= '1' when (rOut = x"1" and paintR = x"0") else '0';
 
 shiftObjects : process(vgaClk)
 begin
@@ -171,6 +167,9 @@ end process;
 
 
 HighScore <= scoreAll when (scoreAll > HighScore);
+VGA_R <= rOut;
+VGA_G <= gOut;
+VGA_B <= bOut;
 HEX1 <= sseg_tens_OUT;
 HEX0 <= sseg_ones_OUT;
 end architecture bhv;

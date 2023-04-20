@@ -44,6 +44,9 @@ signal sseg_tens_OUT : std_logic_vector(6 downto 0);
 signal obstaclePassed : std_logic;
 signal velocity : std_logic_vector(3 downto 0);
 signal bird_y : std_logic_vector(9 downto 0) := "0100101100"; --300
+signal drawBird : std_logic;
+signal drawObstacle : std_logic;
+signal drawGift : std_logic;
 
 component MOUSE is
 	port(clock_25Mhz, reset : in std_logic;
@@ -52,6 +55,12 @@ component MOUSE is
         left_button, right_button : out std_logic;
 	mouse_cursor_row : out std_logic_vector(9 downto 0); 
 	mouse_cursor_column : out std_logic_vector(9 downto 0));       	
+end component;
+
+component sprite is
+	port(Clk : in std_logic;
+	currentY, currentX : in std_logic_vector(9 downto 0)'
+	INPIXEL : out std_logic);
 end component;
 
 component score_counter is
@@ -65,11 +74,12 @@ component vga_clock is
 	vgaClock : out std_logic);
 end component;
 
+--Increase address space and MUX output - STILL NEED TO CHANGE CHAR_ROM
 component char_rom is
-	PORT(character_address : in std_logic_vector(5 downto 0);
+	PORT(character_address : in std_logic_vector(19 downto 0);
 	font_row, font_col : in std_logic_vector(2 downto 0);
 	clock : in std_logic;
-	rom_mux_output : out std_logic);
+	rom_mux_output : out std_logic_vector(11 downto 0));
 end component;
 
 component VGA_SYNC is
@@ -85,6 +95,10 @@ end component;
 
 begin
 score : score_counter port map(Clk, scoreUP, ResetAndPause, scoreAll);
+
+bird : sprite port map(Clk, currentY, currentX, drawBird);
+obstacle : sprite port map(Clk, currentY, currentX, drawObstacle);
+gift : sprite port map(Clk, currentY, currentX, drawGift);
 
 sseg_ones : BCD_to_SevenSeg port map(score_Ones, sseg_ones_OUT);
 sseg_tens : BCD_to_SevenSeg port map(score_Tens, sseg_tens_OUT);
@@ -102,16 +116,21 @@ score_Tens <= '0' & scoreAll(5 downto 3);
 --We attempt to draw a sprite every pixel, and if it is found we draw that sprite pixel
 --ELSE, draw the respective background position.
 
-drawBird : process(vgaClk)
-begin
-end process;
+--IDEA : Store a LAST PIXEL? We need to know which pixel of the sprite to draw somehow...
 
-drawObstacles : process(vgaClk)
+draw : process(vgaClk)
 begin
-end process;
-
-drawGifts : process(vgaClk)
-begin
+ if rising_edge(vgaClk) then
+  if drawBird = '1' then
+   --Draw Bird
+  elsif drawObstacle = '1' then
+   --Draw Obstacle
+  elsif drawGift = '1' then
+   --Draw Gift
+  else
+   --Draw Background
+  end if;
+ end if;
 end process;
 
 --------------------------------------------------------------------

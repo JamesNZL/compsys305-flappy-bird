@@ -47,6 +47,11 @@ signal bird_y : std_logic_vector(9 downto 0) := "0100101100"; --300
 signal drawBird : std_logic;
 signal drawObstacle : std_logic;
 signal drawGift : std_logic;
+signal birdAddress : std_logic_vector(30 downto 0);
+signal obstacleAddress : std_logic_vector(30 downto 0);
+signal giftAddress : std_logic_vector(30 downto 0);
+signal currentPixelAddress : std_logic_vector(30 downto 0);
+signal colorToSet : std_logic_vector(11 downto 0);
 
 component MOUSE is
 	port(clock_25Mhz, reset : in std_logic;
@@ -59,8 +64,9 @@ end component;
 
 component sprite is
 	port(Clk : in std_logic;
-	currentY, currentX : in std_logic_vector(9 downto 0)'
-	INPIXEL : out std_logic);
+	currentY, currentX : in std_logic_vector(9 downto 0);
+	INPIXEL : out std_logic;
+	pixAddress : out std_logic_vector(30 downto 0));--Random number 30
 end component;
 
 component score_counter is
@@ -96,12 +102,14 @@ end component;
 begin
 score : score_counter port map(Clk, scoreUP, ResetAndPause, scoreAll);
 
-bird : sprite port map(Clk, currentY, currentX, drawBird);
-obstacle : sprite port map(Clk, currentY, currentX, drawObstacle);
-gift : sprite port map(Clk, currentY, currentX, drawGift);
+bird : sprite port map(Clk, currentY, currentX, drawBird, birdAddress);
+obstacle : sprite port map(Clk, currentY, currentX, drawObstacle, obstacleAddress);
+gift : sprite port map(Clk, currentY, currentX, drawGift, giftAddress);
 
 sseg_ones : BCD_to_SevenSeg port map(score_Ones, sseg_ones_OUT);
 sseg_tens : BCD_to_SevenSeg port map(score_Tens, sseg_tens_OUT);
+
+addressHandler : char_rom port map(currentPixelAddress, "000", "000", Clk, colorToSet);
 
 newClock : vga_clock port map(Clk, vgaClk);
 vgaInst : VGA_SYNC port map(vgaClk, paintR, paintG, paintB, VGA_R, VGA_G, VGA_B, VGA_HS, VGA_VS, currentY, currentX);
@@ -114,22 +122,33 @@ score_Tens <= '0' & scoreAll(5 downto 3);
 -------------------------------VGA----------------------------------
 
 --We attempt to draw a sprite every pixel, and if it is found we draw that sprite pixel
---ELSE, draw the respective background position.
+--ELSE, draw the respective background position. The way we will do this is through the
+--use of bitmaps and current positions. By calculating the difference between the current
+--VGA position and the sprite position, we get a coordinate we can relate to a bitmap
+--that represents the pixels of the sprite. If that coordinate corresponds to a HIGH on 
+--the sprite bitmap, we set the INPIXEL to high. This maps to the drawBird etc signals.
+--We can also use this logic to check for collisions. If drawBird and drawObstacle are
+--high, then theres an obstacle collision.
 
 --IDEA : Store a LAST PIXEL? We need to know which pixel of the sprite to draw somehow...
+
+--TODO is to write the INPIXEL algorithm in the component.
 
 draw : process(vgaClk)
 begin
  if rising_edge(vgaClk) then
   if drawBird = '1' then
-   --Draw Bird
+   currentPixelAddress <= birdAddress;
   elsif drawObstacle = '1' then
-   --Draw Obstacle
+   currentPixelAddress <= birdAddress;
   elsif drawGift = '1' then
-   --Draw Gift
+   currentPixelAddress <= birdAddress;
   else
-   --Draw Background
+   --currentPixelAddress <= backgroundAddress;
   end if;
+   paintR <= colorToSet(11 downto 8);
+   paintG <= colorToSet(7 downto 4);
+   paintB <= colorToSet(3 downto 0);
  end if;
 end process;
 

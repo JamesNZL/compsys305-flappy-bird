@@ -25,10 +25,10 @@ begin
 
  if rising_edge(Clk) then
   if latch = '0' then
-   vgaClk <= '0';
+   vgaClock <= '0';
    latch <= '1';
   else
-   vgaClk <= '1';
+   vgaClock <= '1';
    latch <= '0';
   end if;
  end if;

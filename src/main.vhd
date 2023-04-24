@@ -25,8 +25,8 @@ entity main is
 	VGA_R, VGA_G, VGA_B : out std_logic_vector(3 downto 0);
 	VGA_HS, VGA_VS : out std_logic;
 	Difficulty : out std_logic_vector(9 downto 0); --> LEDR
-	scoreTens : out std_logic_vector(6 downto 0); --> HEX1
-	scoreOnes : out std_logic_vector(6 downto 0)); --> HEX0
+	HEX1 : out std_logic_vector(6 downto 0); --> scoreTens
+	HEX0 : out std_logic_vector(6 downto 0)); --> scoreOnes
 end entity main;
 
 architecture bhv of main is
@@ -82,15 +82,17 @@ end component;
 
 --Increase address space and MUX output - STILL NEED TO CHANGE CHAR_ROM
 component char_rom is
-	PORT(character_address : in std_logic_vector(19 downto 0);
+	PORT(character_address : in std_logic_vector(30 downto 0);
 	font_row, font_col : in std_logic_vector(2 downto 0);
 	clock : in std_logic;
 	rom_mux_output : out std_logic_vector(11 downto 0));
 end component;
 
 component VGA_SYNC is
-	port(clock_25Mhz, red, green, blue : in	std_logic;
-	red_out, green_out, blue_out, horiz_sync_out, vert_sync_out : out std_logic;
+	port(clock_25Mhz : in std_logic;
+	red, green, blue : in std_logic_vector(3 downto 0);
+	red_out, green_out, blue_out : out std_logic_vector(3 downto 0);
+	horiz_sync_out, vert_sync_out : out std_logic;
 	pixel_row, pixel_column : out std_logic_vector(9 downto 0));
 end component;
 
@@ -173,8 +175,8 @@ begin
  end if;
 end process;
 
-collisions : process(vgaClk)
-begin
+--collisions : process(vgaClk)
+--begin
 
 --To detect collisions, we will draw a small black outline on every object.
 --On the objects, this black color will not be 0x000, it will have an unnoticeable green
@@ -185,13 +187,13 @@ begin
 --Maybe gifts have a blue outline and obstacles have a green one... Detect which combination
 --occurs.
 
- if rising_edge(vgaClk) then
-  if (paintR = "0001" and paintG = "0001") then
-   collision <= '1';
-  end if;
- end if;
+ --if rising_edge(vgaClk) then
+  --if (paintR = "0001" and paintG = "0001") then
+ --  collision <= '1';
+ -- end if;
+ --end if;
 
-end process;
+--end process;
 
 shiftObjects : process(vgaClk)
 begin

@@ -7,10 +7,13 @@ LIBRARY altera_mf;
 USE altera_mf.all;
 
 ENTITY char_rom IS
-	PORT(character_address : in std_logic_vector(30 downto 0);
-	font_row, font_col : in std_logic_vector(2 downto 0);
-	clock : in std_logic;
-	rom_mux_output : out std_logic_vector(11 downto 0));
+	PORT
+	(
+		character_address	:	IN STD_LOGIC_VECTOR (5 DOWNTO 0);
+		font_row, font_col	:	IN STD_LOGIC_VECTOR (2 DOWNTO 0);
+		clock				: 	IN STD_LOGIC ;
+		rom_mux_output		:	OUT STD_LOGIC
+	);
 END char_rom;
 
 

@@ -1,34 +1,236 @@
 m255
 K4
 z2
+!s11e MIXED_VERSIONS
 13
 !s112 1.1
 !i10d 8192
 !i10e 25
 !i10f 100
 cModel Technology
-Z0 dC:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/Nicholas/VHD Files
+dC:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/Nicholas/VHD Files
 Emain
-w1681712302
-DPx4 ieee 18 std_logic_unsigned 0 22 ;eZjO2D4ZDz<]0>8AL<ne1
-DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
-DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
-DPx4 ieee 14 std_logic_1164 0 22 cVAk:aDinOX8^VGI1ekP<3
-!i122 7
-R0
-8C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/Nicholas/VHD Files/main.vhd
-FC:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/Nicholas/VHD Files/main.vhd
+Z0 w1682314358
+Z1 DPx4 ieee 18 std_logic_unsigned 0 22 ;eZjO2D4ZDz<]0>8AL<ne1
+Z2 DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
+Z3 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z4 DPx4 ieee 14 std_logic_1164 0 22 cVAk:aDinOX8^VGI1ekP<3
+!i122 19
+Z5 dC:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src
+Z6 8C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/main.vhd
+Z7 FC:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/main.vhd
 l0
 L21 1
-VT7Ll^_VL7m5<MQQV=mHkU3
-!s100 FEJ5cY;WLFLFHfhdajEmo0
-OE;C;2020.2;71
+VH2N0@IB2zBP3H5alfX;HM3
+!s100 fTTc9nM<:iX5:7bXzPa;U0
+Z8 OE;C;2020.2;71
 32
-!s110 1681712304
+Z9 !s110 1682314600
 !i10b 1
-!s108 1681712304.000000
-!s90 -reportprogress|300|-work|work|C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/Nicholas/VHD Files/main.vhd|
-!s107 C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/Nicholas/VHD Files/main.vhd|
+Z10 !s108 1682314600.000000
+Z11 !s90 -reportprogress|300|-work|work|C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/main.vhd|
+Z12 !s107 C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/main.vhd|
 !i113 0
-o-work work
-tExplicit 1 CvgOpt 0
+Z13 o-work work
+Z14 tExplicit 1 CvgOpt 0
+Abhv
+R1
+R2
+R3
+R4
+Z15 DEx4 work 4 main 0 22 H2N0@IB2zBP3H5alfX;HM3
+!i122 19
+l104
+Z16 L32 184
+Z17 Vjg6gi]dm3BB@Id2DakbR^2
+Z18 !s100 7;EOo3z?J`8P5eM<:]YS10
+R8
+32
+R9
+!i10b 1
+R10
+R11
+R12
+!i113 0
+R13
+R14
+Emouse
+Z19 w1617181975
+R1
+R2
+R3
+R4
+!i122 13
+R5
+Z20 8C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/mouse.vhd
+Z21 FC:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/mouse.vhd
+l0
+L9 1
+VdBfBNf`20z6RSEg9P6dR@3
+!s100 NW:2PZGF>]B=@dDA=NGMT0
+R8
+32
+Z22 !s110 1682314366
+!i10b 1
+Z23 !s108 1682314366.000000
+Z24 !s90 -reportprogress|300|-work|work|C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/mouse.vhd|
+Z25 !s107 C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/mouse.vhd|
+!i113 0
+R13
+R14
+Abehavior
+R1
+R2
+R3
+R4
+DEx4 work 5 mouse 0 22 dBfBNf`20z6RSEg9P6dR@3
+!i122 13
+l44
+L18 256
+V6iV>HgH2ib9kUgU?R6@1e3
+!s100 zCU_b4jngd_4lC86n0`7F0
+R8
+32
+R22
+!i10b 1
+R23
+R24
+R25
+!i113 0
+R13
+R14
+Escore_counter
+Z26 w1681786746
+R1
+R2
+R3
+R4
+!i122 14
+R5
+Z27 8C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/score_counter.vhd
+Z28 FC:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/score_counter.vhd
+l0
+L6 1
+ViGjTKO?bGbmaFb7MKG3J>0
+!s100 P1kF@iZJ;@D4JnlQWLA[m0
+R8
+32
+Z29 !s110 1682314369
+!i10b 1
+Z30 !s108 1682314369.000000
+Z31 !s90 -reportprogress|300|-work|work|C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/score_counter.vhd|
+Z32 !s107 C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/score_counter.vhd|
+!i113 0
+R13
+R14
+Abhv
+R1
+R2
+R3
+R4
+DEx4 work 13 score_counter 0 22 iGjTKO?bGbmaFb7MKG3J>0
+!i122 14
+l13
+L12 24
+VdQWLWD:71A@[^1QS=D_nS3
+!s100 dF_ET:RfMU`<eNCg=OGL02
+R8
+32
+R29
+!i10b 1
+R30
+R31
+R32
+!i113 0
+R13
+R14
+Evga_clock
+Z33 w1682314383
+R1
+R2
+R3
+R4
+!i122 16
+R5
+Z34 8C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/vga_clock.vhd
+Z35 FC:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/vga_clock.vhd
+l0
+L6 1
+VB1[b>a:Z1KzNl;Cm6395E3
+!s100 Jl1_7V;`b:JKnCTYKG^600
+R8
+32
+Z36 !s110 1682314385
+!i10b 1
+Z37 !s108 1682314385.000000
+Z38 !s90 -reportprogress|300|-work|work|C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/vga_clock.vhd|
+Z39 !s107 C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/vga_clock.vhd|
+!i113 0
+R13
+R14
+Abhv
+R1
+R2
+R3
+R4
+DEx4 work 9 vga_clock 0 22 B1[b>a:Z1KzNl;Cm6395E3
+!i122 16
+l21
+L19 20
+VDUg;OmDHXhbBcHPO0P5>U3
+!s100 ULcm5D`_S]VNZZ:c5:@n`0
+R8
+32
+R36
+!i10b 1
+R37
+R38
+R39
+!i113 0
+R13
+R14
+Evga_sync
+Z40 w1519684517
+R1
+R2
+R3
+R4
+!i122 17
+R5
+Z41 8C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/vga_sync.vhd
+Z42 FC:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/vga_sync.vhd
+l0
+L7 1
+VMdI7Y31oA]60C@FFgoE0z1
+!s100 _l^FX8bbCD3IjI0S=_RTW3
+R8
+32
+Z43 !s110 1682314388
+!i10b 1
+Z44 !s108 1682314388.000000
+Z45 !s90 -reportprogress|300|-work|work|C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/vga_sync.vhd|
+Z46 !s107 C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/vga_sync.vhd|
+!i113 0
+R13
+R14
+Aa
+R1
+R2
+R3
+R4
+DEx4 work 8 vga_sync 0 22 MdI7Y31oA]60C@FFgoE0z1
+!i122 17
+l18
+L13 77
+V9UII;YDd:b]4D7T:f?DdW2
+!s100 WFb=Ah6ekZG;K4j`AXbUV2
+R8
+32
+R43
+!i10b 1
+R44
+R45
+R46
+!i113 0
+R13
+R14

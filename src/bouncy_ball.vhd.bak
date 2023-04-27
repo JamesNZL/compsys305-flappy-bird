@@ -42,7 +42,7 @@ begin
 	-- Move ball once every vertical sync
 	if (rising_edge(vert_sync)) then			
 		-- Bounce off top or bottom of the screen
-		if falling_edge(pb2) then--('0' & ball_y_pos >= CONV_STD_LOGIC_VECTOR(479,10) - size) ) then
+		if falling_edge(pb2 = '0') then--('0' & ball_y_pos >= CONV_STD_LOGIC_VECTOR(479,10) - size) ) then
 			ball_y_motion <= CONV_STD_LOGIC_VECTOR(10,10);
 		--elsif ( pb2 = '0' ) then--ball_y_pos <= size) then 
 			--ball_y_motion <= CONV_STD_LOGIC_VECTOR(2,10);

@@ -1,6 +1,7 @@
 m255
 K4
 z2
+!s11e MIXED_VERSIONS
 13
 !s112 1.1
 !i10d 8192
@@ -8,12 +9,57 @@ z2
 !i10f 100
 cModel Technology
 Z0 dC:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/Nicholas/VHD Files
+Ebouncy_ball
+Z1 w1682564082
+Z2 DPx4 ieee 16 std_logic_signed 0 22 C<aanc0R`<LWPSe[JYRP^3
+Z3 DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
+Z4 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z5 DPx4 ieee 14 std_logic_1164 0 22 cVAk:aDinOX8^VGI1ekP<3
+!i122 9
+Z6 dC:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src
+Z7 8C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/bouncy_ball.vhd
+Z8 FC:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/bouncy_ball.vhd
+l0
+L7 1
+VRzd]gm[U]90fD4LfiDNPj1
+!s100 PcWWhRe_Kf<RNk7h2nT3F3
+Z9 OE;C;2020.2;71
+32
+Z10 !s110 1682564084
+!i10b 1
+Z11 !s108 1682564084.000000
+Z12 !s90 -reportprogress|300|-work|work|C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/bouncy_ball.vhd|
+!s107 C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/bouncy_ball.vhd|
+!i113 0
+Z13 o-work work
+Z14 tExplicit 1 CvgOpt 0
+Abehavior
+R2
+R3
+R4
+R5
+DEx4 work 11 bouncy_ball 0 22 Rzd]gm[U]90fD4LfiDNPj1
+!i122 9
+l22
+L14 43
+V```6mVgY@`]>mFNlAo]G_3
+!s100 L30<g9c:LZH<XMciF0=R`1
+R9
+32
+R10
+!i10b 1
+R11
+R12
+Z15 !s107 C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/src/bouncy_ball.vhd|
+!i113 0
+R13
+R14
 Emain
 w1681712302
 DPx4 ieee 18 std_logic_unsigned 0 22 ;eZjO2D4ZDz<]0>8AL<ne1
-DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
-DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
-DPx4 ieee 14 std_logic_1164 0 22 cVAk:aDinOX8^VGI1ekP<3
+R3
+R4
+R5
 !i122 7
 R0
 8C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/Nicholas/VHD Files/main.vhd
@@ -22,7 +68,7 @@ l0
 L21 1
 VT7Ll^_VL7m5<MQQV=mHkU3
 !s100 FEJ5cY;WLFLFHfhdajEmo0
-OE;C;2020.2;71
+R9
 32
 !s110 1681712304
 !i10b 1
@@ -30,5 +76,5 @@ OE;C;2020.2;71
 !s90 -reportprogress|300|-work|work|C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/Nicholas/VHD Files/main.vhd|
 !s107 C:/Users/nwol626/OneDrive - The University of Auckland/Documents/GitHub/compsys305-flappy-bird/Nicholas/VHD Files/main.vhd|
 !i113 0
-o-work work
-tExplicit 1 CvgOpt 0
+R13
+R14

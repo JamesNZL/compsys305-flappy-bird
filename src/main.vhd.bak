@@ -71,7 +71,6 @@ component char_rom is
 	clock : in std_logic;
 	rom_mux_output : out std_logic);
 end component;
-X"F"
 
 component VGA_SYNC is
 	port(clock_25Mhz, red, green, blue : in	std_logic;

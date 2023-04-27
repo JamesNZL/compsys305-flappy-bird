@@ -81,9 +81,9 @@ BEGIN
 	END IF;
 
 -- Put all video signals through DFFs to elminate any delays that cause a blurry image
-		red_out <= red AND video_on;
-		green_out <= green AND video_on;
-		blue_out <= blue AND video_on;
+		red_out <= red;-- AND video_on;
+		green_out <= green;-- AND video_on;
+		blue_out <= blue;-- AND video_on;
 		horiz_sync_out <= horiz_sync;
 		vert_sync_out <= vert_sync;
 

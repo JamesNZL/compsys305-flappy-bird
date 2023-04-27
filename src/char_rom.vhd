@@ -3,8 +3,8 @@ USE ieee.std_logic_1164.all;
 USE IEEE.STD_LOGIC_ARITH.all;
 USE IEEE.STD_LOGIC_UNSIGNED.all;
 
-LIBRARY altera_mf;
-USE altera_mf.all;
+--LIBRARY altera_mf;
+--USE altera_mf.all;
 
 ENTITY char_rom IS
 	PORT(character_address : in std_logic_vector(30 downto 0);
@@ -16,8 +16,8 @@ END char_rom;
 
 ARCHITECTURE SYN OF char_rom IS
 
-	SIGNAL rom_data		: STD_LOGIC_VECTOR (7 DOWNTO 0);
-	SIGNAL rom_address	: STD_LOGIC_VECTOR (8 DOWNTO 0);
+	SIGNAL rom_data		: STD_LOGIC_VECTOR (11 DOWNTO 0);
+	SIGNAL rom_address	: STD_LOGIC_VECTOR (30 DOWNTO 0);
 
 	COMPONENT altsyncram
 	GENERIC (
@@ -38,8 +38,8 @@ ARCHITECTURE SYN OF char_rom IS
 	);
 	PORT (
 		clock0		: IN STD_LOGIC ;
-		address_a	: IN STD_LOGIC_VECTOR (8 DOWNTO 0);
-		q_a			: OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
+		address_a	: IN STD_LOGIC_VECTOR (30 DOWNTO 0);
+		q_a			: OUT STD_LOGIC_VECTOR (11 DOWNTO 0)
 	);
 	END COMPONENT;
 
@@ -68,7 +68,7 @@ BEGIN
 		q_a => rom_data
 	);
 
-	rom_address <= character_address & font_row;
-	rom_mux_output <= rom_data (CONV_INTEGER(NOT font_col(2 DOWNTO 0)));
+	rom_address <= character_address; -- & font_row;
+	rom_mux_output <= rom_data; -- (CONV_INTEGER(NOT font_col(2 DOWNTO 0)));
 
 END SYN;

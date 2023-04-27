@@ -13,13 +13,20 @@
 --VGA [Display background, and draw obstacles, bird, and gifts on the top, make the decision for a static or slowly moving background. Keep in mind refresh rate 60Hz and pixel rate 25MHz]
 --Difficulty [The game must get more difficult as time progresses. We can create our own game clock that can be dynamically sped up, and indicate this with LEDs, or find a better solution]
 
+--TODO 27/04
+--Allow CHAR ROM to handle 12 bit data streams
+--Send values to VGA interface
+--Do pin assignments
+--Initialize the MIF file
+--WIN
+
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.std_logic_arith.all;
 use IEEE.std_logic_unsigned.all;
 
 entity main is
-	port(Clk : in std_logic; --> CLOCK_50
+	port(CLOCK_50 : in std_logic; --> CLOCK_50
 	Mode : in std_logic_vector(9 downto 0); --> SW
 	ResetAndPause : in std_logic_vector(3 downto 0); --> KEY
 	VGA_R, VGA_G, VGA_B : out std_logic_vector(3 downto 0);
@@ -50,6 +57,7 @@ signal drawGift : std_logic;
 signal birdAddress : std_logic_vector(30 downto 0);
 signal obstacleAddress : std_logic_vector(30 downto 0);
 signal giftAddress : std_logic_vector(30 downto 0);
+signal backgroundAddress : std_logic_vector(30 downto 0) := "0000000000000000000001100001010";
 signal currentPixelAddress : std_logic_vector(30 downto 0);
 signal colorToSet : std_logic_vector(11 downto 0);
 
@@ -102,18 +110,18 @@ component BCD_to_SevenSeg is
 end component;
 
 begin
-score : score_counter port map(Clk, scoreUP, ResetAndPause, scoreAll);
+score : score_counter port map(CLOCK_50, scoreUP, ResetAndPause, scoreAll);
 
-bird : sprite port map(Clk, currentY, currentX, drawBird, birdAddress);
-obstacle : sprite port map(Clk, currentY, currentX, drawObstacle, obstacleAddress);
-gift : sprite port map(Clk, currentY, currentX, drawGift, giftAddress);
+--bird : sprite port map(CLOCK_50, currentY, currentX, drawBird, birdAddress);
+--obstacle : sprite port map(CLOCK_50, currentY, currentX, drawObstacle, obstacleAddress);
+--gift : sprite port map(CLOCK_50, currentY, currentX, drawGift, giftAddress);
 
 sseg_ones : BCD_to_SevenSeg port map(score_Ones, sseg_ones_OUT);
 sseg_tens : BCD_to_SevenSeg port map(score_Tens, sseg_tens_OUT);
 
-addressHandler : char_rom port map(currentPixelAddress, "000", "000", Clk, colorToSet);
+addressHandler : char_rom port map(currentPixelAddress, "000", "000", CLOCK_50, colorToSet);
 
-newClock : vga_clock port map(Clk, vgaClk);
+newClock : vga_clock port map(CLOCK_50, vgaClk);
 vgaInst : VGA_SYNC port map(vgaClk, paintR, paintG, paintB, VGA_R, VGA_G, VGA_B, VGA_HS, VGA_VS, currentY, currentX);
 
 scoreUP <= '1' when obstaclePassed = '1' else '0';
@@ -136,17 +144,28 @@ score_Tens <= '0' & scoreAll(5 downto 3);
 
 --TODO is to write the INPIXEL algorithm in the component.
 
+BGINDEXUP : process(vgaClk)
+begin
+ if rising_edge(vgaClk) then
+  if obstacleAddress /= "0000000000001001011001100001001" then
+   obstacleAddress <= obstacleAddress + 1;
+  else
+   obstacleAddress <= "0000000000000000000001100001010";
+  end if;
+ end if;
+end process;
+
 draw : process(vgaClk)
 begin
  if rising_edge(vgaClk) then
   if drawBird = '1' then
    currentPixelAddress <= birdAddress;
   elsif drawObstacle = '1' then
-   currentPixelAddress <= birdAddress;
+   currentPixelAddress <= obstacleAddress;
   elsif drawGift = '1' then
-   currentPixelAddress <= birdAddress;
+   currentPixelAddress <= giftAddress;
   else
-   --currentPixelAddress <= backgroundAddress;
+   currentPixelAddress <= backgroundAddress;
   end if;
    paintR <= colorToSet(11 downto 8);
    paintG <= colorToSet(7 downto 4);

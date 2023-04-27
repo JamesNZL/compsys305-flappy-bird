@@ -17,6 +17,7 @@ architecture behavior of bouncy_ball is
     signal ball_y_pos : std_logic_vector(9 downto 0);
     signal ball_x_pos : std_logic_vector(10 downto 0);
     signal ball_y_motion : std_logic_vector(9 downto 0);
+	 signal STOPGOINGUP : std_logic;
 
 begin
 
@@ -33,25 +34,30 @@ begin
     Red <= '0';
     Green <= not ball_on;
     Blue <= not ball_on;
+	 
+--('0' & ball_y_pos >= CONV_STD_LOGIC_VECTOR(479,10) - size) ) then
+--elsif ( pb2 = '0' ) then--ball_y_pos <= size) then 
+--ball_y_motion <= CONV_STD_LOGIC_VECTOR(2,10);
 
     Move_Ball : process (vert_sync)
     begin
         -- Move ball once every vertical sync
         if (rising_edge(vert_sync)) then
-            -- Bounce off top or bottom of the screen
-            if (pb2 = '0') then--('0' & ball_y_pos >= CONV_STD_LOGIC_VECTOR(479,10) - size) ) then
+		  
+            if (pb2 = '0' and STOPGOINGUP = '0') then
                 ball_y_motion <= -CONV_STD_LOGIC_VECTOR(10, 10);
-                --elsif ( pb2 = '0' ) then--ball_y_pos <= size) then 
-                --ball_y_motion <= CONV_STD_LOGIC_VECTOR(2,10);
-            end if;
-            if (ball_y_motion < 10) then
+					 STOPGOINGUP <= '1';
+				elsif (ball_y_motion < 10) then
                 ball_y_motion <= (ball_y_motion + 2);
-            end if;
+					 STOPGOINGUP <= '0';
+				end if;
+				
+				if ('0' & ball_y_pos >= CONV_STD_LOGIC_VECTOR(479, 10) - size or ball_y_pos <= size) then
+					 ball_y_motion <= -ball_y_motion;
+				end if;
             -- Compute next ball Y position
-            if (ball_y_pos >= CONV_STD_LOGIC_VECTOR(479, 10) - size) then
-                ball_y_motion <= CONV_STD_LOGIC_VECTOR(0, 10);
-            end if;
-            ball_y_pos <= (ball_y_pos + ball_y_motion);
+				ball_y_pos <= (ball_y_pos + ball_y_motion);
+				
         end if;
     end process Move_Ball;
 

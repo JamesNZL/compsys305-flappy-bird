@@ -135,8 +135,8 @@ PORT MAP(clock_25Mhz => vgaClk,
 
 b2v_inst3 : pll
 PORT MAP(refclk => clk,
-		 rst => Reset,
-		 outclk_0 => vgaClk);
+		   rst => Reset,
+		   outclk_0 => vgaClk);
 
 
 b2v_inst5 : bouncy_ball

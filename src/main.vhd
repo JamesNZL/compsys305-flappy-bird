@@ -31,7 +31,10 @@ ENTITY main IS
 		green_out :  OUT  STD_LOGIC;
 		blue_out :  OUT  STD_LOGIC;
 		horiz_sync_out :  OUT  STD_LOGIC;
-		vert_sync_out :  OUT  STD_LOGIC
+		vert_sync_out :  OUT  STD_LOGIC;
+		PS2_CLK: INOUT  STD_LOGIC;
+		PS2_DAT: INOUT STD_LOGIC
+		
 	);
 END main;
 
@@ -51,6 +54,15 @@ COMPONENT vga_sync
 		 pixel_row : OUT STD_LOGIC_VECTOR(9 DOWNTO 0)
 	);
 END COMPONENT;
+
+component MOUSE
+   PORT( clock_25Mhz, reset 		: IN std_logic;
+         mouse_data					: INOUT std_logic;
+         mouse_clk 					: INOUT std_logic;
+         left_button, right_button	: OUT std_logic;
+		   mouse_cursor_row 			: OUT std_logic_vector(9 DOWNTO 0); 
+		   mouse_cursor_column 		: OUT std_logic_vector(9 DOWNTO 0));       	
+END component;
 
 
 
@@ -83,6 +95,11 @@ SIGNAL	Reset :  STD_LOGIC;
 SIGNAL	VSYNC :  STD_LOGIC;
 SIGNAL	xPos :  STD_LOGIC_VECTOR(9 DOWNTO 0);
 SIGNAL	yPos :  STD_LOGIC_VECTOR(9 DOWNTO 0);
+SIGNAL	LEFTBUTTONevent :  STD_LOGIC;
+SIGNAL	RIGHTBUTTONevent :  STD_LOGIC;
+SIGNAL	MOUSEROW :  STD_LOGIC_VECTOR(9 DOWNTO 0);
+SIGNAL	MOUSECOLUMN :  STD_LOGIC_VECTOR(9 DOWNTO 0);
+ 
 
 
 BEGIN 
@@ -103,6 +120,16 @@ PORT MAP(clock_25Mhz => vgaClk,
 		 vert_sync_out => VSYNC,
 		 pixel_column => xPos,
 		 pixel_row => yPos);
+		 
+mouseymouse : MOUSE
+PORT MAP(clock_25Mhz => vgaClk,
+			reset => RESET,
+         mouse_data => PS2_DAT,
+         mouse_clk => PS2_CLK,
+         left_button => LEFTBUTTONevent,
+			right_button => RIGHTBUTTONevent,
+		   mouse_cursor_row => MOUSEROW,
+		   mouse_cursor_column => MOUSECOLUMN);
 
 
 
@@ -114,7 +141,7 @@ PORT MAP(refclk => clk,
 
 b2v_inst5 : bouncy_ball
 PORT MAP(pb1 => pb1,
-		 pb2 => pb2,
+		 pb2 => LEFTBUTTONevent,
 		 clk => vgaClk,
 		 vert_sync => VSYNC,
 		 pixel_column => xPos,

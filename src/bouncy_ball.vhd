@@ -36,10 +36,6 @@ begin
     Green <= not ball_on;
     Blue <= not ball_on;
 	 
---('0' & ball_y_pos >= CONV_STD_LOGIC_VECTOR(479,10) - size) ) then
---elsif ( pb2 = '0' ) then--ball_y_pos <= size) then 
---ball_y_motion <= CONV_STD_LOGIC_VECTOR(2,10);
-
     Move_Ball : process (vert_sync)
     begin
         -- Move ball once every vertical sync
@@ -50,18 +46,13 @@ begin
 					 STOPGOINGUP <= '1';
 				elsif (ball_y_motion < 10) then
                 subpixel <= (subpixel + 10);
-				--elsif (ball_y_pos >= CONV_STD_LOGIC_VECTOR(479, 10) - size) then
-					--ball_y_motion <= CONV_STD_LOGIC_VECTOR(0,10);
 				end if;
 				
 				if (pb2 = '1') then
 					STOPGOINGUP <= '0';
 				end if;
 				
-				--if ((ball_y_pos > 300)) then--CONV_STD_LOGIC_VECTOR(480, 10) - size) or (ball_y_pos < size+1)) then
-					 --ball_y_pos <= CONV_STD_LOGIC_VECTOR(280,10);
-				--else
-					-- Compute next ball Y position
+	
 				ball_y_motion <= shift_right(subpixel, 4)(11 downto 2);
 					
 				if (ball_y_pos <= 479 - size) then

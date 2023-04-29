@@ -11,8 +11,8 @@ ENTITY MOUSE IS
          mouse_data					: INOUT std_logic;
          mouse_clk 					: INOUT std_logic;
          left_button, right_button	: OUT std_logic;
-		 mouse_cursor_row 			: OUT signed(9 DOWNTO 0); 
-		 mouse_cursor_column 		: OUT signed(9 DOWNTO 0));       	
+		 mouse_cursor_row 			: OUT std_logic_vector(9 DOWNTO 0); 
+		 mouse_cursor_column 		: OUT std_logic_vector(9 DOWNTO 0));       	
 END MOUSE;
 
 ARCHITECTURE behavior OF MOUSE IS
@@ -43,8 +43,8 @@ SIGNAL filter 								: std_logic_vector(7 DOWNTO 0);
 
 BEGIN
 
-mouse_cursor_row <= signed(cursor_row);
-mouse_cursor_column <= signed(cursor_column);
+mouse_cursor_row <= cursor_row;
+mouse_cursor_column <= cursor_column;
 
 			-- tri_state control logic for mouse data and clock lines
 MOUSE_DATA <= 'Z' WHEN MOUSE_DATA_DIR = '0' ELSE MOUSE_DATA_BUF;

@@ -6,7 +6,7 @@ entity bird is
     port (
         pb1, pb2, clk, vert_sync : in std_logic;
         pixel_row, pixel_column : in signed(9 downto 0);
-        red, inPixel : out std_logic);--green, blue, inPixel : out std_logic);
+        red, green, blue : out std_logic);
 end bird;
 
 architecture behavior of bird is
@@ -19,7 +19,7 @@ architecture behavior of bird is
 	 signal STOPGOINGUP : std_logic;
 	 signal reset : std_logic;
 	 signal subpixel : signed(11 downto 0);
-	 
+
 begin
 
     size <= TO_SIGNED(8,10);
@@ -32,9 +32,9 @@ begin
 
     -- Colours for pixel data on video signal
     -- Changing the background and ball colour by pushbuttons
-    Red <= ball_on;
-    --Green <= not ball_on;
-    --Blue <= not ball_on;
+    Red <= '0';
+    Green <= not ball_on;
+    Blue <= not ball_on;
 	 
     Move_Ball : process (vert_sync)
     begin
@@ -67,7 +67,5 @@ begin
     end process Move_Ball;
 	 
 	 reset <= '1' when (pb1 = '0' and ball_y_pos >= 479 - size) else '0';
-	 
-	 inPixel <= ball_on;
 
 end behavior;

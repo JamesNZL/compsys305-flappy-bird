@@ -40,6 +40,7 @@ begin
     begin
         -- Move ball once every vertical sync
         if (rising_edge(vert_sync)) then
+			 if (ball_y_pos <= 479 - size) then
 		  
             if (pb2 = '0' and STOPGOINGUP = '0') then
                 subpixel <= TO_SIGNED(-200,12);
@@ -52,19 +53,14 @@ begin
 					STOPGOINGUP <= '0';
 				end if;
 				
-	
 				ball_y_motion <= shift_right(subpixel, 4)(11 downto 2);
-					
-				if (ball_y_pos <= 479 - size) then
-					ball_y_pos <= (ball_y_pos + ball_y_motion);
-				elsif reset = '1' then
-					ball_y_pos <= TO_SIGNED(280,10);
-				else
-					ball_y_pos <= 479 - size;
-				end if;
+				ball_y_pos <= (ball_y_pos + ball_y_motion);
 				
-				
-				
+			 elsif reset = '1' then
+				ball_y_pos <= TO_SIGNED(280,10);
+			 else
+				ball_y_pos <= 479 - size;
+			 end if;
         end if;
     end process Move_Ball;
 	 

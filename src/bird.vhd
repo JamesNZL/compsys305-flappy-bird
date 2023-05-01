@@ -6,7 +6,7 @@ entity bird is
     port (
         enable, pb1, pb2, clk, vert_sync : in std_logic;
         pixel_row, pixel_column : in signed(9 downto 0);
-        red, inPixel : out std_logic);--green, blue, inPixel : out std_logic);
+        red, inPixel, died : out std_logic);--green, blue, inPixel : out std_logic);
 end bird;
 
 architecture behavior of bird is
@@ -43,7 +43,6 @@ begin
         if (rising_edge(vert_sync)) then
             if (enable = '1') then
                 if (ball_y_pos <= 479 - size) then
-
                     if (pb2 = '1' and STOPGOINGUP = '0') then
                         subpixel <= TO_SIGNED(-200, 12);
                         STOPGOINGUP <= '1';
@@ -59,11 +58,13 @@ begin
 
                     ball_y_motion <= shift_right(subpixel, 4)(11 downto 2);
                     ball_y_pos <= (ball_y_pos + ball_y_motion);
-
+                    died <= '0';
                 elsif reset = '1' then
                     ball_y_pos <= TO_SIGNED(280, 10);
+                    died <= '0';
                 else
                     ball_y_pos <= 480 - size;
+                    died <= '1';
                 end if;
             end if;
         end if;

@@ -86,7 +86,7 @@ architecture flappy_bird of main is
         port (
             enable, pb1, pb2, clk, vert_sync : in std_logic;
             pixel_row, pixel_column : in signed(9 downto 0);
-            red, inPixel : out std_logic);--green, blue, inPixel : out std_logic);
+            red, inPixel, died : out std_logic);--green, blue, inPixel : out std_logic);
     end component;
 
     signal vgaClk : std_logic;
@@ -111,6 +111,7 @@ architecture flappy_bird of main is
     signal OBST1: std_logic;
     signal ObDet : std_logic;
     signal BiDet : std_logic;
+    signal BiDied : std_logic := '0';
 
 begin
 
@@ -171,7 +172,8 @@ begin
         pixel_column => xPos,
         pixel_row => yPos,
         red => paintR,
-        inPixel => BiDet); --birdR,
+        inPixel => BiDet,
+        died => BiDied); --birdR,
     --green => birdG,
     --blue => birdB);
 
@@ -191,7 +193,7 @@ begin
     -- BirdDetected 0 | ObstacleDetected 1 => 1 move
     -- BirdDetected 1 | ObstacleDetected 0 => 1 move
     -- BirdDetected 1 | ObstacleDetected 1 => 0 no move
-    movementEnable <= '1' when ((movementEnable = '1' and (BiDet = '1' nand ObDet = '1')) or (pb1 = '0')) else
+    movementEnable <= '1' when (((movementEnable = '1') and (BiDet = '1' nand ObDet = '1') and (BiDied = '0')) or (pb1 = '0')) else
                       '0';
 
     ----------------------------------

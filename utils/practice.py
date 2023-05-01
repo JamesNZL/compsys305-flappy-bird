@@ -1,9 +1,9 @@
 # Open the text file containing the binary strings for reading
-with open("another.txt", "r") as f:
+with open("practicetext.txt", "r") as f:
     # Read the contents of the file into a list of strings
     binary_strings = f.readlines()  
 
-with open("newfile.txt", "w") as g:
+with open("converterFile.txt", "w") as g:
 
     for i in range(5):
         line = binary_strings[i]
@@ -32,6 +32,5 @@ with open("newfile.txt", "w") as g:
 
         # Write the new binary string to the file
         g.write(str(new_binary_string) + '\n')
-# Print the modified list of binary strings
-print(binary_strings)
+
 

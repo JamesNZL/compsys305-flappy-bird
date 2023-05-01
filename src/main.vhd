@@ -107,7 +107,8 @@ architecture flappy_bird of main is
     signal RIGHTBUTTONevent : std_logic;
     signal MOUSEROW : signed(9 downto 0);
     signal MOUSECOLUMN : signed(9 downto 0);
-    signal movementEnable, OBST1 : std_logic;
+    signal movementEnable: std_logic := '1';
+    signal OBST1: std_logic;
     signal ObDet : std_logic;
     signal BiDet : std_logic;
 
@@ -186,12 +187,12 @@ begin
 
     -------------COLLISIONS-----------
 
-    -- BirdDetected 0 | ObstacleDetected 0 => move
-    -- BirdDetected 0 | ObstacleDetected 1 => move
-    -- BirdDetected 1 | ObstacleDetected 0 => move
-    -- BirdDetected 1 | ObstacleDetected 1 => no move
-    movementEnable <= '0' when ((BiDet = '1' and ObDet = '1') or (pb1 /= '0')) else
-                      '1';
+    -- BirdDetected 0 | ObstacleDetected 0 => 1 move
+    -- BirdDetected 0 | ObstacleDetected 1 => 1 move
+    -- BirdDetected 1 | ObstacleDetected 0 => 1 move
+    -- BirdDetected 1 | ObstacleDetected 1 => 0 no move
+    movementEnable <= '1' when ((movementEnable = '1' and (BiDet = '1' nand ObDet = '1')) or (pb1 = '0')) else
+                      '0';
 
     ----------------------------------
 

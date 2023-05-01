@@ -84,7 +84,7 @@ architecture bdf_type of main is
 
     component bird
         port (
-            pb1, pb2, clk, vert_sync : in std_logic;
+            enable, pb1, pb2, clk, vert_sync : in std_logic;
             pixel_row, pixel_column : in signed(9 downto 0);
             red, inPixel : out std_logic);--green, blue, inPixel : out std_logic);
     end component;
@@ -107,7 +107,7 @@ architecture bdf_type of main is
     signal RIGHTBUTTONevent : std_logic;
     signal MOUSEROW : signed(9 downto 0);
     signal MOUSECOLUMN : signed(9 downto 0);
-    signal OBST1 : std_logic;
+    signal movementEnable, OBST1 : std_logic;
     signal ObDet : std_logic;
     signal BiDet : std_logic;
 
@@ -142,14 +142,15 @@ begin
 
     obstacle1 : obstacle
     port map(
-        enable => OBST1,
+        enable => movementEnable,
         pb1 => pb1,
         clk => vgaClk,
         vert_sync => VSYNC,
-        pixel_row => xPos,
-        pixel_column => yPos,
+        pixel_row => yPos,
+        pixel_column => xPos,
         --red => obsR,
-        green => paintG);--obsG),
+        green => paintG,
+        inPixel => ObDet);--obsG),
     --blue => obsB);
 
     b2v_inst3 : pll
@@ -160,13 +161,15 @@ begin
 
     b2v_inst5 : bird
     port map(
+        enable => movementEnable,
         pb1 => pb1,
         pb2 => LEFTBUTTONevent,
         clk => vgaClk,
         vert_sync => VSYNC,
         pixel_column => xPos,
         pixel_row => yPos,
-        red => paintR); --birdR,
+        red => paintR,
+        inPixel => BiDet); --birdR,
     --green => birdG,
     --blue => birdB);
 
@@ -179,6 +182,17 @@ begin
             --SET OBSTACLES INTERMITTENTLY
         end if;
     end process setObstacles;
+
+    -------------COLLISIONS-----------
+
+    -- BirdDetected 0 | ObstacleDetected 0 => move
+    -- BirdDetected 0 | ObstacleDetected 1 => move
+    -- BirdDetected 1 | ObstacleDetected 0 => move
+    -- BirdDetected 1 | ObstacleDetected 1 => no move
+    movementEnable <= '0' when ((BiDet = '1' and ObDet = '1') or (pb1 /= '0')) else
+                      '1';
+
+    ----------------------------------
 
     -------------DRAWING--------------
 

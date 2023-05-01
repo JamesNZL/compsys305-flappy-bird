@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 entity bird is
     port (
-        pb1, pb2, clk, vert_sync : in std_logic;
+        enable, pb1, pb2, clk, vert_sync : in std_logic;
         pixel_row, pixel_column : in signed(9 downto 0);
         red, inPixel : out std_logic);--green, blue, inPixel : out std_logic);
 end bird;
@@ -33,6 +33,7 @@ begin
     -- Colours for pixel data on video signal
     -- Changing the background and ball colour by pushbuttons
     Red <= ball_on;
+    inPixel <= ball_on;
     --Green <= not ball_on;
     --Blue <= not ball_on;
 
@@ -40,35 +41,35 @@ begin
     begin
         -- Move ball once every vertical sync
         if (rising_edge(vert_sync)) then
-            if (ball_y_pos <= 479 - size) then
+            if (enable = '1') then
+                if (ball_y_pos <= 479 - size) then
 
-                if (pb2 = '0' and STOPGOINGUP = '0') then
-                    subpixel <= TO_SIGNED(-200, 12);
-                    STOPGOINGUP <= '1';
-                elsif (ball_y_motion < 10) then
-                    subpixel <= (subpixel + 10);
-                elsif (ball_y_pos >= 479 - size) then
-                    subpixel <= TO_SIGNED(0, 12);
+                    if (pb2 = '1' and STOPGOINGUP = '0') then
+                        subpixel <= TO_SIGNED(-200, 12);
+                        STOPGOINGUP <= '1';
+                    elsif (ball_y_motion < 10) then
+                        subpixel <= (subpixel + 10);
+                    elsif (ball_y_pos >= 479 - size) then
+                        subpixel <= TO_SIGNED(0, 12);
+                    end if;
+
+                    if (pb2 = '0') then
+                        STOPGOINGUP <= '0';
+                    end if;
+
+                    ball_y_motion <= shift_right(subpixel, 4)(11 downto 2);
+                    ball_y_pos <= (ball_y_pos + ball_y_motion);
+
+                elsif reset = '1' then
+                    ball_y_pos <= TO_SIGNED(280, 10);
+                else
+                    ball_y_pos <= 480 - size;
                 end if;
-
-                if (pb2 = '1') then
-                    STOPGOINGUP <= '0';
-                end if;
-
-                ball_y_motion <= shift_right(subpixel, 4)(11 downto 2);
-                ball_y_pos <= (ball_y_pos + ball_y_motion);
-
-            elsif reset = '1' then
-                ball_y_pos <= TO_SIGNED(280, 10);
-            else
-                ball_y_pos <= 479 - size;
             end if;
         end if;
     end process Move_Ball;
 
     reset <= '1' when (pb1 = '0' and ball_y_pos >= 479 - size) else
              '0';
-
-    inPixel <= ball_on;
 
 end behavior;

@@ -9,33 +9,33 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
 entity pll is
-	port (
-		refclk   : in  std_logic := '0'; --  refclk.clk
-		rst      : in  std_logic := '0'; --   reset.reset
-		outclk_0 : out std_logic;        -- outclk0.clk
-		locked   : out std_logic         --  locked.export
-	);
+    port (
+        refclk : in std_logic := '0'; --  refclk.clk
+        rst : in std_logic := '0'; --   reset.reset
+        outclk_0 : out std_logic; -- outclk0.clk
+        locked : out std_logic --  locked.export
+    );
 end entity pll;
 
 architecture rtl of pll is
-	component pll_0002 is
-		port (
-			refclk   : in  std_logic := 'X'; -- clk
-			rst      : in  std_logic := 'X'; -- reset
-			outclk_0 : out std_logic;        -- clk
-			locked   : out std_logic         -- export
-		);
-	end component pll_0002;
+    component pll_0002 is
+        port (
+            refclk : in std_logic := 'X'; -- clk
+            rst : in std_logic := 'X'; -- reset
+            outclk_0 : out std_logic; -- clk
+            locked : out std_logic -- export
+        );
+    end component pll_0002;
 
 begin
 
-	pll_inst : component pll_0002
-		port map (
-			refclk   => refclk,   --  refclk.clk
-			rst      => rst,      --   reset.reset
-			outclk_0 => outclk_0, -- outclk0.clk
-			locked   => locked    --  locked.export
-		);
+    pll_inst : component pll_0002
+        port map(
+            refclk => refclk, --  refclk.clk
+            rst => rst, --   reset.reset
+            outclk_0 => outclk_0, -- outclk0.clk
+            locked => locked --  locked.export
+        );
 
 end architecture rtl; -- of pll
 -- Retrieval info: <?xml version="1.0"?>

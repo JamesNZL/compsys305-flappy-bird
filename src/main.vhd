@@ -60,7 +60,7 @@ architecture flappy_bird of main is
         port (
             enable, pb1, clk, vert_sync : in std_logic;
             pixel_row, pixel_column : in signed(9 downto 0);
-            green, inPixel : out std_logic);--red, green, blue, inPixel : out std_logic);
+            red, green, blue, inPixel : out std_logic);
     end component;
 
     component MOUSE
@@ -86,7 +86,7 @@ architecture flappy_bird of main is
         port (
             enable, pb1, pb2, clk, vert_sync : in std_logic;
             pixel_row, pixel_column : in signed(9 downto 0);
-            red, inPixel, died : out std_logic);--green, blue, inPixel : out std_logic);
+            red, green, blue, inPixel, died : out std_logic);--green, blue, inPixel : out std_logic);
     end component;
 
     signal vgaClk : std_logic;
@@ -151,10 +151,10 @@ begin
         vert_sync => VSYNC,
         pixel_row => yPos,
         pixel_column => xPos,
-        --red => obsR,
-        green => paintG,
-        inPixel => ObDet);--obsG),
-    --blue => obsB);
+        red => obsR,
+        green => obsG,
+        blue => obsB,
+        inPixel => ObDet);
 
     clock_div : pll
     port map(
@@ -171,7 +171,9 @@ begin
         vert_sync => VSYNC,
         pixel_column => xPos,
         pixel_row => yPos,
-        red => paintR,
+        red => birdR,
+        green => birdG,
+        blue => birdB,
         inPixel => BiDet,
         died => BiDied); --birdR,
     --green => birdG,
@@ -200,9 +202,10 @@ begin
 
     -------------DRAWING--------------
 
-    drawSprite : process (clk)
+    -- ? should this be a process? shouldn't it be async?
+    drawSprite : process (vgaClk)
     begin
-        if rising_edge(clk) then
+        if rising_edge(vgaClk) then
 
             if (BiDet = '1') then
                 paintR <= birdR;
@@ -212,10 +215,25 @@ begin
                 paintR <= obsR;
                 paintG <= obsG;
                 paintB <= obsB;
+            else
+                paintR <= '0';
+                paintG <= '0';
+                paintB <= '0';
             end if;
 
         end if;
     end process drawSprite;
+
+    -- ? shouldn't it be async like this?
+    -- paintR <= birdR when (BiDet = '1') else
+    --           obsR when (ObDet = '1') else
+    --           '0';
+    -- paintG <= birdG when (BiDet = '1') else
+    --           obsG when (ObDet = '1') else
+    --           '0';
+    -- paintB <= birdB when (BiDet = '1') else
+    --           obsB when (ObDet = '1') else
+    --           '0';
 
     ----------------------------------
 

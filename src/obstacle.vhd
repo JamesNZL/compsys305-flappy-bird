@@ -6,7 +6,7 @@ entity obstacle is
     port (
         enable, pb1, clk, vert_sync : in std_logic;
         pixel_row, pixel_column : in signed(9 downto 0);
-        green, inPixel : out std_logic);--red, green, blue, inPixel : out std_logic);
+        red, green, blue, inPixel : out std_logic);
 end obstacle;
 
 architecture behavior of obstacle is
@@ -32,7 +32,9 @@ begin
 
     inPixel <= drawObstacle;
 
-    Green <= drawObstacle;
+    red <= not drawObstacle;
+    green <= drawObstacle;
+    blue <= not drawObstacle;
 
     move_obstacle : process (vert_sync)
     begin

@@ -38,7 +38,7 @@ entity main is
     );
 end main;
 
-architecture bdf_type of main is
+architecture flappy_bird of main is
 
     component vga_sync
         port (
@@ -112,10 +112,11 @@ architecture bdf_type of main is
     signal BiDet : std_logic;
 
 begin
+
     vert_sync_out <= VSYNC;
     Reset <= '0';
 
-    b2v_inst : vga_sync
+    vga : vga_sync
     port map(
         clock_25Mhz => vgaClk,
         red => paintR,
@@ -129,7 +130,7 @@ begin
         pixel_column => xPos,
         pixel_row => yPos);
 
-    mouseymouse : MOUSE
+    mousey_mouse : MOUSE
     port map(
         clock_25Mhz => vgaClk,
         reset => RESET,
@@ -140,7 +141,7 @@ begin
         mouse_cursor_row => MOUSEROW,
         mouse_cursor_column => MOUSECOLUMN);
 
-    obstacle1 : obstacle
+    obstacle_one : obstacle
     port map(
         enable => movementEnable,
         pb1 => pb1,
@@ -153,13 +154,13 @@ begin
         inPixel => ObDet);--obsG),
     --blue => obsB);
 
-    b2v_inst3 : pll
+    clock_div : pll
     port map(
         refclk => clk,
         rst => Reset,
         outclk_0 => vgaClk);
 
-    b2v_inst5 : bird
+    elon : bird
     port map(
         enable => movementEnable,
         pb1 => pb1,
@@ -215,4 +216,4 @@ begin
 
     ----------------------------------
 
-end bdf_type;
+end flappy_bird;

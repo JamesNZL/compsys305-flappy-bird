@@ -61,7 +61,7 @@ BEGIN
 		operation_mode => "ROM",
 		outdata_aclr_a => "NONE",
 		outdata_reg_a => "UNREGISTERED",
-		widthad_a => 9,
+		widthad_a => 19,
 		width_a => 12,
 		width_byteena_a => 1
 	)

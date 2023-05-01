@@ -26,9 +26,8 @@ begin
     -- ball_x_pos and ball_y_pos show the (x,y) for the centre of ball
     ball_x_pos <= TO_SIGNED(320, 11);
 
-    ball_on <= '1' when (('0' & ball_x_pos <= '0' & pixel_column + size) and ('0' & pixel_column <= '0' & ball_x_pos + size) -- x_pos - size <= pixel_column <= x_pos + size
-               and ('0' & ball_y_pos <= pixel_row + size) and ('0' & pixel_row <= ball_y_pos + size)) else -- y_pos - size <= pixel_row <= y_pos + size
-               '0';
+    ball_on <= '1' when (('0' & ball_x_pos <= '0' & pixel_column + size) and ('0' & pixel_column <= '0' & ball_x_pos + size) and ('0' & ball_y_pos <= pixel_row + size) and ('0' & pixel_row <= ball_y_pos + size)) else -- x_pos - size <= pixel_column <= x_pos + size
+               '0'; -- y_pos - size <= pixel_row <= y_pos + size
 
     -- Colours for pixel data on video signal
     -- Changing the background and ball colour by pushbuttons

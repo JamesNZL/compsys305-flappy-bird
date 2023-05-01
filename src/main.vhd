@@ -107,8 +107,8 @@ architecture flappy_bird of main is
     signal RIGHTBUTTONevent : std_logic;
     signal MOUSEROW : signed(9 downto 0);
     signal MOUSECOLUMN : signed(9 downto 0);
-    signal movementEnable: std_logic := '1';
-    signal OBST1: std_logic;
+    signal movementEnable : std_logic := '1';
+    signal OBST1 : std_logic;
     signal ObDet : std_logic;
     signal BiDet : std_logic;
     signal BiDied : std_logic := '0';

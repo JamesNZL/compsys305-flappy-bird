@@ -192,7 +192,7 @@ begin
 
     paintScreen : process (vgaClk)
     begin
-        if rising_edge(vgaClk) then
+        if (rising_edge(vgaClk)) then
 
             -- Painting the sprite
             if (BiDet = '1') then

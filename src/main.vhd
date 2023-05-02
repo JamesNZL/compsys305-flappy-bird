@@ -86,7 +86,7 @@ architecture flappy_bird of main is
         port (
             enable, pb1, pb2, clk, vert_sync : in std_logic;
             pixel_row, pixel_column : in signed(9 downto 0);
-            red, green, blue, inPixel, died : out std_logic);--green, blue, inPixel : out std_logic);
+            red, green, blue, inPixel, died : out std_logic);
     end component;
 
     signal vgaClk : std_logic;
@@ -175,9 +175,7 @@ begin
         green => birdG,
         blue => birdB,
         inPixel => BiDet,
-        died => BiDied); --birdR,
-    --green => birdG,
-    --blue => birdB);
+        died => BiDied);
 
     --SET TEST OBSTACLE ENABLE		 
     OBST1 <= '1';

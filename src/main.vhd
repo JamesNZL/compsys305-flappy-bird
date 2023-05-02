@@ -188,7 +188,7 @@ begin
 
     --TODO: Pseudo randomize maybe with linear shift register
 
-    ObDet <= (ObOneDet or ObTwoDet); -- TODO: !!!!!!!!!!! does this need to be inside the process maybe?
+    ObDet <= (ObOneDet or ObTwoDet);
 
     paintScreen : process (vgaClk)
     begin
@@ -201,7 +201,7 @@ begin
                 paintB <= birdB;
             elsif (ObDet = '1') then
                 paintR <= (obsOneR or obsTwoR); -- TODO: change to support 4 bit colour
-                paintG <= (obsOneG or obsTwoG); -- TODO: this needs to be fixed
+                paintG <= (obsOneG or obsTwoG);
                 paintB <= (obsOneB or obsTwoB);
             else
                 paintR <= '0';

@@ -204,8 +204,8 @@ begin
                 paintB <= obsB;
             else
                 paintR <= '0';
-                paintG <= '0';
-                paintB <= '0';
+                paintG <= '1';
+                paintB <= '1';
             end if;
 
             -- Collision detection

@@ -201,7 +201,7 @@ begin
                 paintB <= birdB;
             elsif (ObDet = '1') then
                 paintR <= (obsOneR or obsTwoR); -- TODO: change to support 4 bit colour
-                paintG <= (obsOneG or obsTwoG);
+                paintG <= (obsOneG or obsTwoG); -- TODO: this needs to be fixed
                 paintB <= (obsOneB or obsTwoB);
             else
                 paintR <= '0';

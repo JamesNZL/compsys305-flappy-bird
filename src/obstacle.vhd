@@ -43,8 +43,11 @@ begin
             if (enable = '1') then
 
                 if ((reset = '0') and (xPos > TO_SIGNED(-25, 11))) then -- TODO: parameterise with pipeWidth
-                    xPos <= xPos - xVelocity; -- TODO: wrap around?
+                    xPos <= xPos - xVelocity;
+                elsif (reset = '1') then
+                    xPos <= start_xPos;
                 else
+                    -- Wrap around
                     xPos <= TO_SIGNED(639 + 25, 11); -- TODO: parameterise with pipeWidth
                 end if;
 

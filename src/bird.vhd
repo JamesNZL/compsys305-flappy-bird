@@ -36,7 +36,7 @@ begin
     blue <= not bird_on;
     inPixel <= bird_on;
 
-    Move_Bird : process (vert_sync)
+    moveBird : process (vert_sync)
     begin
         -- Move bird once every vertical sync
         if (rising_edge(vert_sync)) then
@@ -67,7 +67,7 @@ begin
                 end if;
             end if;
         end if;
-    end process Move_Bird;
+    end process moveBird;
 
     reset <= '1' when (pb1 = '0' and bird_y_pos >= 479 - size) else
              '0';

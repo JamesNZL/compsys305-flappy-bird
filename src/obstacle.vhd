@@ -5,6 +5,7 @@ use ieee.numeric_std.all;
 entity obstacle is
     port (
         enable, pb1, clk, vert_sync : in std_logic;
+        start_xPos : in signed(10 downto 0);
         pixel_row, pixel_column : in signed(9 downto 0);
         red, green, blue, inPixel : out std_logic);
 end obstacle;
@@ -15,7 +16,7 @@ architecture behavior of obstacle is
     signal gapSize : signed(9 downto 0);
     signal pipeWidth : signed(9 downto 0);
     signal gapCenter : signed(9 downto 0);
-    signal xPos : signed(10 downto 0) := TO_SIGNED(640, 11);
+    signal xPos : signed(10 downto 0) := start_xPos;
     signal xVelocity : signed(9 downto 0) := TO_SIGNED(3, 10);
     signal reset : std_logic;
     signal drawObstacle : std_logic;
@@ -23,7 +24,7 @@ architecture behavior of obstacle is
 begin
 
     gapSize <= TO_SIGNED(35, 10);
-    gapCenter <= TO_SIGNED(280, 10);
+    gapCenter <= TO_SIGNED(280, 10); -- TODO: randomise with LFSR
     pipeWidth <= TO_SIGNED(25, 10);
 
     drawObstacle <= '1' when (('0' & xPos <= '0' & pixel_column + pipeWidth) and ('0' & pixel_column <= '0' & xPos + pipeWidth)
@@ -36,20 +37,20 @@ begin
     green <= drawObstacle;
     blue <= not drawObstacle;
 
-    move_obstacle : process (vert_sync)
+    moveObstacle : process (vert_sync)
     begin
         if (rising_edge(vert_sync)) then
             if (enable = '1') then
 
-                if (reset = '0') then
-                    xPos <= xPos - xVelocity;
+                if ((reset = '0') and (xPos > TO_SIGNED(-25, 11))) then -- TODO: parameterise with pipeWidth
+                    xPos <= xPos - xVelocity; -- TODO: wrap around?
                 else
-                    xPos <= TO_SIGNED(640, 11);
+                    xPos <= TO_SIGNED(639 + 25, 11); -- TODO: parameterise with pipeWidth
                 end if;
 
             end if;
         end if;
-    end process move_obstacle;
+    end process moveObstacle;
 
     reset <= '1' when (pb1 = '0') else
              '0';

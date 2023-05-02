@@ -38,7 +38,7 @@ entity main is
     );
 end main;
 
-architecture bdf_type of main is
+architecture flappy_bird of main is
 
     component vga_sync
         port (
@@ -60,7 +60,7 @@ architecture bdf_type of main is
         port (
             enable, pb1, clk, vert_sync : in std_logic;
             pixel_row, pixel_column : in signed(9 downto 0);
-            green, inPixel : out std_logic);--red, green, blue, inPixel : out std_logic);
+            red, green, blue, inPixel : out std_logic);
     end component;
 
     component MOUSE
@@ -84,9 +84,9 @@ architecture bdf_type of main is
 
     component bird
         port (
-            pb1, pb2, clk, vert_sync : in std_logic;
+            enable, pb1, pb2, clk, vert_sync : in std_logic;
             pixel_row, pixel_column : in signed(9 downto 0);
-            red, inPixel : out std_logic);--green, blue, inPixel : out std_logic);
+            red, green, blue, inPixel, died : out std_logic);
     end component;
 
     signal vgaClk : std_logic;
@@ -107,15 +107,18 @@ architecture bdf_type of main is
     signal RIGHTBUTTONevent : std_logic;
     signal MOUSEROW : signed(9 downto 0);
     signal MOUSECOLUMN : signed(9 downto 0);
+    signal movementEnable : std_logic := '1';
     signal OBST1 : std_logic;
     signal ObDet : std_logic;
     signal BiDet : std_logic;
+    signal BiDied : std_logic := '0';
 
 begin
+
     vert_sync_out <= VSYNC;
     Reset <= '0';
 
-    b2v_inst : vga_sync
+    vga : vga_sync
     port map(
         clock_25Mhz => vgaClk,
         red => paintR,
@@ -129,7 +132,7 @@ begin
         pixel_column => xPos,
         pixel_row => yPos);
 
-    mouseymouse : MOUSE
+    mousey_mouse : MOUSE
     port map(
         clock_25Mhz => vgaClk,
         reset => RESET,
@@ -140,35 +143,39 @@ begin
         mouse_cursor_row => MOUSEROW,
         mouse_cursor_column => MOUSECOLUMN);
 
-    obstacle1 : obstacle
+    obstacle_one : obstacle
     port map(
-        enable => OBST1,
+        enable => movementEnable,
         pb1 => pb1,
         clk => vgaClk,
         vert_sync => VSYNC,
-        pixel_row => xPos,
-        pixel_column => yPos,
-        --red => obsR,
-        green => paintG);--obsG),
-    --blue => obsB);
+        pixel_row => yPos,
+        pixel_column => xPos,
+        red => obsR,
+        green => obsG,
+        blue => obsB,
+        inPixel => ObDet);
 
-    b2v_inst3 : pll
+    clock_div : pll
     port map(
         refclk => clk,
         rst => Reset,
         outclk_0 => vgaClk);
 
-    b2v_inst5 : bird
+    elon : bird
     port map(
+        enable => movementEnable,
         pb1 => pb1,
         pb2 => LEFTBUTTONevent,
         clk => vgaClk,
         vert_sync => VSYNC,
         pixel_column => xPos,
         pixel_row => yPos,
-        red => paintR); --birdR,
-    --green => birdG,
-    --blue => birdB);
+        red => birdR,
+        green => birdG,
+        blue => birdB,
+        inPixel => BiDet,
+        died => BiDied);
 
     --SET TEST OBSTACLE ENABLE		 
     OBST1 <= '1';
@@ -180,12 +187,13 @@ begin
         end if;
     end process setObstacles;
 
-    -------------DRAWING--------------
+    -------------COLLISIONS & DRAWING--------------
 
-    drawSprite : process (clk)
+    paintScreen : process (vgaClk)
     begin
-        if rising_edge(clk) then
+        if rising_edge(vgaClk) then
 
+            -- Painting the sprite
             if (BiDet = '1') then
                 paintR <= birdR;
                 paintG <= birdG;
@@ -194,11 +202,22 @@ begin
                 paintR <= obsR;
                 paintG <= obsG;
                 paintB <= obsB;
+            else
+                paintR <= '0';
+                paintG <= '0';
+                paintB <= '0';
+            end if;
+
+            -- Collision detection
+            if (((movementEnable = '1') and (BiDet = '1' nand ObDet = '1') and (BiDied = '0')) or (pb1 = '0')) then
+                movementEnable <= '1';
+            else
+                movementEnable <= '0';
             end if;
 
         end if;
-    end process drawSprite;
+    end process paintScreen;
 
     ----------------------------------
 
-end bdf_type;
+end flappy_bird;

@@ -3,7 +3,7 @@ with open("practicetext.txt", "r") as f:
     # Read the contents of the file into a list of strings
     binary_strings = f.readlines()  
 
-with open("converterFile.txt", "w") as g:
+with open("convertedFile.txt", "w") as g:
 
     for i in range(5):
         line = binary_strings[i]
@@ -32,5 +32,4 @@ with open("converterFile.txt", "w") as g:
 
         # Write the new binary string to the file
         g.write(str(new_binary_string) + '\n')
-
 

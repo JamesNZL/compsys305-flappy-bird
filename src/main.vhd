@@ -43,12 +43,12 @@ architecture flappy_bird of main is
     component vga_sync
         port (
             clock_25Mhz : in std_logic;
-            red : in std_logic;
-            green : in std_logic;
-            blue : in std_logic;
-            red_out : out std_logic;
-            green_out : out std_logic;
-            blue_out : out std_logic;
+            red : in std_logic_vector(3 downto 0);
+            green : in std_logic_vector(3 downto 0);
+            blue : in std_logic_vector(3 downto 0);
+            red_out : out std_logic_vector(3 downto 0);
+            green_out : out std_logic_vector(3 downto 0);
+            blue_out : out std_logic_vector(3 downto 0);
             horiz_sync_out : out std_logic;
             vert_sync_out : out std_logic;
             pixel_column : out signed(9 downto 0);

@@ -10,7 +10,6 @@ ENTITY char_romBACKGROUND IS
 	PORT
 	(
 		character_address	:	IN STD_LOGIC_VECTOR (5 DOWNTO 0);
-		font_row, font_col	:	IN STD_LOGIC_VECTOR (2 DOWNTO 0);
 		clock				: 	IN STD_LOGIC ;
 		rom_mux_output		:	OUT STD_LOGIC
 	);
@@ -71,7 +70,7 @@ BEGIN
 		q_a => rom_data
 	);
 
-	rom_address <= character_address & font_row;
-	rom_mux_output <= rom_data (CONV_INTEGER(NOT font_col(2 DOWNTO 0)));
+	rom_address <= character_address;
+	rom_mux_output <= rom_data;
 
 END SYN;

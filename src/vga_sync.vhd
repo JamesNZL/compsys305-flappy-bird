@@ -6,8 +6,9 @@ use IEEE.STD_LOGIC_UNSIGNED.all;
 
 entity VGA_SYNC is
     port (
-        clock_25Mhz, red, green, blue : in std_logic;
-        red_out, green_out, blue_out, horiz_sync_out, vert_sync_out : out std_logic;
+        clock_25Mhz : in std_logic;
+		  red, green, blue : in std_logic_vector(3 downto 0);
+        red_out, green_out, blue_out, horiz_sync_out, vert_sync_out : out std_logic_vector(3 downto 0);
         pixel_row, pixel_column : out signed(9 downto 0));
 end VGA_SYNC;
 

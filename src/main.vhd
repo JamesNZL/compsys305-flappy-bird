@@ -88,6 +88,16 @@ architecture flappy_bird of main is
             pixel_row, pixel_column : in signed(9 downto 0);
             red, green, blue, inPixel, died : out std_logic);
     end component;
+	 
+	 
+	component char_romBACKGROUND
+	PORT
+	(
+		character_address	:	IN STD_LOGIC_VECTOR (5 DOWNTO 0);
+		clock				: 	IN STD_LOGIC ;
+		rom_mux_output		:	OUT STD_LOGIC
+	);
+	end component;
 
     signal vgaClk : std_logic;
     signal paintR : std_logic;
@@ -112,6 +122,8 @@ architecture flappy_bird of main is
     signal ObDet : std_logic;
     signal BiDet : std_logic;
     signal BiDied : std_logic := '0';
+	 signal charadress: std_logic_vector(5 downto 0);
+	 signal muxoutput: std_logic_vector(11 downto 0);
 
 begin
 
@@ -131,6 +143,12 @@ begin
         vert_sync_out => VSYNC,
         pixel_column => xPos,
         pixel_row => yPos);
+		  
+	background : char_romBACKGROUND
+	port map(
+	   character_address	=> charadress;
+		clock => vgaClk,
+		rom_mux_output => muxoutput);
 
     mousey_mouse : MOUSE
     port map(
@@ -203,9 +221,9 @@ begin
                 paintG <= obsG;
                 paintB <= obsB;
             else
-                paintR <= '0';
-                paintG <= '0';
-                paintB <= '0';
+                paintR <= muxoutput(3 downto 0);
+                paintG <= muxoutput(7 downto 4);
+                paintB <= muxoutput(11 downto 8);
             end if;
 
             -- Collision detection

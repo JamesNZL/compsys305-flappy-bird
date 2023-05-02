@@ -11,7 +11,7 @@ ENTITY char_romBACKGROUND IS
 	(
 		character_address	:	IN STD_LOGIC_VECTOR (5 DOWNTO 0);
 		clock				: 	IN STD_LOGIC ;
-		rom_mux_output		:	OUT STD_LOGIC
+		rom_mux_output		:	OUT STD_LOGIC_vector (11 downto 0);
 	);
 END char_romBACKGROUND;
 

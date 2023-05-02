@@ -189,24 +189,13 @@ begin
         end if;
     end process setObstacles;
 
-    -------------COLLISIONS-----------
+    -------------COLLISIONS & DRAWING--------------
 
-    -- BirdDetected 0 | ObstacleDetected 0 => 1 move
-    -- BirdDetected 0 | ObstacleDetected 1 => 1 move
-    -- BirdDetected 1 | ObstacleDetected 0 => 1 move
-    -- BirdDetected 1 | ObstacleDetected 1 => 0 no move
-    movementEnable <= '1' when (((movementEnable = '1') and (BiDet = '1' nand ObDet = '1') and (BiDied = '0')) or (pb1 = '0')) else
-                      '0';
-
-    ----------------------------------
-
-    -------------DRAWING--------------
-
-    -- ? should this be a process? shouldn't it be async?
-    drawSprite : process (vgaClk)
+    paintScreen : process (vgaClk)
     begin
         if rising_edge(vgaClk) then
 
+            -- Painting the sprite
             if (BiDet = '1') then
                 paintR <= birdR;
                 paintG <= birdG;
@@ -221,19 +210,15 @@ begin
                 paintB <= '0';
             end if;
 
-        end if;
-    end process drawSprite;
+            -- Collision detection
+            if (((movementEnable = '1') and (BiDet = '1' nand ObDet = '1') and (BiDied = '0')) or (pb1 = '0')) then
+                movementEnable <= '1';
+            else
+                movementEnable <= '0';
+            end if;
 
-    -- ? shouldn't it be async like this?
-    -- paintR <= birdR when (BiDet = '1') else
-    --           obsR when (ObDet = '1') else
-    --           '0';
-    -- paintG <= birdG when (BiDet = '1') else
-    --           obsG when (ObDet = '1') else
-    --           '0';
-    -- paintB <= birdB when (BiDet = '1') else
-    --           obsB when (ObDet = '1') else
-    --           '0';
+        end if;
+    end process paintScreen;
 
     ----------------------------------
 

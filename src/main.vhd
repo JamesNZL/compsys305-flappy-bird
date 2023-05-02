@@ -155,7 +155,7 @@ begin
         pb1 => pb1,
         clk => vgaClk,
         vert_sync => vsync,
-        start_xPos => TO_SIGNED(860, 11),
+        start_xPos => TO_SIGNED(960, 11),
         pixel_row => yPos,
         pixel_column => xPos,
         red => obsTwoR,

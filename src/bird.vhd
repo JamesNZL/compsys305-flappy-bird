@@ -30,11 +30,11 @@ begin
                '0'; -- y_pos - size <= pixel_row <= y_pos + size
 
     -- Colours for pixel data on video signal
-    -- Changing the background and bird colour by pushbuttons
+    inPixel <= bird_on;
+
     red <= bird_on;
     green <= bird_on;
-    blue <= not bird_on;
-    inPixel <= bird_on;
+    blue <= '0';
 
     moveBird : process (vert_sync)
     begin

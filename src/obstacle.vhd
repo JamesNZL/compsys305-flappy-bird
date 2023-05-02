@@ -32,9 +32,9 @@ begin
 
     inPixel <= drawObstacle;
 
-    red <= not drawObstacle;
+    red <= '0';
     green <= drawObstacle;
-    blue <= not drawObstacle;
+    blue <= '0';
 
     moveObstacle : process (vert_sync)
     begin

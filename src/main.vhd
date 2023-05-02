@@ -188,7 +188,7 @@ begin
 
     --TODO: Pseudo randomize maybe with linear shift register
 
-    ObDet <= (ObOneDet or ObTwoDet);
+    ObDet <= (ObOneDet or ObTwoDet); -- TODO: !!!!!!!!!!! does this need to be inside the process maybe?
 
     paintScreen : process (vgaClk)
     begin

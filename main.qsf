@@ -478,19 +478,19 @@ set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_global_assignment -name SIP_FILE pll.sip
-set_global_assignment -name SOURCE_FILE pll.cmp
-set_global_assignment -name QIP_FILE pll.qip
-set_global_assignment -name BDF_FILE text.bdf
-set_global_assignment -name BDF_FILE ps2.bdf
-set_global_assignment -name BDF_FILE mainBlockDiagram.bdf
-set_global_assignment -name VHDL_FILE vga_sync.vhd
-set_global_assignment -name VHDL_FILE pll.vhd
-set_global_assignment -name VHDL_FILE obstacle.vhd
-set_global_assignment -name VHDL_FILE mouse.vhd
-set_global_assignment -name VHDL_FILE main.vhd
-set_global_assignment -name VHDL_FILE char_rom.vhd
-set_global_assignment -name VHDL_FILE bouncy_ball.vhd
-set_global_assignment -name VHDL_FILE BCD_to_7Seg.vhd
-set_global_assignment -name VHDL_FILE ball.vhd
+set_global_assignment -name SIP_FILE src/pll.sip
+set_global_assignment -name SOURCE_FILE src/pll.cmp
+set_global_assignment -name QIP_FILE src/pll.qip
+set_global_assignment -name BDF_FILE src/text.bdf
+set_global_assignment -name BDF_FILE src/ps2.bdf
+set_global_assignment -name BDF_FILE src/mainBlockDiagram.bdf
+set_global_assignment -name VHDL_FILE src/vga_sync.vhd
+set_global_assignment -name VHDL_FILE src/pll.vhd
+set_global_assignment -name VHDL_FILE src/obstacle.vhd
+set_global_assignment -name VHDL_FILE src/mouse.vhd
+set_global_assignment -name VHDL_FILE src/main.vhd
+set_global_assignment -name VHDL_FILE src/char_rom.vhd
+set_global_assignment -name VHDL_FILE src/bouncy_ball.vhd
+set_global_assignment -name VHDL_FILE src/BCD_to_7Seg.vhd
+set_global_assignment -name VHDL_FILE src/ball.vhd
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

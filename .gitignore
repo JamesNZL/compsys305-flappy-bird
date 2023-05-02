@@ -1,5 +1,11 @@
-*/output_files
-*/db
-*/incremental_db
+.vscode/
+
+output_files/
+db/
+incremental_db/
+dist/
+
 *.bak
 *.qws
+*_pin_model_dump.txt
+*.srf

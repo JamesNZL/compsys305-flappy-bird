@@ -319,7 +319,7 @@ refer to the applicable agreement for further details.
 )
 (symbol
 	(rect 376 488 568 632)
-	(text "bouncy_ball" (rect 5 0 64 12)(font "Arial" ))
+	(text "bird" (rect 5 0 64 12)(font "Arial" ))
 	(text "inst5" (rect 8 128 30 145)(font "Intel Clear" ))
 	(port
 		(pt 0 32)

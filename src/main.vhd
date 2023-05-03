@@ -97,7 +97,7 @@ architecture flappy_bird of main is
     signal obsTwoR, obsTwoG, obsTwoB : std_logic;
     signal reset : std_logic;
     signal vsync : std_logic;
-    signal xPos, yPos : signed(9 downto 0);
+    signal xPixel, yPixel : signed(9 downto 0);
     signal leftButtonEvent, rightButtonEvent : std_logic;
     signal mouseRow, mouseColumn : signed(9 downto 0);
     signal movementEnable : std_logic := '1';
@@ -121,8 +121,8 @@ begin
         blue_out => blue_out,
         horiz_sync_out => horiz_sync_out,
         vert_sync_out => vsync,
-        pixel_column => xPos,
-        pixel_row => yPos);
+        pixel_column => xPixel,
+        pixel_row => yPixel);
 
     mousey_mouse : MOUSE
     port map(
@@ -142,8 +142,8 @@ begin
         clk => vgaClk,
         vert_sync => vsync,
         start_xPos => TO_SIGNED(640, 11),
-        pixel_row => yPos,
-        pixel_column => xPos,
+        pixel_row => yPixel,
+        pixel_column => xPixel,
         red => obsOneR,
         green => obsOneG,
         blue => obsOneB,
@@ -156,8 +156,8 @@ begin
         clk => vgaClk,
         vert_sync => vsync,
         start_xPos => TO_SIGNED(960, 11),
-        pixel_row => yPos,
-        pixel_column => xPos,
+        pixel_row => yPixel,
+        pixel_column => xPixel,
         red => obsTwoR,
         green => obsTwoG,
         blue => obsTwoB,
@@ -176,8 +176,8 @@ begin
         pb2 => leftButtonEvent,
         clk => vgaClk,
         vert_sync => vsync,
-        pixel_column => xPos,
-        pixel_row => yPos,
+        pixel_column => xPixel,
+        pixel_row => yPixel,
         red => birdR,
         green => birdG,
         blue => birdB,

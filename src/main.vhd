@@ -187,13 +187,29 @@ begin
         end if;
     end process setObstacles;
 
-    -------------COLLISIONS & DRAWING--------------
+    -------------COLLISIONS--------------
+
+    detectCollisions : process (vgaClk)
+    begin
+        if rising_edge(vgaClk) then
+
+            if (((movementEnable = '1') and (BiDet = '1' nand ObDet = '1') and (BiDied = '0')) or (pb1 = '0')) then
+                movementEnable <= '1';
+            else
+                movementEnable <= '0';
+            end if;
+
+        end if;
+    end process detectCollisions;
+
+    ----------------------------------
+
+    -------------DRAWING--------------
 
     paintScreen : process (vgaClk)
     begin
         if rising_edge(vgaClk) then
 
-            -- Painting the sprite
             if (BiDet = '1') then
                 paintR <= birdR;
                 paintG <= birdG;
@@ -206,13 +222,6 @@ begin
                 paintR <= '0';
                 paintG <= '0';
                 paintB <= '0';
-            end if;
-
-            -- Collision detection
-            if (((movementEnable = '1') and (BiDet = '1' nand ObDet = '1') and (BiDied = '0')) or (pb1 = '0')) then
-                movementEnable <= '1';
-            else
-                movementEnable <= '0';
             end if;
 
         end if;

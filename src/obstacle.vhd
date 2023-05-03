@@ -28,6 +28,7 @@ begin
     pipeWidth <= TO_SIGNED(25, 10);
 
     drawObstacle <= '1' when (('0' & xPos <= '0' & pixel_column + pipeWidth) and ('0' & pixel_column <= '0' & xPos + pipeWidth) and (('0' & gapCenter >= pixel_row + gapSize) or ('0' & pixel_row >= gapCenter + gapSize))) else
+                    '1' when ((xPos <= pixel_column + pipeWidth) and (pixel_column <= xPos + pipeWidth) and ((gapCenter >= pixel_row + gapSize) or (pixel_row >= gapCenter + gapSize))) else
                     '0';
 
     inPixel <= drawObstacle;

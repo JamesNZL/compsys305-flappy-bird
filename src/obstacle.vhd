@@ -15,7 +15,7 @@ architecture behavior of obstacle is
     signal obstacle_on : std_logic;
     signal gapSize : signed(9 downto 0);
     signal pipeWidth : signed(9 downto 0);
-    signal gapCenter : signed(9 downto 0);
+    signal gapCentre : signed(9 downto 0);
     signal xPos : signed(10 downto 0) := start_xPos;
     signal xVelocity : signed(9 downto 0) := TO_SIGNED(3, 10); -- TODO: increase over course of game
     signal reset : std_logic;
@@ -24,11 +24,11 @@ architecture behavior of obstacle is
 begin
 
     gapSize <= TO_SIGNED(35, 10);
-    gapCenter <= TO_SIGNED(280, 10); -- TODO: randomise with LFSR
+    gapCentre <= TO_SIGNED(280, 10); -- TODO: randomise with LFSR
     pipeWidth <= TO_SIGNED(25, 10);
 
-    drawObstacle <= '1' when (('0' & xPos <= '0' & pixel_column + pipeWidth) and ('0' & pixel_column <= '0' & xPos + pipeWidth) and (('0' & gapCenter >= pixel_row + gapSize) or ('0' & pixel_row >= gapCenter + gapSize))) else
-                    '1' when ((xPos <= pixel_column + pipeWidth) and (pixel_column <= xPos + pipeWidth) and ((gapCenter >= pixel_row + gapSize) or (pixel_row >= gapCenter + gapSize))) else
+    drawObstacle <= '1' when (('0' & xPos <= '0' & pixel_column + pipeWidth) and ('0' & pixel_column <= '0' & xPos + pipeWidth) and (('0' & gapCentre >= pixel_row + gapSize) or ('0' & pixel_row >= gapCentre + gapSize))) else
+                    '1' when ((xPos <= pixel_column + pipeWidth) and (pixel_column <= xPos + pipeWidth) and ((gapCentre >= pixel_row + gapSize) or (pixel_row >= gapCentre + gapSize))) else
                     '0';
 
     inPixel <= drawObstacle;

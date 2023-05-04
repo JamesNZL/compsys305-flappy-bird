@@ -9,17 +9,17 @@ USE altera_mf.all;
 ENTITY char_romBACKGROUND IS
 	PORT
 	(
-		character_address	:	IN STD_LOGIC_VECTOR (5 DOWNTO 0);
+		character_address	:	IN signed(18 DOWNTO 0);
 		clock				: 	IN STD_LOGIC ;
-		rom_mux_output		:	OUT STD_LOGIC_vector (11 downto 0);
+		rom_mux_output		:	OUT STD_LOGIC_vector (11 downto 0)
 	);
 END char_romBACKGROUND;
 
 
 ARCHITECTURE SYN OF char_romBACKGROUND IS
 
-	SIGNAL rom_data		: STD_LOGIC_VECTOR (7 DOWNTO 0);
-	SIGNAL rom_address	: STD_LOGIC_VECTOR (8 DOWNTO 0);
+	SIGNAL rom_data		: STD_LOGIC_VECTOR (11 DOWNTO 0);
+	SIGNAL rom_address	: signed(18 DOWNTO 0);
 
 	COMPONENT altsyncram
 	GENERIC (
@@ -40,8 +40,8 @@ ARCHITECTURE SYN OF char_romBACKGROUND IS
 	);
 	PORT (
 		clock0		: IN STD_LOGIC ;
-		address_a	: IN STD_LOGIC_VECTOR (8 DOWNTO 0);
-		q_a			: OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
+		address_a	: IN signed(18 DOWNTO 0);
+		q_a			: OUT STD_LOGIC_VECTOR (11 DOWNTO 0)
 	);
 	END COMPONENT;
 

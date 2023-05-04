@@ -6,12 +6,13 @@ entity bird is
     port (
         enable, pb1, pb2, clk, vert_sync : in std_logic;
         pixel_row, pixel_column : in signed(9 downto 0);
-        red, green, blue, inPixel, died : out std_logic);
+        red, green, blue : out std_logic_vector(3 downto 0);
+		  inPixel, died : out std_logic);
 end bird;
 
 architecture behavior of bird is
 
-    signal bird_on : std_logic;
+    signal bird_on : std_logic_vector(3 downto 0);
     signal size : signed(9 downto 0);
     signal bird_y_pos : signed(9 downto 0);
     signal bird_x_pos : signed(10 downto 0);
@@ -26,15 +27,16 @@ begin
     -- bird_x_pos and bird_y_pos show the (x,y) for the centre of bird
     bird_x_pos <= TO_SIGNED(320, 11);
 
-    bird_on <= '1' when (('0' & bird_x_pos <= '0' & pixel_column + size) and ('0' & pixel_column <= '0' & bird_x_pos + size) and ('0' & bird_y_pos <= pixel_row + size) and ('0' & pixel_row <= bird_y_pos + size)) else -- x_pos - size <= pixel_column <= x_pos + size
-               '0'; -- y_pos - size <= pixel_row <= y_pos + size
-
+    bird_on <= "1111" when (('0' & bird_x_pos <= '0' & pixel_column + size) and ('0' & pixel_column <= '0' & bird_x_pos + size) and ('0' & bird_y_pos <= pixel_row + size) and ('0' & pixel_row <= bird_y_pos + size)) else -- x_pos - size <= pixel_column <= x_pos + size
+               "0000"; -- y_pos - size <= pixel_row <= y_pos + size
+    
+	 inPixel <= '1' when (bird_on = "1111") else '0';
     -- Colours for pixel data on video signal
     -- Changing the background and bird colour by pushbuttons
     red <= bird_on;
     green <= bird_on;
     blue <= not bird_on;
-    inPixel <= bird_on;
+
 
     Move_Bird : process (vert_sync)
     begin

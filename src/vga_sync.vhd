@@ -8,7 +8,8 @@ entity VGA_SYNC is
     port (
         clock_25Mhz : in std_logic;
 		  red, green, blue : in std_logic_vector(3 downto 0);
-        red_out, green_out, blue_out, horiz_sync_out, vert_sync_out : out std_logic_vector(3 downto 0);
+        red_out, green_out, blue_out :  out std_logic_vector(3 downto 0);
+		  horiz_sync_out, vert_sync_out : out std_logic;
         pixel_row, pixel_column : out signed(9 downto 0));
 end VGA_SYNC;
 
@@ -79,9 +80,20 @@ begin
         end if;
 
         -- Put all video signals through DFFs to elminate any delays that cause a blurry image
-        red_out <= red and video_on;
-        green_out <= green and video_on;
-        blue_out <= blue and video_on;
+		  if (video_on = '1') then
+		  
+        red_out <= red;
+        green_out <= green;
+        blue_out <= blue; 
+		  
+		  else 
+		  
+		  red_out <= "0000";
+        green_out <= "0000";
+        blue_out <= "0000";
+		  
+		  end if;
+		  
         horiz_sync_out <= horiz_sync;
         vert_sync_out <= vert_sync;
 

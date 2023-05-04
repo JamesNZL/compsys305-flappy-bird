@@ -27,9 +27,9 @@ entity main is
         clk : in std_logic;
         pb1 : in std_logic;
         pb2 : in std_logic;
-        red_out : out std_logic;
-        green_out : out std_logic;
-        blue_out : out std_logic;
+        VGA_R : out std_logic_vector(3 downto 0);--VGA_R
+        VGA_G : out std_logic_vector(3 downto 0);
+        VGA_B : out std_logic_vector(3 downto 0);
         horiz_sync_out : out std_logic;
         vert_sync_out : out std_logic;
         PS2_CLK : inout std_logic;
@@ -60,7 +60,8 @@ architecture flappy_bird of main is
         port (
             enable, pb1, clk, vert_sync : in std_logic;
             pixel_row, pixel_column : in signed(9 downto 0);
-            red, green, blue, inPixel : out std_logic);
+            red, green, blue : out std_logic_vector(3 downto 0);
+				inPixel : out std_logic);
     end component;
 
     component MOUSE
@@ -86,29 +87,30 @@ architecture flappy_bird of main is
         port (
             enable, pb1, pb2, clk, vert_sync : in std_logic;
             pixel_row, pixel_column : in signed(9 downto 0);
-            red, green, blue, inPixel, died : out std_logic);
+            red, green, blue : out std_logic_vector(3 downto 0);
+				inPixel, died : out std_logic);
     end component;
 	 
 	 
 	component char_romBACKGROUND
 	PORT
 	(
-		character_address	:	IN STD_LOGIC_VECTOR (5 DOWNTO 0);
+		character_address	:	IN signed(18 DOWNTO 0);
 		clock				: 	IN STD_LOGIC ;
-		rom_mux_output		:	OUT STD_LOGIC
+		rom_mux_output		:	OUT STD_LOGIC_VECTOR (11 downto 0)
 	);
 	end component;
 
     signal vgaClk : std_logic;
-    signal paintR : std_logic;
-    signal paintG : std_logic;
-    signal paintB : std_logic;
-    signal birdR : std_logic;
-    signal birdG : std_logic;
-    signal birdB : std_logic;
-    signal obsR : std_logic;
-    signal obsG : std_logic;
-    signal obsB : std_logic;
+    signal paintR : std_logic_vector(3 downto 0);
+    signal paintG : std_logic_vector(3 downto 0);
+    signal paintB : std_logic_vector(3 downto 0);
+    signal birdR : std_logic_vector(3 downto 0);
+    signal birdG : std_logic_vector(3 downto 0);
+    signal birdB : std_logic_vector(3 downto 0);
+    signal obsR : std_logic_vector(3 downto 0);
+    signal obsG : std_logic_vector(3 downto 0);
+    signal obsB : std_logic_vector(3 downto 0);
     signal Reset : std_logic;
     signal VSYNC : std_logic;
     signal xPos : signed(9 downto 0);
@@ -122,7 +124,7 @@ architecture flappy_bird of main is
     signal ObDet : std_logic;
     signal BiDet : std_logic;
     signal BiDied : std_logic := '0';
-	 signal charadress: std_logic_vector(5 downto 0);
+	 signal charadress: signed(18 downto 0) := (others => '0');
 	 signal muxoutput: std_logic_vector(11 downto 0);
 
 begin
@@ -136,9 +138,9 @@ begin
         red => paintR,
         green => paintG,
         blue => paintB,
-        red_out => red_out,
-        green_out => green_out,
-        blue_out => blue_out,
+        red_out => VGA_R,
+        green_out => VGA_G,
+        blue_out => VGA_B,
         horiz_sync_out => horiz_sync_out,
         vert_sync_out => VSYNC,
         pixel_column => xPos,
@@ -146,7 +148,7 @@ begin
 		  
 	background : char_romBACKGROUND
 	port map(
-	   character_address	=> charadress;
+	   character_address	=> charadress,
 		clock => vgaClk,
 		rom_mux_output => muxoutput);
 
@@ -210,7 +212,20 @@ begin
     paintScreen : process (vgaClk)
     begin
         if rising_edge(vgaClk) then
-
+		  
+		  --increase the character adress by one every clock cycle
+		  -- call the muxoutput associated to the character adress
+		  -- reaches end amount then reset
+		  
+		  if charadress = "1001010111111111111" then
+                charadress <= (others => '0');
+            else
+                charadress <= charadress + 1;
+            end if;
+		  
+		  
+		  
+		
             -- Painting the sprite
             if (BiDet = '1') then
                 paintR <= birdR;
@@ -221,9 +236,9 @@ begin
                 paintG <= obsG;
                 paintB <= obsB;
             else
-                paintR <= muxoutput(3 downto 0);
+                paintR <= muxoutput(11 downto 8);
                 paintG <= muxoutput(7 downto 4);
-                paintB <= muxoutput(11 downto 8);
+                paintB <= muxoutput(3 downto 0);
             end if;
 
             -- Collision detection

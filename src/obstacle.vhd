@@ -6,7 +6,8 @@ entity obstacle is
     port (
         enable, pb1, clk, vert_sync : in std_logic;
         pixel_row, pixel_column : in signed(9 downto 0);
-        red, green, blue, inPixel : out std_logic);
+        red, green, blue : out std_logic_vector(3 downto 0);
+		  inPixel : out std_logic);
 end obstacle;
 
 architecture behavior of obstacle is
@@ -18,7 +19,8 @@ architecture behavior of obstacle is
     signal xPos : signed(10 downto 0) := TO_SIGNED(640, 11);
     signal xVelocity : signed(9 downto 0) := TO_SIGNED(3, 10);
     signal reset : std_logic;
-    signal drawObstacle : std_logic;
+    signal drawObstacle : std_logic_vector(3 downto 0);
+
 
 begin
 
@@ -26,11 +28,12 @@ begin
     gapCenter <= TO_SIGNED(280, 10);
     pipeWidth <= TO_SIGNED(25, 10);
 
-    drawObstacle <= '1' when (('0' & xPos <= '0' & pixel_column + pipeWidth) and ('0' & pixel_column <= '0' & xPos + pipeWidth)
+    drawObstacle <= "1111" when (('0' & xPos <= '0' & pixel_column + pipeWidth) and ('0' & pixel_column <= '0' & xPos + pipeWidth)
                     and (('0' & gapCenter >= pixel_row + gapSize) or ('0' & pixel_row >= gapCenter + gapSize))) else
-                    '0';
+                    "0000";
 
-    inPixel <= drawObstacle;
+    inPixel <= '1' when (drawObstacle = "1111") else '0';
+	 
 
     red <= not drawObstacle;
     green <= drawObstacle;

@@ -1,5 +1,9 @@
-with open('converterFile.txt', 'r') as infile, open('shorterFile.txt', 'w') as outfile:
+with open('converterFile.txt', 'r') as infile, open('shorterfile.txt', 'w') as outfile:
     lines = infile.readlines()
+    count = 0
     for i, line in enumerate(lines):
         if i % 2 == 0:
-            outfile.write(line)
+            count += 1
+            parts = line.split(':')
+            prefix = '{:07d}'.format(count-1)
+            outfile.write(prefix + ' : ' + parts[1])

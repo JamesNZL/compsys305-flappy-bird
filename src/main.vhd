@@ -210,18 +210,24 @@ begin
     -------------COLLISIONS & DRAWING--------------
 
     paintScreen : process (vgaClk)
+	 variable counter : std_logic := '0';
     begin
         if rising_edge(vgaClk) then
-		  
-		  --increase the character adress by one every clock cycle
-		  -- call the muxoutput associated to the character adress
-		  -- reaches end amount then reset
-		  
-		  if charadress = "1001010111111111111" then
+		 
+		 
+		 if (counter = '0') then
+          
+            if charadress = "1001010111111111111" then
                 charadress <= (others => '0');
             else
                 charadress <= charadress + 1;
+					 counter := '1'; 
             end if;
+   
+  
+        elsif (counter = '1') then
+            counter := '0'; 
+        end if;
 		  
 		  
 		  

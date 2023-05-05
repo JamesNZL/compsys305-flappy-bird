@@ -140,7 +140,7 @@ begin
         pb1 => pb1,
         clk => vgaClk,
         vert_sync => vsync,
-        lfsrSeed => "11111010", -- TODO: randomise with mouse position
+        lfsrSeed => std_logic_vector(xPixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
         start_xPos => TO_SIGNED(640, 11),
         pixel_row => yPixel,
         pixel_column => xPixel,
@@ -155,7 +155,7 @@ begin
         pb1 => pb1,
         clk => vgaClk,
         vert_sync => vsync,
-        lfsrSeed => "11001110", -- TODO: randomise with mouse position
+        lfsrSeed => std_logic_vector(yPixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
         start_xPos => TO_SIGNED(960, 11),
         pixel_row => yPixel,
         pixel_column => xPixel,

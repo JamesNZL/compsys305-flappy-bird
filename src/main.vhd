@@ -33,9 +33,7 @@ entity main is
         horiz_sync_out : out std_logic;
         vert_sync_out : out std_logic;
         PS2_CLK : inout std_logic;
-        PS2_DAT : inout std_logic
-
-    );
+        PS2_DAT : inout std_logic);
 end main;
 
 architecture flappy_bird of main is
@@ -59,6 +57,7 @@ architecture flappy_bird of main is
     component obstacle is
         port (
             enable, pb1, clk, vert_sync : in std_logic;
+            lfsrSeed : in std_logic_vector(8 downto 1);
             start_xPos : in signed(10 downto 0);
             pixel_row, pixel_column : in signed(9 downto 0);
             red, green, blue, inPixel : out std_logic);
@@ -141,6 +140,7 @@ begin
         pb1 => pb1,
         clk => vgaClk,
         vert_sync => vsync,
+        lfsrSeed => "11111010", -- TODO: randomise with mouse position
         start_xPos => TO_SIGNED(640, 11),
         pixel_row => yPixel,
         pixel_column => xPixel,
@@ -155,6 +155,7 @@ begin
         pb1 => pb1,
         clk => vgaClk,
         vert_sync => vsync,
+        lfsrSeed => "11001110", -- TODO: randomise with mouse position
         start_xPos => TO_SIGNED(960, 11),
         pixel_row => yPixel,
         pixel_column => xPixel,

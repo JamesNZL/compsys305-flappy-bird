@@ -48,7 +48,8 @@ begin
     -- This ensures all gapCentres will be valid, with a reasonable (112px) buffer from the top/bottom
     gapCentre <= signed(lfsrOutput) + TO_SIGNED(240, 10);
 
-    drawObstacle <= '1' when (('0' & xPos <= '0' & pixel_column + pipeWidth) and ('0' & pixel_column <= '0' & xPos + pipeWidth) and (('0' & gapCentre >= pixel_row + gapSize) or ('0' & pixel_row >= gapCentre + gapSize))) else
+    drawObstacle <= '0' when (reset = '1') else
+                    '1' when (('0' & xPos <= '0' & pixel_column + pipeWidth) and ('0' & pixel_column <= '0' & xPos + pipeWidth) and (('0' & gapCentre >= pixel_row + gapSize) or ('0' & pixel_row >= gapCentre + gapSize))) else
                     '1' when ((xPos <= pixel_column + pipeWidth) and (pixel_column <= xPos + pipeWidth) and ((gapCentre >= pixel_row + gapSize) or (pixel_row >= gapCentre + gapSize))) else
                     '0';
 

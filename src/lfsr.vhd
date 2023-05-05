@@ -13,7 +13,6 @@ architecture galois of lfsr is
     signal currentState : std_logic_vector(8 downto 1) := seed;
 
 begin
-    -- Don't care about bit 0
     lfsrOutput <= currentState(8 downto 1);
 
     runLFSR : process (clk, reset)

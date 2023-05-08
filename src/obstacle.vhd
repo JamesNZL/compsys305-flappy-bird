@@ -8,7 +8,7 @@ entity obstacle is
         lfsrSeed : in std_logic_vector(8 downto 1);
         start_xPos : in signed(10 downto 0);
         pixel_row, pixel_column : in signed(9 downto 0);
-        red, green, blue, inPixel : out std_logic);
+        red, green, blue, inPixel, scoreTick : out std_logic);
 end obstacle;
 
 architecture behavior of obstacle is
@@ -52,6 +52,8 @@ begin
                     '1' when (('0' & xPos <= '0' & pixel_column + pipeWidth) and ('0' & pixel_column <= '0' & xPos + pipeWidth) and (('0' & gapCentre >= pixel_row + gapSize) or ('0' & pixel_row >= gapCentre + gapSize))) else
                     '1' when ((xPos <= pixel_column + pipeWidth) and (pixel_column <= xPos + pipeWidth) and ((gapCentre >= pixel_row + gapSize) or (pixel_row >= gapCentre + gapSize))) else
                     '0';
+
+    scoreTick <= '1' when ((xPos >= 300) and (xPos <= 340)) else '0';
 
     inPixel <= drawObstacle;
 

@@ -33,9 +33,7 @@ entity main is
         horiz_sync_out : out std_logic;
         vert_sync_out : out std_logic;
         PS2_CLK : inout std_logic;
-        PS2_DAT : inout std_logic
-
-    );
+        PS2_DAT : inout std_logic);
 end main;
 
 architecture flappy_bird of main is
@@ -59,6 +57,8 @@ architecture flappy_bird of main is
     component obstacle is
         port (
             enable, pb1, clk, vert_sync : in std_logic;
+            lfsrSeed : in std_logic_vector(8 downto 1);
+            start_xPos : in signed(10 downto 0);
             pixel_row, pixel_column : in signed(9 downto 0);
             red, green, blue, inPixel : out std_logic);
     end component;
@@ -90,32 +90,23 @@ architecture flappy_bird of main is
     end component;
 
     signal vgaClk : std_logic;
-    signal paintR : std_logic;
-    signal paintG : std_logic;
-    signal paintB : std_logic;
-    signal birdR : std_logic;
-    signal birdG : std_logic;
-    signal birdB : std_logic;
-    signal obsR : std_logic;
-    signal obsG : std_logic;
-    signal obsB : std_logic;
-    signal Reset : std_logic;
-    signal VSYNC : std_logic;
-    signal xPos : signed(9 downto 0);
-    signal yPos : signed(9 downto 0);
-    signal LEFTBUTTONevent : std_logic;
-    signal RIGHTBUTTONevent : std_logic;
-    signal MOUSEROW : signed(9 downto 0);
-    signal MOUSECOLUMN : signed(9 downto 0);
+    signal paintR, paintG, paintB : std_logic;
+    signal birdR, birdG, birdB : std_logic;
+    signal obsOneR, obsOneG, obsOneB : std_logic;
+    signal obsTwoR, obsTwoG, obsTwoB : std_logic;
+    signal reset : std_logic;
+    signal vsync : std_logic;
+    signal xPixel, yPixel : signed(9 downto 0);
+    signal leftButtonEvent, rightButtonEvent : std_logic;
+    signal mouseRow, mouseColumn : signed(9 downto 0);
     signal movementEnable : std_logic := '1';
-    signal OBST1 : std_logic;
-    signal ObDet : std_logic;
+    signal ObOneDet, ObTwoDet, ObDet : std_logic;
     signal BiDet : std_logic;
     signal BiDied : std_logic := '0';
 
 begin
 
-    vert_sync_out <= VSYNC;
+    vert_sync_out <= vsync;
     Reset <= '0';
 
     vga : vga_sync
@@ -128,9 +119,9 @@ begin
         green_out => green_out,
         blue_out => blue_out,
         horiz_sync_out => horiz_sync_out,
-        vert_sync_out => VSYNC,
-        pixel_column => xPos,
-        pixel_row => yPos);
+        vert_sync_out => vsync,
+        pixel_column => xPixel,
+        pixel_row => yPixel);
 
     mousey_mouse : MOUSE
     port map(
@@ -138,23 +129,40 @@ begin
         reset => RESET,
         mouse_data => PS2_DAT,
         mouse_clk => PS2_CLK,
-        left_button => LEFTBUTTONevent,
-        right_button => RIGHTBUTTONevent,
-        mouse_cursor_row => MOUSEROW,
-        mouse_cursor_column => MOUSECOLUMN);
+        left_button => leftButtonEvent,
+        right_button => rightButtonEvent,
+        mouse_cursor_row => mouseRow,
+        mouse_cursor_column => mouseColumn);
 
     obstacle_one : obstacle
     port map(
         enable => movementEnable,
         pb1 => pb1,
         clk => vgaClk,
-        vert_sync => VSYNC,
-        pixel_row => yPos,
-        pixel_column => xPos,
-        red => obsR,
-        green => obsG,
-        blue => obsB,
-        inPixel => ObDet);
+        vert_sync => vsync,
+        lfsrSeed => std_logic_vector(xPixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
+        start_xPos => TO_SIGNED(640, 11),
+        pixel_row => yPixel,
+        pixel_column => xPixel,
+        red => obsOneR,
+        green => obsOneG,
+        blue => obsOneB,
+        inPixel => ObOneDet);
+
+    obstacle_two : obstacle
+    port map(
+        enable => movementEnable,
+        pb1 => pb1,
+        clk => vgaClk,
+        vert_sync => vsync,
+        lfsrSeed => std_logic_vector(yPixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
+        start_xPos => TO_SIGNED(960, 11),
+        pixel_row => yPixel,
+        pixel_column => xPixel,
+        red => obsTwoR,
+        green => obsTwoG,
+        blue => obsTwoB,
+        inPixel => ObTwoDet);
 
     clock_div : pll
     port map(
@@ -166,53 +174,56 @@ begin
     port map(
         enable => movementEnable,
         pb1 => pb1,
-        pb2 => LEFTBUTTONevent,
+        pb2 => leftButtonEvent,
         clk => vgaClk,
-        vert_sync => VSYNC,
-        pixel_column => xPos,
-        pixel_row => yPos,
+        vert_sync => vsync,
+        pixel_column => xPixel,
+        pixel_row => yPixel,
         red => birdR,
         green => birdG,
         blue => birdB,
         inPixel => BiDet,
         died => BiDied);
 
-    --SET TEST OBSTACLE ENABLE		 
-    OBST1 <= '1';
+    -------------COLLISIONS--------------
 
-    setObstacles : process (clk)
-    begin
-        if rising_edge(clk) then
-            --SET OBSTACLES INTERMITTENTLY
-        end if;
-    end process setObstacles;
+    --TODO: Pseudo randomize maybe with linear shift register
 
-    -------------COLLISIONS & DRAWING--------------
+    ObDet <= (ObOneDet or ObTwoDet);
 
-    paintScreen : process (vgaClk)
+    detectCollisions : process (vgaClk)
     begin
         if rising_edge(vgaClk) then
 
-            -- Painting the sprite
+            if (((movementEnable = '1') and (BiDet = '1' nand ObDet = '1') and (BiDied = '0')) or (pb1 = '0')) then
+                movementEnable <= '1';
+            else
+                movementEnable <= '0';
+            end if;
+
+        end if;
+    end process detectCollisions;
+
+    ----------------------------------
+
+    -------------DRAWING--------------
+
+    paintScreen : process (vgaClk)
+    begin
+        if (rising_edge(vgaClk)) then
+
             if (BiDet = '1') then
                 paintR <= birdR;
                 paintG <= birdG;
                 paintB <= birdB;
             elsif (ObDet = '1') then
-                paintR <= obsR;
-                paintG <= obsG;
-                paintB <= obsB;
+                paintR <= (obsOneR or obsTwoR); -- TODO: change to support 4 bit colour
+                paintG <= (obsOneG or obsTwoG);
+                paintB <= (obsOneB or obsTwoB);
             else
                 paintR <= '0';
-                paintG <= '0';
-                paintB <= '0';
-            end if;
-
-            -- Collision detection
-            if (((movementEnable = '1') and (BiDet = '1' nand ObDet = '1') and (BiDied = '0')) or (pb1 = '0')) then
-                movementEnable <= '1';
-            else
-                movementEnable <= '0';
+                paintG <= '1';
+                paintB <= '1';
             end if;
 
         end if;

@@ -478,6 +478,7 @@ set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name VHDL_FILE src/lfsr.vhd
 set_global_assignment -name SIP_FILE src/pll.sip
 set_global_assignment -name SOURCE_FILE src/pll.cmp
 set_global_assignment -name QIP_FILE src/pll.qip
@@ -485,7 +486,7 @@ set_global_assignment -name BDF_FILE src/text.bdf
 set_global_assignment -name BDF_FILE src/ps2.bdf
 set_global_assignment -name BDF_FILE src/mainBlockDiagram.bdf
 set_global_assignment -name VHDL_FILE src/vga_sync.vhd
-set_global_assignment -name VHDL_FILE src/pll.vhd
+set_global_assignment -name VHDL_FILE src/pll.vhd -library pll
 set_global_assignment -name VHDL_FILE src/obstacle.vhd
 set_global_assignment -name VHDL_FILE src/mouse.vhd
 set_global_assignment -name VHDL_FILE src/main.vhd

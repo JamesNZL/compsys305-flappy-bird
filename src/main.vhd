@@ -20,6 +20,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+
 library work;
 
 entity main is
@@ -274,9 +275,24 @@ begin
 	 
 	 
 	 -------------CHAR_ROM-------------
-	 charAddress <= "000001";
-	 fontrow <= "000";
-	 fontcol <= "000";
+	 charrom : process (vgaClk)
+	 variable counter : std_logic_vector(2 downto 0) := "000";
+	 begin
+	 
+	  if (rising_edge(vgaClk)) then
+	  
+		  charAddress <= "000001"; -- should print A
+		  -- figure out how font row and column works
+		  if (counter = "111") then 
+			counter := "000";
+		  else 
+			counter := std_logic_vector(unsigned(counter) + 1);
+		  end if;
+		  fontrow <= counter;
+		  fontcol <= counter;
+	  end if;
+	 end process charrom;
+	 
 
     ----------------------------------
 
@@ -290,7 +306,7 @@ begin
                 paintR <= birdR;
                 paintG <= birdG;
                 paintB <= birdB;
-			  elsif ((xPixel <= 30 and xPixel >= 10) and (yPixel <= 30 and yPixel >= 30)) then
+			  elsif ((xPixel <= 30 and xPixel >= 10) and (yPixel <= 30 and yPixel >= 30)) then -- should print in the left hand corner?? in red
 					 paintR <= charOUTPUT;
 					 paintG <= '0';
                 paintB <= '0';

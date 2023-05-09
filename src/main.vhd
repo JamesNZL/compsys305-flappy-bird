@@ -33,7 +33,10 @@ entity main is
         horiz_sync_out : out std_logic;
         vert_sync_out : out std_logic;
         PS2_CLK : inout std_logic;
-        PS2_DAT : inout std_logic);
+        PS2_DAT : inout std_logic;
+        HEX1 : out std_logic_vector(6 downto 0);
+        HEX0 : out std_logic_vector(6 downto 0)
+        );
 end main;
 
 architecture flappy_bird of main is
@@ -60,7 +63,7 @@ architecture flappy_bird of main is
             lfsrSeed : in std_logic_vector(8 downto 1);
             start_xPos : in signed(10 downto 0);
             pixel_row, pixel_column : in signed(9 downto 0);
-            red, green, blue, inPixel : out std_logic);
+            red, green, blue, inPixel, scoreTick : out std_logic);
     end component;
 
     component MOUSE
@@ -89,6 +92,25 @@ architecture flappy_bird of main is
             red, green, blue, inPixel, died : out std_logic);
     end component;
 
+    component scoreCounter is
+        port(Clk, Tick : in std_logic;
+	    Reset : in std_logic;
+        setNextDigit : out std_logic;
+	    Q_Out : out std_logic_vector(3 downto 0));
+    end component;
+
+    component BCD_to_SevenSeg is
+        port (BCD_digit : in std_logic_vector(3 downto 0);
+              SevenSeg_out : out std_logic_vector(6 downto 0));
+    end component;
+
+    component char_rom is
+        PORT(character_address	:	IN STD_LOGIC_VECTOR (5 DOWNTO 0);
+		    font_row, font_col	:	IN STD_LOGIC_VECTOR (2 DOWNTO 0);
+		    clock				: 	IN STD_LOGIC ;
+		    rom_mux_output		:	OUT STD_LOGIC);
+    end component;
+
     signal vgaClk : std_logic;
     signal paintR, paintG, paintB : std_logic;
     signal birdR, birdG, birdB : std_logic;
@@ -101,8 +123,11 @@ architecture flappy_bird of main is
     signal mouseRow, mouseColumn : signed(9 downto 0);
     signal movementEnable : std_logic := '1';
     signal ObOneDet, ObTwoDet, ObDet : std_logic;
+    signal ObOneTick, ObTwoTick, tensTick, hundredsTick : std_logic;
+    signal scoreOnes, scoreTens : std_logic_vector(3 downto 0);
     signal BiDet : std_logic;
     signal BiDied : std_logic := '0';
+
 
 begin
 
@@ -147,7 +172,8 @@ begin
         red => obsOneR,
         green => obsOneG,
         blue => obsOneB,
-        inPixel => ObOneDet);
+        inPixel => ObOneDet,
+        scoreTick => ObOneTick);
 
     obstacle_two : obstacle
     port map(
@@ -162,7 +188,34 @@ begin
         red => obsTwoR,
         green => obsTwoG,
         blue => obsTwoB,
-        inPixel => ObTwoDet);
+        inPixel => ObTwoDet,
+        scoreTick => ObTwoTick);
+
+    scoringOnes : scoreCounter
+    port map(
+        Clk => vgaClk,
+        Tick => (ObOneTick or ObTwoTick),
+	    Reset => pb1,
+        setNextDigit => tensTick,
+	    Q_Out => scoreOnes);
+
+    scoringTens : scoreCounter
+    port map(
+        Clk => vgaClk,
+        Tick => tensTick,
+        Reset => pb1,
+        setNextDigit => hundredsTick,
+        Q_Out => scoreTens);
+
+    ssegOnes : BCD_to_SevenSeg
+    port map(
+        BCD_digit => scoreOnes,
+        SevenSeg_Out => HEX0);
+
+    ssegTens : BCD_to_SevenSeg
+    port map(
+        BCD_digit => scoreTens,
+        SevenSeg_Out => HEX1);
 
     clock_div : pll
     port map(
@@ -224,11 +277,16 @@ begin
                 paintR <= '0';
                 paintG <= '1';
                 paintB <= '1';
+
             end if;
 
         end if;
     end process paintScreen;
 
+    ----------------------------------
+
+    -------------SCORING--------------
+                
     ----------------------------------
 
 end flappy_bird;

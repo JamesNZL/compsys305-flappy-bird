@@ -130,9 +130,9 @@ architecture flappy_bird of main is
     signal scoreOnes, scoreTens : std_logic_vector(3 downto 0);
     signal BiDet : std_logic;
     signal BiDied : std_logic := '0';
-	 signal charAddress : std_logic_vector( 5 downto 0);
-	 signal fontrow, fontcol : STD_LOGIC_VECTOR (2 DOWNTO 0);
-	 signal charOUTPUT : std_logic;
+	signal charAddress : std_logic_vector( 5 downto 0);
+	signal fontrow, fontcol : STD_LOGIC_VECTOR (2 DOWNTO 0);
+	signal charOUTPUT : std_logic;
 
 
 begin
@@ -273,32 +273,14 @@ begin
         end if;
     end process detectCollisions;
 	 
-	 
-	 -------------CHAR_ROM-------------
-	 charrom : process (vgaClk)
-	 variable counter : std_logic_vector(2 downto 0) := "000";
-	 begin
-	 
-	  if (rising_edge(vgaClk)) then
-	  
-		  charAddress <= "000001"; -- should print A
-		  -- figure out how font row and column works
-		  if (counter = "111") then 
-			counter := "000";
-		  else 
-			counter := std_logic_vector(unsigned(counter) + 1);
-		  end if;
-		  fontrow <= counter;
-		  fontcol <= counter;
-	  end if;
-	 end process charrom;
-	 
-
+     
     ----------------------------------
 
     -------------DRAWING--------------
 
     paintScreen : process (vgaClk)
+    variable counter : std_logic_vector(2 downto 0) := "000";
+    variable counter2 : std_logic_vector(2 downto 0) := "000";
     begin
         if (rising_edge(vgaClk)) then
 
@@ -306,10 +288,25 @@ begin
                 paintR <= birdR;
                 paintG <= birdG;
                 paintB <= birdB;
-			  elsif ((xPixel <= 30 and xPixel >= 10) and (yPixel <= 30 and yPixel >= 30)) then -- should print in the left hand corner?? in red
-					 paintR <= charOUTPUT;
-					 paintG <= '0';
-                paintB <= '0';
+			elsif ((xPixel >= 8 and xPixel <= 16) and (yPixel >= 8 and yPixel <= 16)) then -- should print in the left hand corner?? in red
+               
+                charAddress <= "000001"; 
+               
+                if (counter = "111") then 
+                counter := "000";
+                counter2 := std_logic_vector(unsigned(counter2) + 1);
+                    if (counter2 = "111") then
+                        counter2:= "000";
+                    end if;
+                else 
+                    counter := std_logic_vector(unsigned(counter) + 1);
+                end if;
+                fontcol <= counter;
+                fontrow <= counter2;
+                
+                paintR <= charOUTPUT;
+				paintG <= '0';
+                paintB <= '0'; -- should print in red in the right hand corner an A
 					 
             elsif (ObDet = '1') then
                 paintR <= (obsOneR or obsTwoR); -- TODO: change to support 4 bit colour

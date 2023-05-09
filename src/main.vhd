@@ -130,9 +130,11 @@ architecture flappy_bird of main is
     signal scoreOnes, scoreTens : std_logic_vector(3 downto 0);
     signal BiDet : std_logic;
     signal BiDied : std_logic := '0';
-	signal charAddress : std_logic_vector( 5 downto 0);
-	signal fontrow, fontcol : STD_LOGIC_VECTOR (2 DOWNTO 0);
-	signal charOUTPUT : std_logic;
+	 signal charAddress : std_logic_vector( 5 downto 0);
+	 signal fontrow, fontcol : STD_LOGIC_VECTOR (2 DOWNTO 0);
+	 signal charOUTPUT : std_logic;
+	 signal counter : std_logic_vector(2 downto 0) := "000";
+    signal counter2 : std_logic_vector(2 downto 0) := "000";
 
 
 begin
@@ -279,8 +281,7 @@ begin
     -------------DRAWING--------------
 
     paintScreen : process (vgaClk)
-    variable counter : std_logic_vector(2 downto 0) := "000";
-    variable counter2 : std_logic_vector(2 downto 0) := "000";
+	 variable int_value : integer;
     begin
         if (rising_edge(vgaClk)) then
 
@@ -288,25 +289,36 @@ begin
                 paintR <= birdR;
                 paintG <= birdG;
                 paintB <= birdB;
-			elsif ((xPixel >= 8 and xPixel <= 16) and (yPixel >= 8 and yPixel <= 16)) then -- should print in the left hand corner?? in red
+				elsif ((xPixel >= 8 and xPixel < 16) and (yPixel >= 8 and yPixel < 16)) then--elsif ((xPixel >= 8 and xPixel <= 16) and (yPixel >= 8 and yPixel <= 16)) then -- should print in the left hand corner?? in red
                
-                charAddress <= "000001"; 
-               
-                if (counter = "111") then 
-                counter := "000";
-                counter2 := std_logic_vector(unsigned(counter2) + 1);
-                    if (counter2 = "111") then
-                        counter2:= "000";
-                    end if;
-                else 
-                    counter := std_logic_vector(unsigned(counter) + 1);
-                end if;
-                fontcol <= counter;
-                fontrow <= counter2;
+					 
+					 int_value := to_integer(unsigned(scoreOnes)) + 48
+					 charAddress <= to_octstring(int_value, 6);
+                charAddress <= std_logic_vector(to_unsigned(int_value, 6));
+					
+					-- scoreOnes is 4 bit 
+					 
+					 fontcol <= counter;
+					 fontrow <= counter2;
+					 
+					  if (counter = "111") then 
+		           counter <= "000";
+					  counter2 <= std_logic_vector(unsigned(counter2) + 1);
+							if (counter2 = "111") then
+							counter2 <= "000";
+							end if;
+					  else 
+		           counter <= std_logic_vector(unsigned(counter) + 1);
+					  end if;
                 
                 paintR <= charOUTPUT;
-				paintG <= '0';
+				    paintG <= '0';
                 paintB <= '0'; -- should print in red in the right hand corner an A
+					 
+					 --take background out
+					 -- connect to score 
+					 -- add two digits on screen
+					 -- make them bigger
 					 
             elsif (ObDet = '1') then
                 paintR <= (obsOneR or obsTwoR); -- TODO: change to support 4 bit colour

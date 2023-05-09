@@ -487,7 +487,6 @@ set_global_assignment -name BDF_FILE src/text.bdf
 set_global_assignment -name BDF_FILE src/ps2.bdf
 set_global_assignment -name BDF_FILE src/mainBlockDiagram.bdf
 set_global_assignment -name VHDL_FILE src/vga_sync.vhd
-set_global_assignment -name VHDL_FILE src/pll.vhd -library pll
 set_global_assignment -name VHDL_FILE src/obstacle.vhd
 set_global_assignment -name VHDL_FILE src/mouse.vhd
 set_global_assignment -name VHDL_FILE src/main.vhd

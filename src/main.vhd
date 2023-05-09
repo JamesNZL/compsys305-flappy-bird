@@ -57,6 +57,7 @@ architecture flappy_bird of main is
         );
     end component;
 
+
     component obstacle is
         port (
             enable, pb1, clk, vert_sync : in std_logic;
@@ -113,6 +114,7 @@ architecture flappy_bird of main is
 
     signal vgaClk : std_logic;
     signal paintR, paintG, paintB : std_logic;
+	 signal scoreR, scoreG, scoreB : std_logic;
     signal birdR, birdG, birdB : std_logic;
     signal obsOneR, obsOneG, obsOneB : std_logic;
     signal obsTwoR, obsTwoG, obsTwoB : std_logic;
@@ -127,6 +129,9 @@ architecture flappy_bird of main is
     signal scoreOnes, scoreTens : std_logic_vector(3 downto 0);
     signal BiDet : std_logic;
     signal BiDied : std_logic := '0';
+	 signal charAddress : std_logic_vector( 5 downto 0);
+	 signal fontrow, fontcol : STD_LOGIC_VECTOR (2 DOWNTO 0);
+	 signal charOUTPUT : std_logic;
 
 
 begin
@@ -147,6 +152,16 @@ begin
         vert_sync_out => vsync,
         pixel_column => xPixel,
         pixel_row => yPixel);
+		  
+		  
+	 score_display : char_rom
+	 port map(
+	       character_address => charAddress,
+		    font_row => fontrow,
+			 font_col => fontcol,
+		    clock => vgaClk,		
+		    rom_mux_output => charOUTPUT);
+	 
 
     mousey_mouse : MOUSE
     port map(
@@ -256,6 +271,12 @@ begin
 
         end if;
     end process detectCollisions;
+	 
+	 
+	 -------------CHAR_ROM-------------
+	 charAddress <= "000001";
+	 fontrow <= "000";
+	 fontcol <= "000";
 
     ----------------------------------
 
@@ -269,10 +290,16 @@ begin
                 paintR <= birdR;
                 paintG <= birdG;
                 paintB <= birdB;
+			  elsif ((xPixel <= 30 and xPixel >= 10) and (yPixel <= 30 and yPixel >= 30)) then
+					 paintR <= charOUTPUT;
+					 paintG <= '0';
+                paintB <= '0';
+					 
             elsif (ObDet = '1') then
                 paintR <= (obsOneR or obsTwoR); -- TODO: change to support 4 bit colour
                 paintG <= (obsOneG or obsTwoG);
                 paintB <= (obsOneB or obsTwoB);
+					 
             else
                 paintR <= '0';
                 paintG <= '1';

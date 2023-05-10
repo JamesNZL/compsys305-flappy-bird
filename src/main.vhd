@@ -289,11 +289,12 @@ begin
                 paintR <= birdR;
                 paintG <= birdG;
                 paintB <= birdB;
-            elsif ((xPixel >= 312 and xPixel < 320) and (yPixel >= 8 and yPixel < 16)) then
+            elsif ((xPixel >= 24  and xPixel < 40) and (yPixel >= 8 and yPixel < 16)) then
 
                 --figure out how to make it bigger 
                 int_value := to_integer(unsigned(scoreOnes)) + 48;
                 charAddress <= std_logic_vector(to_unsigned(int_value, 6));
+					
 
                 fontcol <= counter;
                 fontrow <= counter2;
@@ -309,8 +310,9 @@ begin
                         counter <= std_logic_vector(unsigned(counter) + 1);
 
                     end if;
-                    flag <= (flag + 1) mod 2;
                 end if;
+					 
+					 flag := (flag + 1) mod 2;
 
                 if (charOUTPUT = '1') then
                     paintR <= '0';
@@ -321,8 +323,8 @@ begin
                     paintG <= '1';
                     paintB <= '1';
                 end if;
-
-            elsif ((xPixel >= 320 and xPixel < 328) and (yPixel >= 8 and yPixel < 16)) then--elsif ((xPixel >= 8 and xPixel <= 16) and (yPixel >= 8 and yPixel <= 16)) then -- should print in the left hand corner?? in red
+					 
+			    elsif ((xPixel >= 8 and xPixel < 24) and (yPixel >= 8 and yPixel < 16)) then--elsif ((xPixel >= 8 and xPixel <= 16) and (yPixel >= 8 and yPixel <= 16)) then -- should print in the left hand corner?? in red
 
                 --figure out how to make it bigger 
                 int_value := to_integer(unsigned(scoreTens)) + 48;
@@ -330,16 +332,23 @@ begin
 
                 fontcol <= counter3;
                 fontrow <= counter4;
+					 
+					 
+                if (flag = 1) then
 
-                if (counter3 = "111") then
-                    counter3 <= "000";
-                    counter4 <= std_logic_vector(unsigned(counter4) + 1);
-                    if (counter4 = "111") then
-                        counter4 <= "000";
-                    end if;
-                else
-                    counter3 <= std_logic_vector(unsigned(counter3) + 1);
-                end if;
+						 if (counter3 = "111") then
+							  counter3 <= "000";
+							  counter4 <= std_logic_vector(unsigned(counter4) + 1);
+							  if (counter4 = "111") then
+									counter4 <= "000";
+							  end if;
+						 else
+							  counter3 <= std_logic_vector(unsigned(counter3) + 1);
+						 end if;
+						 
+					 end if;
+					 
+					 flag := (flag + 1) mod 2;
 
                 if (charOUTPUT = '1') then
                     paintR <= '0';
@@ -351,6 +360,7 @@ begin
                     paintB <= '1';
                 end if;
 
+     
             elsif (ObDet = '1') then
                 paintR <= (obsOneR or obsTwoR); -- TODO: change to support 4 bit colour
                 paintG <= (obsOneG or obsTwoG);

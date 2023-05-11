@@ -66,6 +66,19 @@ architecture flappy_bird of main is
         );
     end component;
 
+    component FSM
+        type gameMode is (DrawMenu, TrainingMode, HardMode, Paused);
+     port(
+         menuNavigator1, menuNavigator2 : in std_logic;
+         Reset : in std_logic;
+         mode : gameMode; --GAME STATES
+         isFlying, hitObstacle, hitFloor, scoreUp : out std_logic; --BIRD STATES
+         colectCoin, collectGift : out std_logic; --BIRD HARDMODE STATES
+         
+         );
+		  
+	end component;
+
     component mouse
         port (
             clock_25Mhz, reset : in std_logic;

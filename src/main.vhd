@@ -24,7 +24,7 @@ library work;
 
 entity main is
     port (
-        clk : in std_logic;
+        ref_clk : in std_logic;
         pb1 : in std_logic;
         pb2 : in std_logic;
         red_out : out std_logic;
@@ -142,7 +142,7 @@ begin
 
     clock_div : pll
     port map(
-        refclk => clk,
+        refclk => ref_clk,
         rst => '0',
         outclk_0 => clk);
 
@@ -215,7 +215,7 @@ begin
         in_pixel => obs_two_det,
         score_tick => obs_two_tick);
 
-    score_ones : score_counter
+    score_counter_ones : score_counter
     port map(
         clk => clk,
         reset => not pb1,
@@ -223,7 +223,7 @@ begin
         set_next_digit => score_tens_tick,
         score_out => score_ones);
 
-    score_tens : score_counter
+    score_counter_tens : score_counter
     port map(
         clk => clk,
         reset => not pb1,

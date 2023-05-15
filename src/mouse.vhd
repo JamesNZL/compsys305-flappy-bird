@@ -194,7 +194,7 @@ begin
             READ_CHAR <= '0';
             PACKET_COUNT <= "00";
             mouse_left <= '0';
-            RIGHT_BUTTON <= '0';
+            mouse_right <= '0';
             CHARIN <= "00000000";
         elsif MOUSE_clk_FILTER'event and MOUSE_clk_FILTER = '0' then
             if MOUSE_DATA_DIR = '0' then
@@ -263,7 +263,7 @@ begin
                                 NEW_cursor_column <= cursor_column + (PACKET_CHAR2(7) &
                                                      PACKET_CHAR2(7) & PACKET_CHAR2);
                                 mouse_left <= PACKET_CHAR1(0);
-                                RIGHT_BUTTON <= PACKET_CHAR1(1);
+                                mouse_right <= PACKET_CHAR1(1);
                             end if;
                         end if;
                     end if;

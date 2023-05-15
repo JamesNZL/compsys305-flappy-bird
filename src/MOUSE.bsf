@@ -40,8 +40,8 @@ refer to the applicable agreement for further details.
 	(port
 		(pt 264 64)
 		(output)
-		(text "left_button" (rect 0 0 41 12)(font "Arial" ))
-		(text "left_button" (rect 202 59 243 71)(font "Arial" ))
+		(text "mouse_left" (rect 0 0 41 12)(font "Arial" ))
+		(text "mouse_left" (rect 202 59 243 71)(font "Arial" ))
 		(line (pt 264 64)(pt 248 64)(line_width 1))
 	)
 	(port

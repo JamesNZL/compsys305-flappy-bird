@@ -7,11 +7,11 @@ entity FSM is
         clk                                : in std_logic;
         menu_navigator_1, menu_navigator_2 : in std_logic;
         mouse_right, mouse_left            : in std_logic;
+        hit_obstacle, hit_floor            : in std_logic;
 
-        reset                                        : in  std_logic;
-        is_flying, hit_obstacle, hit_floor, score_up : out std_logic; --BIRD STATES
-        collect_coin, collect_gift                   : out std_logic; --BIRD HARDMODE STATES
-        obstacle_movement                            : out std_logic; --Set obstacle movement at first jump
+        reset                        : in  std_logic;
+        flying, hovering, invincible : out std_logic; --BIRD STATES
+        obstacle_movement            : out std_logic; --Set obstacle movement at first jump
 
     );
 end entity FSM;
@@ -21,6 +21,8 @@ architecture state_driver of FSM is
     type mode_memory is (TrainingMode, HardMode);
     signal state, next_state : game_state;
     signal difficulty        : mode_memory;
+    signal bird_collides;
+    signal lives : signed(1 downto 0) := TO_SIGNED(3, 2);
 begin
 
     sync_proc : process (clk)
@@ -34,9 +36,9 @@ begin
         end if;
     end process;
 
-    decide_output : process (mode, menu_navigator_1, menu_navigator_2, mouse_right, mouse_left)
+    decide_output : process (state, menu_navigator_1, menu_navigator_2, mouse_right, mouse_left)
     begin
-        is_flying         <= '0';
+        flying            <= '0';
         menu_enable       <= '0';
         obstacle_movement <= '0';
 
@@ -48,21 +50,36 @@ begin
             when HardModeInit =>
                 hovering <= '1';
             when Gaming =>
-                is_flying <= '1';
+                flying <= '1';
                 if (difficulty = TrainingMode) then
+                    if (hit_obstacle = '1') then
+                        if (lives /= 0) then
+                            lives      <= lives - 1;
+                            invincible <= '1'; --TODO: For 2 seconds
+                        else
+                            bird_collides <= '1';
+                        end if;
+                    elsif (hit_floor = '1') then
+                        bird_collides <= '1';
+                    end if;
                 else
+                    if ((hit_obstacle = '1') or (hit_floor = '1')) then
+                        bird_collides <= '1';
+                    end if;
                 end if;
             when Paused =>
-                is_flying         <= '0';
+                flying            <= '0';
                 obstacle_movement <= '0';
             when Dead =>
-                is_flying         <= '0';
+                flying            <= '0';
                 obstacle_movement <= '0';
             when others =>
+                flying            <= '0';
+                obstacle_movement <= '0';
         end case;
     end process;
 
-    decide_next_state : process (mode, menu_navigator_1, menu_navigator_2, mouse_right, mouse_left)
+    decide_next_state : process (state, menu_navigator_1, menu_navigator_2, mouse_right, mouse_left)
     begin
         next_state <= DrawMenu;
         case state is

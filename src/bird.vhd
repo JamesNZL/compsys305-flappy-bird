@@ -19,7 +19,7 @@ architecture behaviour of bird is
     signal y_pos : signed(9 downto 0);
     signal x_pos : signed(10 downto 0);
     signal y_velocity : signed(9 downto 0);
-    signal subpixel : signed(11 downto 0);
+    signal sub_pixel : signed(11 downto 0);
 
     signal flapped_flag : std_logic;
 
@@ -46,19 +46,19 @@ begin
             if (enable = '1') then
                 if (y_pos <= 479 - size) then
                     if (flap = '1' and flapped_flag = '0') then
-                        subpixel <= TO_SIGNED(-200, 12);
+                        sub_pixel <= TO_SIGNED(-200, 12);
                         flapped_flag <= '1';
                     elsif (y_velocity < 10) then
-                        subpixel <= (subpixel + 10);
+                        sub_pixel <= (sub_pixel + 10);
                     elsif (y_pos >= 479 - size) then
-                        subpixel <= TO_SIGNED(0, 12);
+                        sub_pixel <= TO_SIGNED(0, 12);
                     end if;
 
                     if (flap = '0') then
                         flapped_flag <= '0';
                     end if;
 
-                    y_velocity <= shift_right(subpixel, 4)(11 downto 2);
+                    y_velocity <= shift_right(sub_pixel, 4)(11 downto 2);
                     y_pos <= (y_pos + y_velocity);
                     died <= '0';
                 elsif (reset_pos = '1') then

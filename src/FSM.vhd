@@ -11,7 +11,7 @@ entity FSM is
 
         reset                        : in  std_logic;
         flying, hovering, invincible : out std_logic; --BIRD STATES
-        obstacle_movement            : out std_logic; --Set obstacle movement at first jump
+        obstacle_movement            : out std_logic --Set obstacle movement at first jump
 
     );
 end entity FSM;
@@ -21,8 +21,9 @@ architecture state_driver of FSM is
     type mode_memory is (TrainingMode, HardMode);
     signal state, next_state : game_state;
     signal difficulty        : mode_memory;
-    signal bird_collides;
-    signal lives : signed(1 downto 0) := TO_SIGNED(3, 2);
+    signal bird_collides     : std_logic;
+    signal menu_enable       : std_logic;
+    signal lives             : signed(1 downto 0) := TO_SIGNED(3, 2);
 begin
 
     sync_proc : process (clk)

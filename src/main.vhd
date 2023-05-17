@@ -79,15 +79,6 @@ architecture flappy_bird of main is
 
     end component;
 
-    component obstacle is
-        port (
-            enable, pb1, clk, vert_sync          : in  std_logic;
-            lfsrSeed                             : in  std_logic_vector(8 downto 1);
-            start_xPos                           : in  signed(10 downto 0);
-            pixel_row, pixel_column              : in  signed(9 downto 0);
-            red, green, blue, inPixel, scoreTick : out std_logic);
-    end component;
-
     component mouse
         port (
             clock_25Mhz, reset      : in    std_logic;

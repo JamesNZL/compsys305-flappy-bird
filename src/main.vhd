@@ -322,14 +322,14 @@ begin
 		  
 		  ---BOX PRINTED
 		  
-		   if ((xPixel >= 95 and xPixel < 545) and (yPixel >= 75 and yPixel < 405)) then
+		   if ((xPixel >= 120 and xPixel < 400) and (yPixel >= 100 and yPixel < 300)) then
 		  
 
           
-            if ((xPixel >= 100  and xPixel < 540) and (yPixel >= 80 and yPixel < 400)) then
+            if ((xPixel >= 125  and xPixel < 395) and (yPixel >= 105 and yPixel < 295)) then
 				
 				---FLAPPYBIRD PRINTED
-				    if ((xPixel >= 180  and xPixel < 196) and (yPixel >= 100 and yPixel < 108)) then 
+				    if ((xPixel >= 180  and xPixel < 196) and (yPixel >= 120 and yPixel < 128)) then 
 					 
 
 						 charAddress <= "000110";
@@ -363,7 +363,7 @@ begin
 					end if;
 
 					 
-					 elsif ((xPixel >= 196 and xPixel < 212) and (yPixel >= 100 and yPixel < 108)) then
+					 elsif ((xPixel >= 196 and xPixel < 212) and (yPixel >= 120 and yPixel < 128)) then
 						 charAddress <= "001100";
 
 						 fontcol <= counter3;
@@ -397,7 +397,7 @@ begin
 						end if;
 
 						 
-					elsif ((xPixel >= 212 and xPixel < 228) and (yPixel >= 100 and yPixel < 108)) then
+					elsif ((xPixel >= 212 and xPixel < 228) and (yPixel >= 120 and yPixel < 128)) then
 						 
 						 charAddress <= "000001";
 
@@ -421,20 +421,20 @@ begin
 						 
 						 flag := (flag + 1) mod 2;
 						 if (charOUTPUT = '1') then
-    paintR <= '1';
-    paintG <= '1';
-    paintB <= '1';
-else
-    paintR <= '0';
-    paintG <= '0';
-    paintB <= '0';
-end if;
+					 paintR <= '1';
+					 paintG <= '1';
+					 paintB <= '1';
+				else
+					 paintR <= '0';
+					 paintG <= '0';
+					 paintB <= '0';
+				end if;
 
 
 						 
 					
 						
-				elsif ((xPixel >= 228 and xPixel < 244) and (yPixel >= 100 and yPixel < 108)) then
+				elsif ((xPixel >= 228 and xPixel < 244) and (yPixel >= 120 and yPixel < 128)) then
 					  charAddress <= "010000";
 					  fontcol <= counter7;
 					  fontrow <= counter8;
@@ -454,17 +454,17 @@ end if;
 					  flag := (flag + 1) mod 2;
 
 					if (charOUTPUT = '1') then
-    paintR <= '1';
-    paintG <= '1';
-    paintB <= '1';
-else
-    paintR <= '0';
-    paintG <= '0';
-    paintB <= '0';
-end if;
+					 paintR <= '1';
+					 paintG <= '1';
+					 paintB <= '1';
+				else
+					 paintR <= '0';
+					 paintG <= '0';
+					 paintB <= '0';
+				end if;
 
 					  
-				elsif ((xPixel >= 244 and xPixel < 260) and (yPixel >= 100 and yPixel < 108)) then
+				elsif ((xPixel >= 244 and xPixel < 260) and (yPixel >= 120 and yPixel < 128)) then
 						  charAddress <= "010000";
 						  fontcol <= counter9;
 						  fontrow <= counter10;
@@ -484,17 +484,17 @@ end if;
 						  flag := (flag + 1) mod 2;
 
 						 if (charOUTPUT = '1') then
-    paintR <= '1';
-    paintG <= '1';
-    paintB <= '1';
-else
-    paintR <= '0';
-    paintG <= '0';
-    paintB <= '0';
-end if;
+					 paintR <= '1';
+					 paintG <= '1';
+					 paintB <= '1';
+				else
+					 paintR <= '0';
+					 paintG <= '0';
+					 paintB <= '0';
+				end if;
 
 						  
-			 elsif ((xPixel >= 260 and xPixel < 276) and (yPixel >= 100 and yPixel < 108)) then
+			 elsif ((xPixel >= 260 and xPixel < 276) and (yPixel >= 120 and yPixel < 128)) then
 				  charAddress <= "011001";
 				  fontcol <= counter11;
 				  fontrow <= counter12;
@@ -514,17 +514,17 @@ end if;
 				  flag := (flag + 1) mod 2;
 
 				  if (charOUTPUT = '1') then
-    paintR <= '1';
-    paintG <= '1';
-    paintB <= '1';
-else
-    paintR <= '0';
-    paintG <= '0';
-    paintB <= '0';
-end if;
+					 paintR <= '1';
+					 paintG <= '1';
+					 paintB <= '1';
+				else
+					 paintR <= '0';
+					 paintG <= '0';
+					 paintB <= '0';
+				end if;
 
 				  
-			elsif ((xPixel >= 300 and xPixel < 316) and (yPixel >= 100 and yPixel < 108)) then
+			elsif ((xPixel >= 300 and xPixel < 316) and (yPixel >= 120 and yPixel < 128)) then
 				  charAddress <= "000010";
 				  fontcol <= counter13;
 				  fontrow <= counter14;
@@ -544,17 +544,17 @@ end if;
 				  flag := (flag + 1) mod 2;
 
 				  if (charOUTPUT = '1') then
-    paintR <= '1';
-    paintG <= '1';
-    paintB <= '1';
-else
-    paintR <= '0';
-    paintG <= '0';
-    paintB <= '0';
-end if;
+					 paintR <= '1';
+					 paintG <= '1';
+					 paintB <= '1';
+				else
+					 paintR <= '0';
+					 paintG <= '0';
+					 paintB <= '0';
+				end if;
 
 				  
-	   elsif ((xPixel >= 316 and xPixel < 332) and (yPixel >= 100 and yPixel < 108)) then
+	   elsif ((xPixel >= 316 and xPixel < 332) and (yPixel >= 120 and yPixel < 128)) then
 						  charAddress <= "001001";
 						  fontcol <= counter15;
 						  fontrow <= counter16;
@@ -574,16 +574,16 @@ end if;
 						  flag := (flag + 1) mod 2;
 
 						  if (charOUTPUT = '1') then
-    paintR <= '1';
-    paintG <= '1';
-    paintB <= '1';
-else
-    paintR <= '0';
-    paintG <= '0';
-    paintB <= '0';
-end if;
+					 paintR <= '1';
+					 paintG <= '1';
+					 paintB <= '1';
+				else
+					 paintR <= '0';
+					 paintG <= '0';
+					 paintB <= '0';
+				end if;
 
-					elsif ((xPixel >= 332 and xPixel < 348) and (yPixel >= 100 and yPixel < 108)) then
+					elsif ((xPixel >= 332 and xPixel < 348) and (yPixel >= 120 and yPixel < 128)) then
 						  charAddress <= "010010";
 						  fontcol <= counter17;
 						  fontrow <= counter18;
@@ -603,17 +603,17 @@ end if;
 						  flag := (flag + 1) mod 2;
 
 						if (charOUTPUT = '1') then
-    paintR <= '1';
-    paintG <= '1';
-    paintB <= '1';
-else
-    paintR <= '0';
-    paintG <= '0';
-    paintB <= '0';
-end if;
+					 paintR <= '1';
+					 paintG <= '1';
+					 paintB <= '1';
+				else
+					 paintR <= '0';
+					 paintG <= '0';
+					 paintB <= '0';
+				end if;
 
 						  
-					elsif ((xPixel >= 348 and xPixel < 364) and (yPixel >= 100 and yPixel < 108)) then
+					elsif ((xPixel >= 348 and xPixel < 364) and (yPixel >= 120 and yPixel < 128)) then
 					  charAddress <= "000100";
 					  fontcol <= counter19;
 					  fontrow <= counter20;
@@ -633,20 +633,20 @@ end if;
 					  flag := (flag + 1) mod 2;
 
 					if (charOUTPUT = '1') then
-    paintR <= '1';
-    paintG <= '1';
-    paintB <= '1';
-else
-    paintR <= '0';
-    paintG <= '0';
-    paintB <= '0';
-end if;
+					 paintR <= '1';
+					 paintG <= '1';
+					 paintB <= '1';
+				else
+					 paintR <= '0';
+					 paintG <= '0';
+					 paintB <= '0';
+				end if;
 
 					  
 					  
 			  ----TRAIN PRINTED--------
 					  
-				elsif ((xPixel >= 120 and xPixel < 136) and (yPixel >= 200 and yPixel < 208)) then
+				elsif ((xPixel >= 130 and xPixel < 146) and (yPixel >= 180 and yPixel < 196)) then
 					  charAddress <= "010100";
 					  fontcol <= counter37;
 					  fontrow <= counter38;
@@ -666,17 +666,17 @@ end if;
 					  flag := (flag + 1) mod 2;
 
 					 if (charOUTPUT = '1') then
-    paintR <= '1';
-    paintG <= '1';
-    paintB <= '1';
-else
-    paintR <= '0';
-    paintG <= '0';
-    paintB <= '0';
-end if;
+					 paintR <= '1';
+					 paintG <= '1';
+					 paintB <= '1';
+				else
+					 paintR <= '0';
+					 paintG <= '0';
+					 paintB <= '0';
+				end if;
 
 					  
-				elsif ((xPixel >= 136 and xPixel < 152) and (yPixel >= 200 and yPixel < 208)) then
+				elsif ((xPixel >= 146 and xPixel < 162) and (yPixel >= 180 and yPixel < 196)) then
 					 charAddress <= "010010";
 					 fontcol <= counter21;
 					 fontrow <= counter22;
@@ -694,17 +694,17 @@ end if;
 					 end if;
 
 					 flag := (flag + 1) mod 2;
-if (charOUTPUT = '1') then
-    paintR <= '1';
-    paintG <= '1';
-    paintB <= '1';
-else
-    paintR <= '0';
-    paintG <= '0';
-    paintB <= '0';
-end if;
+			if (charOUTPUT = '1') then
+				 paintR <= '1';
+				 paintG <= '1';
+				 paintB <= '1';
+			else
+				 paintR <= '0';
+				 paintG <= '0';
+				 paintB <= '0';
+			end if;
 
-			elsif ((xPixel >= 152 and xPixel < 168) and (yPixel >= 200 and yPixel < 208)) then
+			elsif ((xPixel >= 162 and xPixel < 178) and (yPixel >= 180 and yPixel < 196)) then
 				 charAddress <= "000001";
 				 fontcol <= counter23;
 				 fontrow <= counter24;
@@ -722,18 +722,18 @@ end if;
 				 end if;
 
 				 flag := (flag + 1) mod 2;
-if (charOUTPUT = '1') then
-    paintR <= '1';
-    paintG <= '1';
-    paintB <= '1';
-else
-    paintR <= '0';
-    paintG <= '0';
-    paintB <= '0';
-end if;
+			if (charOUTPUT = '1') then
+				 paintR <= '1';
+				 paintG <= '1';
+				 paintB <= '1';
+			else
+				 paintR <= '0';
+				 paintG <= '0';
+				 paintB <= '0';
+			end if;
 
 				 
-			elsif ((xPixel >= 168 and xPixel < 184) and (yPixel >= 200 and yPixel < 208)) then
+			elsif ((xPixel >= 178 and xPixel < 194) and (yPixel >= 180 and yPixel < 196)) then
 				 charAddress <= "001001";
 				 fontcol <= counter25;
 				 fontrow <= counter26;
@@ -753,19 +753,19 @@ end if;
 				 flag := (flag + 1) mod 2;
 
 				if (charOUTPUT = '1') then
-    paintR <= '1';
-    paintG <= '1';
-    paintB <= '1';
-else
-    paintR <= '0';
-    paintG <= '0';
-    paintB <= '0';
-end if;
+				 paintR <= '1';
+				 paintG <= '1';
+				 paintB <= '1';
+			else
+				 paintR <= '0';
+				 paintG <= '0';
+				 paintB <= '0';
+			end if;
 
 
 
 					
-			elsif ((xPixel >= 184 and xPixel < 200) and (yPixel >= 200 and yPixel < 208)) then
+			elsif ((xPixel >= 194 and xPixel < 210) and (yPixel >= 180 and yPixel < 196)) then
 				 charAddress <= "001110";
 				 fontcol <= counter27;
 				 fontrow <= counter28;
@@ -785,14 +785,14 @@ end if;
 				 flag := (flag + 1) mod 2;
 
 				 if (charOUTPUT = '1') then
-    paintR <= '1';
-    paintG <= '1';
-    paintB <= '1';
-else
-    paintR <= '0';
-    paintG <= '0';
-    paintB <= '0';
-end if;
+				 paintR <= '1';
+				 paintG <= '1';
+				 paintB <= '1';
+			else
+				 paintR <= '0';
+				 paintG <= '0';
+				 paintB <= '0';
+			end if;
 
 				 
 				 
@@ -800,7 +800,7 @@ end if;
 		
 		
 		
-		elsif ((xPixel >= 120 and xPixel < 136) and (yPixel >= 300 and yPixel < 308)) then
+		elsif ((xPixel >= 130 and xPixel < 146) and (yPixel >= 240 and yPixel < 248)) then
 			 charAddress <= "000111";
 			 fontcol <= counter29;
 			 fontrow <= counter30;
@@ -818,18 +818,18 @@ end if;
 			 end if;
 
 			 flag := (flag + 1) mod 2;
-if (charOUTPUT = '1') then
-    paintR <= '1';
-    paintG <= '1';
-    paintB <= '1';
-else
-    paintR <= '0';
-    paintG <= '0';
-    paintB <= '0';
-end if;
+			if (charOUTPUT = '1') then
+				 paintR <= '1';
+				 paintG <= '1';
+				 paintB <= '1';
+			else
+				 paintR <= '0';
+				 paintG <= '0';
+				 paintB <= '0';
+			end if;
 
 
-			elsif ((xPixel >= 136 and xPixel < 152) and (yPixel >= 300 and yPixel < 308)) then
+			elsif ((xPixel >= 146 and xPixel < 162) and (yPixel >= 240 and yPixel < 248)) then
 				 charAddress <= "000001";
 				 fontcol <= counter31;
 				 fontrow <= counter32;
@@ -849,17 +849,17 @@ end if;
 				 flag := (flag + 1) mod 2;
 
 				if (charOUTPUT = '1') then
-    paintR <= '1';
-    paintG <= '1';
-    paintB <= '1';
-else
-    paintR <= '0';
-    paintG <= '0';
-    paintB <= '0';
-end if;
+				 paintR <= '1';
+				 paintG <= '1';
+				 paintB <= '1';
+			else
+				 paintR <= '0';
+				 paintG <= '0';
+				 paintB <= '0';
+			end if;
 
 								
-			elsif ((xPixel >= 152 and xPixel < 168) and (yPixel >= 300 and yPixel < 308)) then
+			elsif ((xPixel >= 162 and xPixel < 178) and (yPixel >= 240 and yPixel < 248)) then
 				 charAddress <= "001101";
 				 fontcol <= counter33;
 				 fontrow <= counter34;
@@ -877,19 +877,19 @@ end if;
 				 end if;
 
 				 flag := (flag + 1) mod 2;
-if (charOUTPUT = '1') then
-    paintR <= '1';
-    paintG <= '1';
-    paintB <= '1';
-else
-    paintR <= '0';
-    paintG <= '0';
-    paintB <= '0';
-end if;
+				if (charOUTPUT = '1') then
+					 paintR <= '1';
+					 paintG <= '1';
+					 paintB <= '1';
+				else
+					 paintR <= '0';
+					 paintG <= '0';
+					 paintB <= '0';
+				end if;
 
 								  
 							 
-			elsif ((xPixel >= 168 and xPixel < 184) and (yPixel >= 300 and yPixel < 308)) then
+			elsif ((xPixel >= 178 and xPixel < 194) and (yPixel >= 240 and yPixel < 248)) then
 				 charAddress <= "000101";
 				 fontcol <= counter35;
 				 fontrow <= counter36;
@@ -909,16 +909,16 @@ end if;
 				 flag := (flag + 1) mod 2;
 
 				if (charOUTPUT = '1') then
-    paintR <= '1';
-    paintG <= '1';
-    paintB <= '1';
-else
-    paintR <= '0';
-    paintG <= '0';
-    paintB <= '0';
-end if;
+				 paintR <= '1';
+				 paintG <= '1';
+				 paintB <= '1';
+			else
+				 paintR <= '0';
+				 paintG <= '0';
+				 paintB <= '0';
+			end if;
 
-								else
+				else
 						 paintR <= '0';
                    paintG <= '0';
                    paintB <= '0';
@@ -927,7 +927,7 @@ end if;
 						
 				else 
 				
-						paintR <= '1';
+						 paintR <= '1';
                    paintG <= '1';
                    paintB <= '1';
 						 

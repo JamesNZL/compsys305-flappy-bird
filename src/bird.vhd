@@ -39,7 +39,7 @@ begin
     green <= draw_bird;
     blue <= '0';
 
-    moveBird : process (clk)
+    move_bird : process (clk)
     begin
         -- Move bird once every vertical sync
         if (rising_edge(clk)) then
@@ -70,7 +70,7 @@ begin
                 end if;
             end if;
         end if;
-    end process moveBird;
+    end process move_bird;
 
     reset_pos <= '1' when (reset = '1' and y_pos >= 479 - size) else
                  '0';

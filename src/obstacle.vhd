@@ -11,7 +11,7 @@ entity obstacle is
         red, green, blue, in_pixel, score_tick : out std_logic);
 end obstacle;
 
-architecture behavior of obstacle is
+architecture behaviour of obstacle is
 
     component lfsr is
         port (
@@ -84,4 +84,4 @@ begin
         end if;
     end process move_obstacle;
 
-end behavior;
+end behaviour;

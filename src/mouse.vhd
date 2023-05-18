@@ -32,13 +32,13 @@ architecture behavior of MOUSE is
     signal SHIFTOUT : std_logic_vector(10 downto 0);
     signal PACKET_CHAR1, PACKET_CHAR2,
     PACKET_CHAR3 : std_logic_vector(7 downto 0);
-    signal MOUSE_clk_BUF, DATA_READY, READ_CHAR : std_logic;
+    signal MOUSE_CLK_BUF, DATA_READY, READ_CHAR : std_logic;
     signal i : integer;
     signal cursor, iready_set, break, toggle_next,
     output_ready, send_char, send_data : std_logic;
     signal MOUSE_DATA_DIR, MOUSE_DATA_OUT, MOUSE_DATA_BUF,
-    MOUSE_clk_DIR : std_logic;
-    signal MOUSE_clk_FILTER : std_logic;
+    MOUSE_CLK_DIR : std_logic;
+    signal MOUSE_CLK_FILTER : std_logic;
     signal filter : std_logic_vector(7 downto 0);
 
 begin
@@ -49,8 +49,8 @@ begin
     -- tri_state control logic for mouse data and clock lines
     MOUSE_DATA <= 'Z' when MOUSE_DATA_DIR = '0' else
                   MOUSE_DATA_BUF;
-    MOUSE_clk <= 'Z' when MOUSE_clk_DIR = '0' else
-                 MOUSE_clk_BUF;
+    MOUSE_CLK <= 'Z' when MOUSE_CLK_DIR = '0' else
+                 MOUSE_CLK_BUF;
     -- state machine to send init command and start recv process.
     process (reset, clock_25Mhz)
     begin
@@ -114,7 +114,7 @@ begin
         '0' when INPUT_PACKETS;
     -- Mouse Clock Tri-state control line: '1' DE0 drives, '0'=Mouse Drives
     with mouse_state select
-        MOUSE_clk_DIR <= '1' when INHIBIT_TRANS,
+        MOUSE_CLK_DIR <= '1' when INHIBIT_TRANS,
         '1' when LOAD_COMMAND,
         '1' when LOAD_COMMAND2,
         '0' when WAIT_OUTPUT_READY,
@@ -122,7 +122,7 @@ begin
         '0' when INPUT_PACKETS;
     with mouse_state select
         -- Input to DE0 tri-state buffer mouse clock_25Mhz line
-        MOUSE_clk_BUF <= '0' when INHIBIT_TRANS,
+        MOUSE_CLK_BUF <= '0' when INHIBIT_TRANS,
         '1' when LOAD_COMMAND,
         '1' when LOAD_COMMAND2,
         '1' when WAIT_OUTPUT_READY,
@@ -134,11 +134,11 @@ begin
     begin
         wait until clock_25Mhz'event and clock_25Mhz = '1';
         filter(7 downto 1) <= filter(6 downto 0);
-        filter(0) <= MOUSE_clk;
+        filter(0) <= MOUSE_CLK;
         if filter = "11111111" then
-            MOUSE_clk_FILTER <= '1';
+            MOUSE_CLK_FILTER <= '1';
         elsif filter = "00000000" then
-            MOUSE_clk_FILTER <= '0';
+            MOUSE_CLK_FILTER <= '0';
         end if;
     end process;
 
@@ -163,7 +163,7 @@ begin
             -- Tells mouse to clock out command data (is also start bit)
             MOUSE_DATA_BUF <= '0';
 
-        elsif (MOUSE_clk_filter'event and MOUSE_clk_filter = '0') then
+        elsif (MOUSE_CLK_filter'event and MOUSE_CLK_filter = '0') then
             if MOUSE_DATA_DIR = '1' then
                 -- SHIFT OUT NEXT SERIAL BIT
                 if SEND_CHAR = '1' then
@@ -196,7 +196,7 @@ begin
             mouse_left <= '0';
             mouse_right <= '0';
             CHARIN <= "00000000";
-        elsif MOUSE_clk_FILTER'event and MOUSE_clk_FILTER = '0' then
+        elsif MOUSE_CLK_FILTER'event and MOUSE_CLK_FILTER = '0' then
             if MOUSE_DATA_DIR = '0' then
                 if MOUSE_DATA = '0' and READ_CHAR = '0' then
                     READ_CHAR <= '1';

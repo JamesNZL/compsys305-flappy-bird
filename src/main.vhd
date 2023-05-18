@@ -66,18 +66,17 @@ architecture flappy_bird of main is
         );
     end component;
 
-    component FSM
+    component fsm
         port (
-            clk : in std_logic;
+            clk, reset : in std_logic;
             menu_navigator_1, menu_navigator_2 : in std_logic;
             mouse_right, mouse_left : in std_logic;
-            hit_obstacle, hit_floor : in std_logic;
 
-            reset : in std_logic;
-            --BIRD STATES
-            flying, hovering, invincible : out std_logic;
-            --Set obstacle movement at first jump
-            obstacle_movement : out std_logic);
+            -- bird states
+            hit_obstacle, hit_floor : in std_logic;
+            bird_hovering, bird_invincible : out std_logic;
+
+            movement_enable : out std_logic);
     end component;
 
     component mouse

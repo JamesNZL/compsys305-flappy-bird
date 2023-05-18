@@ -24,18 +24,18 @@ library work;
 
 entity main is
     port (
-        ref_clk        : in    std_logic;
-        pb1            : in    std_logic;
-        pb2            : in    std_logic;
-        red_out        : out   std_logic;
-        green_out      : out   std_logic;
-        blue_out       : out   std_logic;
-        horiz_sync_out : out   std_logic;
-        vert_sync_out  : out   std_logic;
-        PS2_CLK        : inout std_logic;
-        PS2_DAT        : inout std_logic;
-        HEX1           : out   std_logic_vector(6 downto 0);
-        HEX0           : out   std_logic_vector(6 downto 0)
+        ref_clk : in std_logic;
+        pb1 : in std_logic;
+        pb2 : in std_logic;
+        red_out : out std_logic;
+        green_out : out std_logic;
+        blue_out : out std_logic;
+        horiz_sync_out : out std_logic;
+        vert_sync_out : out std_logic;
+        PS2_CLK : inout std_logic;
+        PS2_DAT : inout std_logic;
+        HEX1 : out std_logic_vector(6 downto 0);
+        HEX0 : out std_logic_vector(6 downto 0)
     );
 end main;
 
@@ -43,111 +43,112 @@ architecture flappy_bird of main is
 
     component pll
         port (
-            refclk   : in  std_logic;
-            rst      : in  std_logic;
+            refclk : in std_logic;
+            rst : in std_logic;
             outclk_0 : out std_logic;
-            locked   : out std_logic
+            locked : out std_logic
         );
     end component;
 
     component vga_sync
         port (
-            clock_25Mhz    : in  std_logic;
-            red            : in  std_logic;
-            green          : in  std_logic;
-            blue           : in  std_logic;
-            red_out        : out std_logic;
-            green_out      : out std_logic;
-            blue_out       : out std_logic;
+            clock_25Mhz : in std_logic;
+            red : in std_logic;
+            green : in std_logic;
+            blue : in std_logic;
+            red_out : out std_logic;
+            green_out : out std_logic;
+            blue_out : out std_logic;
             horiz_sync_out : out std_logic;
-            vert_sync_out  : out std_logic;
-            pixel_column   : out signed(9 downto 0);
-            pixel_row      : out signed(9 downto 0)
+            vert_sync_out : out std_logic;
+            pixel_column : out signed(9 downto 0);
+            pixel_row : out signed(9 downto 0)
         );
     end component;
 
     component FSM
-        type gameMode is (DrawMenu, TrainingMode, HardMode, Paused);
         port (
-            menuNavigator1, menuNavigator2           : in std_logic;
-            Reset                                    : in std_logic;
-            mode                                     : gameMode; --GAME STATES
-            isFlying, hitObstacle, hitFloor, scoreUp : out std_logic; --BIRD STATES
-            colectCoin, collectGift                  : out std_logic; --BIRD HARDMODE STATES
+            clk : in std_logic;
+            menu_navigator_1, menu_navigator_2 : in std_logic;
+            mouse_right, mouse_left : in std_logic;
+            hit_obstacle, hit_floor : in std_logic;
 
-        );
-
+            reset : in std_logic;
+            --BIRD STATES
+            flying, hovering, invincible : out std_logic;
+            --Set obstacle movement at first jump
+            obstacle_movement : out std_logic);
     end component;
 
     component mouse
         port (
-            clock_25Mhz, reset      : in    std_logic;
-            mouse_data              : inout std_logic;
-            mouse_clk               : inout std_logic;
-            mouse_left, mouse_right : out   std_logic;
-            mouse_cursor_row        : out   signed(9 downto 0);
-            mouse_cursor_column     : out   signed(9 downto 0));
+            clock_25Mhz, reset : in std_logic;
+            mouse_data : inout std_logic;
+            mouse_clk : inout std_logic;
+            mouse_left, mouse_right : out std_logic;
+            mouse_cursor_row : out signed(9 downto 0);
+            mouse_cursor_column : out signed(9 downto 0));
     end component;
 
     component bird
         port (
-            clk, reset, enable, flap         : in  std_logic;
-            pixel_row, pixel_column          : in  signed(9 downto 0);
+            clk, reset, enable, flap : in std_logic;
+            pixel_row, pixel_column : in signed(9 downto 0);
             red, green, blue, in_pixel, died : out std_logic);
     end component;
 
     component obstacle is
         port (
-            clk, reset, enable                     : in  std_logic;
-            lfsr_seed                              : in  std_logic_vector(8 downto 1);
-            start_x_pos                            : in  signed(10 downto 0);
-            pixel_row, pixel_column                : in  signed(9 downto 0);
+            clk, reset, enable : in std_logic;
+            lfsr_seed : in std_logic_vector(8 downto 1);
+            start_x_pos : in signed(10 downto 0);
+            pixel_row, pixel_column : in signed(9 downto 0);
             red, green, blue, in_pixel, score_tick : out std_logic);
     end component;
 
     component score_counter is
         port (
-            clk, reset, tick : in  std_logic;
-            set_next_digit   : out std_logic;
-            score_out        : out std_logic_vector(3 downto 0));
+            clk, reset, tick : in std_logic;
+            set_next_digit : out std_logic;
+            score_out : out std_logic_vector(3 downto 0));
     end component;
 
     component bcd_to_seven_seg is
         port (
-            bcd_digit     : in  std_logic_vector(3 downto 0);
+            bcd_digit : in std_logic_vector(3 downto 0);
             seven_seg_out : out std_logic_vector(6 downto 0));
     end component;
 
     component char_rom is
         port (
-            clk                : in  std_logic;
-            character_address  : in  std_logic_vector (5 downto 0);
-            font_row, font_col : in  std_logic_vector (2 downto 0);
-            rom_mux_output     : out std_logic);
+            clk : in std_logic;
+            character_address : in std_logic_vector (5 downto 0);
+            font_row, font_col : in std_logic_vector (2 downto 0);
+            rom_mux_output : out std_logic);
     end component;
 
     signal clk : std_logic;
 
-    signal vert_sync                 : std_logic;
-    signal x_pixel, y_pixel          : signed(9 downto 0);
+    signal vert_sync : std_logic;
+    signal x_pixel, y_pixel : signed(9 downto 0);
     signal paint_r, paint_g, paint_b : std_logic;
 
     signal mouse_left_event, mouse_right_event : std_logic;
-    signal mouse_row, mouse_column             : signed(9 downto 0);
+    signal mouse_row, mouse_column : signed(9 downto 0);
 
     signal movement_enable : std_logic := '1';
 
     signal bird_r, bird_g, bird_b : std_logic;
-    signal bird_det               : std_logic;
-    signal bird_died              : std_logic := '0';
+    signal bird_det : std_logic;
+    signal bird_died : std_logic := '0';
 
-    signal obs_one_r, obs_one_g, obs_one_b   : std_logic;
-    signal obs_two_r, obs_two_g, obs_two_b   : std_logic;
+    signal obs_one_r, obs_one_g, obs_one_b : std_logic;
+    signal obs_two_r, obs_two_g, obs_two_b : std_logic;
     signal obs_one_det, obs_two_det, obs_det : std_logic;
-    signal obs_one_tick, obs_two_tick        : std_logic;
+    signal obs_one_tick, obs_two_tick : std_logic;
 
     signal score_tens_tick, score_hundreds_tick : std_logic;
-    signal score_ones, score_tens               : std_logic_vector(3 downto 0);
+    signal score_ones, score_tens : std_logic_vector(3 downto 0);
 
 begin
 
@@ -155,103 +156,103 @@ begin
 
     clock_div : pll
     port map(
-        refclk   => ref_clk,
-        rst      => '0',
+        refclk => ref_clk,
+        rst => '0',
         outclk_0 => clk);
 
     vga : vga_sync
     port map(
-        clock_25Mhz    => clk,
-        red            => paint_r,
-        green          => paint_g,
-        blue           => paint_b,
-        red_out        => red_out,
-        green_out      => green_out,
-        blue_out       => blue_out,
+        clock_25Mhz => clk,
+        red => paint_r,
+        green => paint_g,
+        blue => paint_b,
+        red_out => red_out,
+        green_out => green_out,
+        blue_out => blue_out,
         horiz_sync_out => horiz_sync_out,
-        vert_sync_out  => vert_sync,
-        pixel_column   => x_pixel,
-        pixel_row      => y_pixel);
+        vert_sync_out => vert_sync,
+        pixel_column => x_pixel,
+        pixel_row => y_pixel);
 
     mousey_mouse : mouse
     port map(
-        clock_25Mhz         => clk,
-        reset               => '0',
-        mouse_data          => PS2_DAT,
-        mouse_clk           => PS2_CLK,
-        mouse_left          => mouse_left_event,
-        mouse_right         => mouse_right_event,
-        mouse_cursor_row    => mouse_row,
+        clock_25Mhz => clk,
+        reset => '0',
+        mouse_data => PS2_DAT,
+        mouse_clk => PS2_CLK,
+        mouse_left => mouse_left_event,
+        mouse_right => mouse_right_event,
+        mouse_cursor_row => mouse_row,
         mouse_cursor_column => mouse_column);
 
     elon : bird
     port map(
-        clk          => vert_sync,
-        reset        => not pb1,
-        enable       => movement_enable,
-        flap         => mouse_left_event,
-        pixel_row    => y_pixel,
+        clk => vert_sync,
+        reset => not pb1,
+        enable => movement_enable,
+        flap => mouse_left_event,
+        pixel_row => y_pixel,
         pixel_column => x_pixel,
-        red          => bird_r,
-        green        => bird_g,
-        blue         => bird_b,
-        in_pixel     => bird_det,
-        died         => bird_died);
+        red => bird_r,
+        green => bird_g,
+        blue => bird_b,
+        in_pixel => bird_det,
+        died => bird_died);
 
     obstacle_one : obstacle
     port map(
-        clk          => vert_sync,
-        reset        => not pb1,
-        enable       => movement_enable,
-        lfsr_seed    => std_logic_vector(x_pixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
-        start_x_pos  => TO_SIGNED(640, 11),
-        pixel_row    => y_pixel,
+        clk => vert_sync,
+        reset => not pb1,
+        enable => movement_enable,
+        lfsr_seed => std_logic_vector(x_pixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
+        start_x_pos => TO_SIGNED(640, 11),
+        pixel_row => y_pixel,
         pixel_column => x_pixel,
-        red          => obs_one_r,
-        green        => obs_one_g,
-        blue         => obs_one_b,
-        in_pixel     => obs_one_det,
-        score_tick   => obs_one_tick);
+        red => obs_one_r,
+        green => obs_one_g,
+        blue => obs_one_b,
+        in_pixel => obs_one_det,
+        score_tick => obs_one_tick);
 
     obstacle_two : obstacle
     port map(
-        clk          => vert_sync,
-        reset        => not pb1,
-        enable       => movement_enable,
-        lfsr_seed    => std_logic_vector(y_pixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
-        start_x_pos  => TO_SIGNED(960, 11),
-        pixel_row    => y_pixel,
+        clk => vert_sync,
+        reset => not pb1,
+        enable => movement_enable,
+        lfsr_seed => std_logic_vector(y_pixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
+        start_x_pos => TO_SIGNED(960, 11),
+        pixel_row => y_pixel,
         pixel_column => x_pixel,
-        red          => obs_two_r,
-        green        => obs_two_g,
-        blue         => obs_two_b,
-        in_pixel     => obs_two_det,
-        score_tick   => obs_two_tick);
+        red => obs_two_r,
+        green => obs_two_g,
+        blue => obs_two_b,
+        in_pixel => obs_two_det,
+        score_tick => obs_two_tick);
 
     score_counter_ones : score_counter
     port map(
-        clk            => clk,
-        reset          => not pb1,
-        tick           => (obs_one_tick or obs_two_tick),
+        clk => clk,
+        reset => not pb1,
+        tick => (obs_one_tick or obs_two_tick),
         set_next_digit => score_tens_tick,
-        score_out      => score_ones);
+        score_out => score_ones);
 
     score_counter_tens : score_counter
     port map(
-        clk            => clk,
-        reset          => not pb1,
-        tick           => score_tens_tick,
+        clk => clk,
+        reset => not pb1,
+        tick => score_tens_tick,
         set_next_digit => score_hundreds_tick,
-        score_out      => score_tens);
+        score_out => score_tens);
 
     seven_seg_ones : bcd_to_seven_seg
     port map(
-        bcd_digit     => score_ones,
+        bcd_digit => score_ones,
         seven_seg_out => HEX0);
 
     seven_seg_tens : bcd_to_seven_seg
     port map(
-        bcd_digit     => score_tens,
+        bcd_digit => score_tens,
         seven_seg_out => HEX1);
 
     -------------COLLISIONS--------------

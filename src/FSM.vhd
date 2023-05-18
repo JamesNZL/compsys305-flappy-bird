@@ -4,15 +4,14 @@ use ieee.numeric_std.all;
 
 entity FSM is
     port (
-        clk                                : in std_logic;
+        clk : in std_logic;
         menu_navigator_1, menu_navigator_2 : in std_logic;
-        mouse_right, mouse_left            : in std_logic;
-        hit_obstacle, hit_floor            : in std_logic;
+        mouse_right, mouse_left : in std_logic;
+        hit_obstacle, hit_floor : in std_logic;
 
-        reset                        : in  std_logic;
+        reset : in std_logic;
         flying, hovering, invincible : out std_logic; --BIRD STATES
-        obstacle_movement            : out std_logic --Set obstacle movement at first jump
-
+        obstacle_movement : out std_logic --Set obstacle movement at first jump
     );
 end entity FSM;
 
@@ -20,10 +19,10 @@ architecture state_driver of FSM is
     type game_state is (DrawMenu, TrainingModeInit, HardModeInit, Gaming, Paused, Dead);
     type mode_memory is (TrainingMode, HardMode);
     signal state, next_state : game_state;
-    signal difficulty        : mode_memory;
-    signal bird_collides     : std_logic;
-    signal menu_enable       : std_logic;
-    signal lives             : signed(1 downto 0) := TO_SIGNED(3, 2);
+    signal difficulty : mode_memory;
+    signal bird_collides : std_logic;
+    signal menu_enable : std_logic;
+    signal lives : signed(1 downto 0) := TO_SIGNED(3, 2);
 begin
 
     sync_proc : process (clk)
@@ -39,8 +38,8 @@ begin
 
     decide_output : process (state, menu_navigator_1, menu_navigator_2, mouse_right, mouse_left)
     begin
-        flying            <= '0';
-        menu_enable       <= '0';
+        flying <= '0';
+        menu_enable <= '0';
         obstacle_movement <= '0';
 
         case state is
@@ -55,7 +54,7 @@ begin
                 if (difficulty = TrainingMode) then
                     if (hit_obstacle = '1') then
                         if (lives /= 0) then
-                            lives      <= lives - 1;
+                            lives <= lives - 1;
                             invincible <= '1'; --TODO: For 2 seconds
                         else
                             bird_collides <= '1';
@@ -69,13 +68,13 @@ begin
                     end if;
                 end if;
             when Paused =>
-                flying            <= '0';
+                flying <= '0';
                 obstacle_movement <= '0';
             when Dead =>
-                flying            <= '0';
+                flying <= '0';
                 obstacle_movement <= '0';
             when others =>
-                flying            <= '0';
+                flying <= '0';
                 obstacle_movement <= '0';
         end case;
     end process;

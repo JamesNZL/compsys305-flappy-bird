@@ -4,11 +4,11 @@ use ieee.numeric_std.all;
 
 entity obstacle is
     port (
-        enable, pb1, clk, vert_sync : in std_logic; -- TODO: we probably don't need clk in these entities
-        lfsrSeed : in std_logic_vector(8 downto 1);
-        start_xPos : in signed(10 downto 0);
+        clk, reset, enable : in std_logic;
+        lfsr_seed : in std_logic_vector(8 downto 1);
+        start_x_pos : in signed(10 downto 0);
         pixel_row, pixel_column : in signed(9 downto 0);
-        red, green, blue, inPixel, scoreTick : out std_logic);
+        red, green, blue, in_pixel, score_tick : out std_logic);
 end obstacle;
 
 architecture behavior of obstacle is
@@ -17,72 +17,71 @@ architecture behavior of obstacle is
         port (
             clk, reset, enable : in std_logic;
             seed : std_logic_vector(8 downto 1);
-            lfsrOutput : out std_logic_vector (7 downto 0));
+            lfsr_out : out std_logic_vector (7 downto 0));
     end component;
 
-    signal obstacle_on : std_logic;
-    signal gapSize : signed(9 downto 0);
-    signal pipeWidth : signed(9 downto 0);
-    signal lfsrClock : std_logic := '0';
-    signal lfsrOutput : std_logic_vector(7 downto 0);
-    signal gapCentre : signed(9 downto 0);
-    signal xPos : signed(10 downto 0) := start_xPos;
-    signal xVelocity : signed(9 downto 0) := TO_SIGNED(3, 10); -- TODO: increase over course of game
-    signal reset : std_logic;
-    signal drawObstacle : std_logic;
+    signal lfsr_clk : std_logic := '0';
+    signal lfsr_out : std_logic_vector(7 downto 0);
+
+    signal draw_obs : std_logic;
+
+    signal pipe_width : signed(9 downto 0);
+    signal gap_size : signed(9 downto 0);
+    signal gap_centre : signed(9 downto 0);
+
+    signal x_pos : signed(10 downto 0) := start_x_pos;
+    signal x_velocity : signed(9 downto 0) := TO_SIGNED(3, 10); -- TODO: increase over course of game
 
 begin
 
     shifty : lfsr
     port map(
-        clk => lfsrClock,
-        reset => pb1,
+        clk => lfsr_clk,
+        reset => reset,
         enable => enable,
-        seed => lfsrSeed,
-        lfsrOutput => lfsrOutput);
+        seed => lfsr_seed,
+        lfsr_out => lfsr_out);
 
-    gapSize <= TO_SIGNED(35, 10);
-    pipeWidth <= TO_SIGNED(25, 10);
+    gap_size <= TO_SIGNED(35, 10);
+    pipe_width <= TO_SIGNED(25, 10);
 
     -- Use a 7-bit LFSR with 255 loop size to generate a signed offset about the middle of the screen
-    -- This ensures all gapCentres will be valid, with a reasonable (112px) buffer from the top/bottom
-    gapCentre <= signed(lfsrOutput) + TO_SIGNED(240, 10);
+    -- This ensures all gap_centres will be valid, with a reasonable (112px) buffer from the top/bottom
+    gap_centre <= signed(lfsr_out) + TO_SIGNED(240, 10);
 
-    drawObstacle <= '0' when (reset = '1') else
-                    '1' when (('0' & xPos <= '0' & pixel_column + pipeWidth) and ('0' & pixel_column <= '0' & xPos + pipeWidth) and (('0' & gapCentre >= pixel_row + gapSize) or ('0' & pixel_row >= gapCentre + gapSize))) else
-                    '1' when ((xPos <= pixel_column + pipeWidth) and (pixel_column <= xPos + pipeWidth) and ((gapCentre >= pixel_row + gapSize) or (pixel_row >= gapCentre + gapSize))) else
-                    '0';
+    draw_obs <= '0' when (reset = '1') else
+                '1' when (('0' & x_pos <= '0' & pixel_column + pipe_width) and ('0' & pixel_column <= '0' & x_pos + pipe_width) and (('0' & gap_centre >= pixel_row + gap_size) or ('0' & pixel_row >= gap_centre + gap_size))) else
+                '1' when ((x_pos <= pixel_column + pipe_width) and (pixel_column <= x_pos + pipe_width) and ((gap_centre >= pixel_row + gap_size) or (pixel_row >= gap_centre + gap_size))) else
+                '0';
 
-    scoreTick <= '1' when ((xPos >= 300) and (xPos <= 340)) else '0';
+    score_tick <= '1' when ((x_pos >= 300) and (x_pos <= 340)) else
+                  '0';
 
-    inPixel <= drawObstacle;
+    in_pixel <= draw_obs;
 
     red <= '0';
-    green <= drawObstacle;
+    green <= draw_obs;
     blue <= '0';
 
-    moveObstacle : process (vert_sync)
+    move_obstacle : process (clk)
     begin
-        if (rising_edge(vert_sync)) then
+        if (rising_edge(clk)) then
             if (enable = '1') then
 
-                if ((reset = '0') and (xPos > (-pipeWidth))) then -- TODO: does this need a '0' concatenated in front?
-                    xPos <= xPos - xVelocity;
-                    lfsrClock <= '0';
+                if ((reset = '0') and (x_pos > (-pipe_width))) then
+                    x_pos <= x_pos - x_velocity;
+                    lfsr_clk <= '0';
                 elsif (reset = '1') then
-                    xPos <= start_xPos + pipeWidth;
-                    lfsrClock <= '0';
+                    x_pos <= start_x_pos + pipe_width;
+                    lfsr_clk <= '0';
                 else
                     -- Wrap around
-                    xPos <= TO_SIGNED(639, 11) + pipeWidth;
-                    lfsrClock <= '1';
+                    x_pos <= TO_SIGNED(639, 11) + pipe_width;
+                    lfsr_clk <= '1';
                 end if;
 
             end if;
         end if;
-    end process moveObstacle;
-
-    reset <= '1' when (pb1 = '0') else
-             '0';
+    end process move_obstacle;
 
 end behavior;

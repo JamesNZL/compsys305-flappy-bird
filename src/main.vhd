@@ -24,7 +24,7 @@ library work;
 
 entity main is
     port (
-        clk : in std_logic;
+        ref_clk : in std_logic;
         pb1 : in std_logic;
         pb2 : in std_logic;
         red_out : out std_logic;
@@ -36,10 +36,19 @@ entity main is
         PS2_DAT : inout std_logic;
         HEX1 : out std_logic_vector(6 downto 0);
         HEX0 : out std_logic_vector(6 downto 0)
-        );
+    );
 end main;
 
 architecture flappy_bird of main is
+
+    component pll
+        port (
+            refclk : in std_logic;
+            rst : in std_logic;
+            outclk_0 : out std_logic;
+            locked : out std_logic
+        );
+    end component;
 
     component vga_sync
         port (
@@ -57,236 +66,230 @@ architecture flappy_bird of main is
         );
     end component;
 
-    component obstacle is
-        port (
-            enable, pb1, clk, vert_sync : in std_logic;
-            lfsrSeed : in std_logic_vector(8 downto 1);
-            start_xPos : in signed(10 downto 0);
-            pixel_row, pixel_column : in signed(9 downto 0);
-            red, green, blue, inPixel, scoreTick : out std_logic);
-    end component;
-
-    component MOUSE
+    component mouse
         port (
             clock_25Mhz, reset : in std_logic;
             mouse_data : inout std_logic;
             mouse_clk : inout std_logic;
-            left_button, right_button : out std_logic;
+            mouse_left, mouse_right : out std_logic;
             mouse_cursor_row : out signed(9 downto 0);
             mouse_cursor_column : out signed(9 downto 0));
     end component;
 
-    component pll
-        port (
-            refclk : in std_logic;
-            rst : in std_logic;
-            outclk_0 : out std_logic;
-            locked : out std_logic
-        );
-    end component;
-
     component bird
         port (
-            enable, pb1, pb2, clk, vert_sync : in std_logic;
+            clk, reset, enable, flap : in std_logic;
             pixel_row, pixel_column : in signed(9 downto 0);
-            red, green, blue, inPixel, died : out std_logic);
+            red, green, blue, in_pixel, died : out std_logic);
     end component;
 
-    component scoreCounter is
-        port(Clk, Tick : in std_logic;
-	    Reset : in std_logic;
-        setNextDigit : out std_logic;
-	    Q_Out : out std_logic_vector(3 downto 0));
+    component obstacle is
+        port (
+            clk, reset, enable : in std_logic;
+            lfsr_seed : in std_logic_vector(8 downto 1);
+            start_x_pos : in signed(10 downto 0);
+            pixel_row, pixel_column : in signed(9 downto 0);
+            red, green, blue, in_pixel, score_tick : out std_logic);
     end component;
 
-    component BCD_to_SevenSeg is
-        port (BCD_digit : in std_logic_vector(3 downto 0);
-              SevenSeg_out : out std_logic_vector(6 downto 0));
+    component score_counter is
+        port (
+            clk, reset, tick : in std_logic;
+            set_next_digit : out std_logic;
+            score_out : out std_logic_vector(3 downto 0));
+    end component;
+
+    component bcd_to_seven_seg is
+        port (
+            bcd_digit : in std_logic_vector(3 downto 0);
+            seven_seg_out : out std_logic_vector(6 downto 0));
     end component;
 
     component char_rom is
-        PORT(character_address	:	IN STD_LOGIC_VECTOR (5 DOWNTO 0);
-		    font_row, font_col	:	IN STD_LOGIC_VECTOR (2 DOWNTO 0);
-		    clock				: 	IN STD_LOGIC ;
-		    rom_mux_output		:	OUT STD_LOGIC);
+        port (
+            clk : in std_logic;
+            character_address : in std_logic_vector (5 downto 0);
+            font_row, font_col : in std_logic_vector (2 downto 0);
+            rom_mux_output : out std_logic);
     end component;
 
-    signal vgaClk : std_logic;
-    signal paintR, paintG, paintB : std_logic;
-    signal birdR, birdG, birdB : std_logic;
-    signal obsOneR, obsOneG, obsOneB : std_logic;
-    signal obsTwoR, obsTwoG, obsTwoB : std_logic;
-    signal reset : std_logic;
-    signal vsync : std_logic;
-    signal xPixel, yPixel : signed(9 downto 0);
-    signal leftButtonEvent, rightButtonEvent : std_logic;
-    signal mouseRow, mouseColumn : signed(9 downto 0);
-    signal movementEnable : std_logic := '1';
-    signal ObOneDet, ObTwoDet, ObDet : std_logic;
-    signal ObOneTick, ObTwoTick, tensTick, hundredsTick : std_logic;
-    signal scoreOnes, scoreTens : std_logic_vector(3 downto 0);
-    signal BiDet : std_logic;
-    signal BiDied : std_logic := '0';
+    signal clk : std_logic;
 
+    signal vert_sync : std_logic;
+    signal x_pixel, y_pixel : signed(9 downto 0);
+    signal paint_r, paint_g, paint_b : std_logic;
+
+    signal mouse_left_event, mouse_right_event : std_logic;
+    signal mouse_row, mouse_column : signed(9 downto 0);
+
+    signal movement_enable : std_logic := '1';
+
+    signal bird_r, bird_g, bird_b : std_logic;
+    signal bird_det : std_logic;
+    signal bird_died : std_logic := '0';
+
+    signal obs_one_r, obs_one_g, obs_one_b : std_logic;
+    signal obs_two_r, obs_two_g, obs_two_b : std_logic;
+    signal obs_one_det, obs_two_det, obs_det : std_logic;
+    signal obs_one_tick, obs_two_tick : std_logic;
+
+    signal score_tens_tick, score_hundreds_tick : std_logic;
+    signal score_ones, score_tens : std_logic_vector(3 downto 0);
 
 begin
 
-    vert_sync_out <= vsync;
-    Reset <= '0';
+    vert_sync_out <= vert_sync;
+
+    clock_div : pll
+    port map(
+        refclk => ref_clk,
+        rst => '0',
+        outclk_0 => clk);
 
     vga : vga_sync
     port map(
-        clock_25Mhz => vgaClk,
-        red => paintR,
-        green => paintG,
-        blue => paintB,
+        clock_25Mhz => clk,
+        red => paint_r,
+        green => paint_g,
+        blue => paint_b,
         red_out => red_out,
         green_out => green_out,
         blue_out => blue_out,
         horiz_sync_out => horiz_sync_out,
-        vert_sync_out => vsync,
-        pixel_column => xPixel,
-        pixel_row => yPixel);
+        vert_sync_out => vert_sync,
+        pixel_column => x_pixel,
+        pixel_row => y_pixel);
 
-    mousey_mouse : MOUSE
+    mousey_mouse : mouse
     port map(
-        clock_25Mhz => vgaClk,
-        reset => RESET,
+        clock_25Mhz => clk,
+        reset => '0',
         mouse_data => PS2_DAT,
         mouse_clk => PS2_CLK,
-        left_button => leftButtonEvent,
-        right_button => rightButtonEvent,
-        mouse_cursor_row => mouseRow,
-        mouse_cursor_column => mouseColumn);
-
-    obstacle_one : obstacle
-    port map(
-        enable => movementEnable,
-        pb1 => pb1,
-        clk => vgaClk,
-        vert_sync => vsync,
-        lfsrSeed => std_logic_vector(xPixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
-        start_xPos => TO_SIGNED(640, 11),
-        pixel_row => yPixel,
-        pixel_column => xPixel,
-        red => obsOneR,
-        green => obsOneG,
-        blue => obsOneB,
-        inPixel => ObOneDet,
-        scoreTick => ObOneTick);
-
-    obstacle_two : obstacle
-    port map(
-        enable => movementEnable,
-        pb1 => pb1,
-        clk => vgaClk,
-        vert_sync => vsync,
-        lfsrSeed => std_logic_vector(yPixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
-        start_xPos => TO_SIGNED(960, 11),
-        pixel_row => yPixel,
-        pixel_column => xPixel,
-        red => obsTwoR,
-        green => obsTwoG,
-        blue => obsTwoB,
-        inPixel => ObTwoDet,
-        scoreTick => ObTwoTick);
-
-    scoringOnes : scoreCounter
-    port map(
-        Clk => vgaClk,
-        Tick => (ObOneTick or ObTwoTick),
-	    Reset => pb1,
-        setNextDigit => tensTick,
-	    Q_Out => scoreOnes);
-
-    scoringTens : scoreCounter
-    port map(
-        Clk => vgaClk,
-        Tick => tensTick,
-        Reset => pb1,
-        setNextDigit => hundredsTick,
-        Q_Out => scoreTens);
-
-    ssegOnes : BCD_to_SevenSeg
-    port map(
-        BCD_digit => scoreOnes,
-        SevenSeg_Out => HEX0);
-
-    ssegTens : BCD_to_SevenSeg
-    port map(
-        BCD_digit => scoreTens,
-        SevenSeg_Out => HEX1);
-
-    clock_div : pll
-    port map(
-        refclk => clk,
-        rst => Reset,
-        outclk_0 => vgaClk);
+        mouse_left => mouse_left_event,
+        mouse_right => mouse_right_event,
+        mouse_cursor_row => mouse_row,
+        mouse_cursor_column => mouse_column);
 
     elon : bird
     port map(
-        enable => movementEnable,
-        pb1 => pb1,
-        pb2 => leftButtonEvent,
-        clk => vgaClk,
-        vert_sync => vsync,
-        pixel_column => xPixel,
-        pixel_row => yPixel,
-        red => birdR,
-        green => birdG,
-        blue => birdB,
-        inPixel => BiDet,
-        died => BiDied);
+        clk => vert_sync,
+        reset => not pb1,
+        enable => movement_enable,
+        flap => mouse_left_event,
+        pixel_row => y_pixel,
+        pixel_column => x_pixel,
+        red => bird_r,
+        green => bird_g,
+        blue => bird_b,
+        in_pixel => bird_det,
+        died => bird_died);
+
+    obstacle_one : obstacle
+    port map(
+        clk => vert_sync,
+        reset => not pb1,
+        enable => movement_enable,
+        lfsr_seed => std_logic_vector(x_pixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
+        start_x_pos => TO_SIGNED(640, 11),
+        pixel_row => y_pixel,
+        pixel_column => x_pixel,
+        red => obs_one_r,
+        green => obs_one_g,
+        blue => obs_one_b,
+        in_pixel => obs_one_det,
+        score_tick => obs_one_tick);
+
+    obstacle_two : obstacle
+    port map(
+        clk => vert_sync,
+        reset => not pb1,
+        enable => movement_enable,
+        lfsr_seed => std_logic_vector(y_pixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
+        start_x_pos => TO_SIGNED(960, 11),
+        pixel_row => y_pixel,
+        pixel_column => x_pixel,
+        red => obs_two_r,
+        green => obs_two_g,
+        blue => obs_two_b,
+        in_pixel => obs_two_det,
+        score_tick => obs_two_tick);
+
+    score_counter_ones : score_counter
+    port map(
+        clk => clk,
+        reset => not pb1,
+        tick => (obs_one_tick or obs_two_tick),
+        set_next_digit => score_tens_tick,
+        score_out => score_ones);
+
+    score_counter_tens : score_counter
+    port map(
+        clk => clk,
+        reset => not pb1,
+        tick => score_tens_tick,
+        set_next_digit => score_hundreds_tick,
+        score_out => score_tens);
+
+    seven_seg_ones : bcd_to_seven_seg
+    port map(
+        bcd_digit => score_ones,
+        seven_seg_out => HEX0);
+
+    seven_seg_tens : bcd_to_seven_seg
+    port map(
+        bcd_digit => score_tens,
+        seven_seg_out => HEX1);
 
     -------------COLLISIONS--------------
 
     --TODO: Pseudo randomize maybe with linear shift register
 
-    ObDet <= (ObOneDet or ObTwoDet);
+    obs_det <= (obs_one_det or obs_two_det);
 
-    detectCollisions : process (vgaClk)
+    detect_collisions : process (clk)
     begin
-        if rising_edge(vgaClk) then
+        if rising_edge(clk) then
 
-            if (((movementEnable = '1') and (BiDet = '1' nand ObDet = '1') and (BiDied = '0')) or (pb1 = '0')) then
-                movementEnable <= '1';
+            if (((movement_enable = '1') and (bird_det = '1' nand obs_det = '1') and (bird_died = '0')) or (pb1 = '0')) then
+                movement_enable <= '1';
             else
-                movementEnable <= '0';
+                movement_enable <= '0';
             end if;
 
         end if;
-    end process detectCollisions;
+    end process detect_collisions;
 
     ----------------------------------
 
     -------------DRAWING--------------
 
-    paintScreen : process (vgaClk)
+    paint_screen : process (clk)
     begin
-        if (rising_edge(vgaClk)) then
+        if (rising_edge(clk)) then
 
-            if (BiDet = '1') then
-                paintR <= birdR;
-                paintG <= birdG;
-                paintB <= birdB;
-            elsif (ObDet = '1') then
-                paintR <= (obsOneR or obsTwoR); -- TODO: change to support 4 bit colour
-                paintG <= (obsOneG or obsTwoG);
-                paintB <= (obsOneB or obsTwoB);
+            if (bird_det = '1') then
+                paint_r <= bird_r;
+                paint_g <= bird_g;
+                paint_b <= bird_b;
+            elsif (obs_det = '1') then
+                paint_r <= (obs_one_r or obs_two_r); -- TODO: change to support 4 bit colour
+                paint_g <= (obs_one_g or obs_two_g);
+                paint_b <= (obs_one_b or obs_two_b);
             else
-                paintR <= '0';
-                paintG <= '1';
-                paintB <= '1';
+                paint_r <= '0';
+                paint_g <= '1';
+                paint_b <= '1';
 
             end if;
 
         end if;
-    end process paintScreen;
+    end process paint_screen;
 
     ----------------------------------
 
     -------------SCORING--------------
-                
+
     ----------------------------------
 
 end flappy_bird;

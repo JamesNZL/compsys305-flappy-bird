@@ -9,9 +9,9 @@ USE altera_mf.all;
 ENTITY char_rom IS
 	PORT
 	(
+		clk				: 	IN STD_LOGIC ;
 		character_address	:	IN STD_LOGIC_VECTOR (5 DOWNTO 0);
 		font_row, font_col	:	IN STD_LOGIC_VECTOR (2 DOWNTO 0);
-		clock				: 	IN STD_LOGIC ;
 		rom_mux_output		:	OUT STD_LOGIC
 	);
 END char_rom;
@@ -66,7 +66,7 @@ BEGIN
 		width_byteena_a => 1
 	)
 	PORT MAP (
-		clock0 => clock,
+		clock0 => clk,
 		address_a => rom_address,
 		q_a => rom_data
 	);

@@ -322,14 +322,14 @@ begin
 		  
 		  ---BOX PRINTED
 		  
-		   if ((xPixel >= 120 and xPixel < 400) and (yPixel >= 100 and yPixel < 300)) then
+		   if ((xPixel >= 180 and xPixel < 460) and (yPixel >= 140 and yPixel < 340)) then
 		  
 
           
-            if ((xPixel >= 125  and xPixel < 395) and (yPixel >= 105 and yPixel < 295)) then
+            if ((xPixel >= 185  and xPixel < 455) and (yPixel >= 145 and yPixel < 335)) then
 				
 				---FLAPPYBIRD PRINTED
-				    if ((xPixel >= 180  and xPixel < 196) and (yPixel >= 120 and yPixel < 128)) then 
+				    if ((xPixel >= 200 and xPixel < 216) and (yPixel >= 150 and yPixel < 158)) then 
 					 
 
 						 charAddress <= "000110";
@@ -363,7 +363,7 @@ begin
 					end if;
 
 					 
-					 elsif ((xPixel >= 196 and xPixel < 212) and (yPixel >= 120 and yPixel < 128)) then
+					 elsif ((xPixel >= 216 and xPixel < 232) and (yPixel >= 150 and yPixel < 158)) then
 						 charAddress <= "001100";
 
 						 fontcol <= counter3;
@@ -397,7 +397,7 @@ begin
 						end if;
 
 						 
-					elsif ((xPixel >= 212 and xPixel < 228) and (yPixel >= 120 and yPixel < 128)) then
+					elsif ((xPixel >= 232 and xPixel < 248) and (yPixel >= 150 and yPixel < 158)) then
 						 
 						 charAddress <= "000001";
 
@@ -434,7 +434,7 @@ begin
 						 
 					
 						
-				elsif ((xPixel >= 228 and xPixel < 244) and (yPixel >= 120 and yPixel < 128)) then
+				elsif ((xPixel >= 248 and xPixel < 264) and (yPixel >= 150 and yPixel < 158)) then
 					  charAddress <= "010000";
 					  fontcol <= counter7;
 					  fontrow <= counter8;
@@ -464,7 +464,7 @@ begin
 				end if;
 
 					  
-				elsif ((xPixel >= 244 and xPixel < 260) and (yPixel >= 120 and yPixel < 128)) then
+				elsif ((xPixel >= 264 and xPixel < 280) and (yPixel >= 150 and yPixel < 158)) then
 						  charAddress <= "010000";
 						  fontcol <= counter9;
 						  fontrow <= counter10;
@@ -494,7 +494,7 @@ begin
 				end if;
 
 						  
-			 elsif ((xPixel >= 260 and xPixel < 276) and (yPixel >= 120 and yPixel < 128)) then
+			 elsif ((xPixel >= 280 and xPixel < 296) and (yPixel >= 150 and yPixel < 158)) then
 				  charAddress <= "011001";
 				  fontcol <= counter11;
 				  fontrow <= counter12;
@@ -524,7 +524,7 @@ begin
 				end if;
 
 				  
-			elsif ((xPixel >= 300 and xPixel < 316) and (yPixel >= 120 and yPixel < 128)) then
+			elsif ((xPixel >= 320 and xPixel < 336) and (yPixel >= 150 and yPixel < 158)) then
 				  charAddress <= "000010";
 				  fontcol <= counter13;
 				  fontrow <= counter14;
@@ -554,7 +554,7 @@ begin
 				end if;
 
 				  
-	   elsif ((xPixel >= 316 and xPixel < 332) and (yPixel >= 120 and yPixel < 128)) then
+	   elsif ((xPixel >= 336 and xPixel < 352) and (yPixel >= 150 and yPixel < 158)) then
 						  charAddress <= "001001";
 						  fontcol <= counter15;
 						  fontrow <= counter16;
@@ -583,7 +583,7 @@ begin
 					 paintB <= '0';
 				end if;
 
-					elsif ((xPixel >= 332 and xPixel < 348) and (yPixel >= 120 and yPixel < 128)) then
+					elsif ((xPixel >= 352 and xPixel < 368) and (yPixel >= 150 and yPixel < 158)) then
 						  charAddress <= "010010";
 						  fontcol <= counter17;
 						  fontrow <= counter18;
@@ -613,7 +613,7 @@ begin
 				end if;
 
 						  
-					elsif ((xPixel >= 348 and xPixel < 364) and (yPixel >= 120 and yPixel < 128)) then
+					elsif ((xPixel >= 368 and xPixel < 384) and (yPixel >= 150 and yPixel < 158)) then
 					  charAddress <= "000100";
 					  fontcol <= counter19;
 					  fontrow <= counter20;
@@ -646,7 +646,7 @@ begin
 					  
 			  ----TRAIN PRINTED--------
 					  
-				elsif ((xPixel >= 130 and xPixel < 146) and (yPixel >= 180 and yPixel < 196)) then
+				elsif ((xPixel >= 190 and xPixel < 206) and (yPixel >= 200 and yPixel < 208)) then
 					  charAddress <= "010100";
 					  fontcol <= counter37;
 					  fontrow <= counter38;
@@ -676,7 +676,7 @@ begin
 				end if;
 
 					  
-				elsif ((xPixel >= 146 and xPixel < 162) and (yPixel >= 180 and yPixel < 196)) then
+				elsif ((xPixel >= 206 and xPixel < 222) and (yPixel >= 200 and yPixel < 208)) then
 					 charAddress <= "010010";
 					 fontcol <= counter21;
 					 fontrow <= counter22;
@@ -704,7 +704,7 @@ begin
 				 paintB <= '0';
 			end if;
 
-			elsif ((xPixel >= 162 and xPixel < 178) and (yPixel >= 180 and yPixel < 196)) then
+			elsif ((xPixel >= 222 and xPixel < 238) and (yPixel >= 200 and yPixel < 208)) then
 				 charAddress <= "000001";
 				 fontcol <= counter23;
 				 fontrow <= counter24;
@@ -733,7 +733,7 @@ begin
 			end if;
 
 				 
-			elsif ((xPixel >= 178 and xPixel < 194) and (yPixel >= 180 and yPixel < 196)) then
+			elsif ((xPixel >= 238 and xPixel < 254) and (yPixel >= 200 and yPixel < 208)) then
 				 charAddress <= "001001";
 				 fontcol <= counter25;
 				 fontrow <= counter26;
@@ -765,7 +765,7 @@ begin
 
 
 					
-			elsif ((xPixel >= 194 and xPixel < 210) and (yPixel >= 180 and yPixel < 196)) then
+			elsif ((xPixel >= 254 and xPixel < 270) and (yPixel >= 200 and yPixel < 208)) then
 				 charAddress <= "001110";
 				 fontcol <= counter27;
 				 fontrow <= counter28;
@@ -784,7 +784,7 @@ begin
 
 				 flag := (flag + 1) mod 2;
 
-				 if (charOUTPUT = '1') then
+		   if (charOUTPUT = '1') then
 				 paintR <= '1';
 				 paintG <= '1';
 				 paintB <= '1';
@@ -800,7 +800,7 @@ begin
 		
 		
 		
-		elsif ((xPixel >= 130 and xPixel < 146) and (yPixel >= 240 and yPixel < 248)) then
+		elsif ((xPixel >= 190 and xPixel < 206) and (yPixel >= 250 and yPixel < 258)) then
 			 charAddress <= "000111";
 			 fontcol <= counter29;
 			 fontrow <= counter30;
@@ -829,7 +829,7 @@ begin
 			end if;
 
 
-			elsif ((xPixel >= 146 and xPixel < 162) and (yPixel >= 240 and yPixel < 248)) then
+			elsif ((xPixel >= 206 and xPixel < 222) and (yPixel >= 250 and yPixel < 258)) then
 				 charAddress <= "000001";
 				 fontcol <= counter31;
 				 fontrow <= counter32;
@@ -859,7 +859,7 @@ begin
 			end if;
 
 								
-			elsif ((xPixel >= 162 and xPixel < 178) and (yPixel >= 240 and yPixel < 248)) then
+			elsif ((xPixel >= 222 and xPixel < 238) and (yPixel >= 250 and yPixel < 258)) then
 				 charAddress <= "001101";
 				 fontcol <= counter33;
 				 fontrow <= counter34;
@@ -889,7 +889,7 @@ begin
 
 								  
 							 
-			elsif ((xPixel >= 178 and xPixel < 194) and (yPixel >= 240 and yPixel < 248)) then
+			elsif ((xPixel >= 238 and xPixel < 254) and (yPixel >= 250 and yPixel < 258)) then
 				 charAddress <= "000101";
 				 fontcol <= counter35;
 				 fontrow <= counter36;

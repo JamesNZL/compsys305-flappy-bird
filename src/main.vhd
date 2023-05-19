@@ -134,44 +134,12 @@ architecture flappy_bird of main is
     signal charAddress                                  : std_logic_vector(5 downto 0);
     signal fontrow, fontcol                             : std_logic_vector (2 downto 0);
     signal charOUTPUT                                   : std_logic;
+	 signal homescreenEnable                             : std_logic;
     signal counter                                      : std_logic_vector(2 downto 0) := "000";
-    signal counter2                                     : std_logic_vector(2 downto 0) := "000";
-    signal counter3                                     : std_logic_vector(2 downto 0) := "000";
-    signal counter4                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter5                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter6                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter7                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter8                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter9                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter10                                    : std_logic_vector(2 downto 0) := "000";
-	 signal counter11                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter12                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter13                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter14                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter15                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter16                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter17                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter18                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter19                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter20                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter21                                     : std_logic_vector(2 downto 0) := "000";
-    signal counter22                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter23                                    : std_logic_vector(2 downto 0) := "000";
-	 signal counter24                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter25                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter26                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter27                                    : std_logic_vector(2 downto 0) := "000";
-	 signal counter28                                    : std_logic_vector(2 downto 0) := "000";
-	 signal counter29                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter30                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter31                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter32                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter33                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter34                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter35                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter36                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter37                                     : std_logic_vector(2 downto 0) := "000";
-	 signal counter38                                     : std_logic_vector(2 downto 0) := "000";
+    signal counter2, counter3, counter4, counter5, counter6,counter7, counter8, counter9, counter10, counter11, counter12, counter13, counter14 : std_logic_vector(2 downto 0) := "000";
+    signal counter15, counter16, counter17, counter18, counter19, counter20, counter21, counter22, counter23, counter24, counter25, counter26 : std_logic_vector(2 downto 0) := "000";
+    signal counter27, counter28, counter29, counter30, counter31, counter32, counter33, counter34, counter35, counter36, counter37, counter38 : std_logic_vector(2 downto 0) := "000";
+
 
 begin
 
@@ -321,6 +289,7 @@ begin
 		  
 		  
 		  ---BOX PRINTED
+		  if (homescreenEnable = '1') then 
 		  
 		   if ((xPixel >= 180 and xPixel < 460) and (yPixel >= 140 and yPixel < 340)) then
 		  
@@ -932,11 +901,13 @@ begin
                    paintB <= '1';
 						 
 						end if;
+			end if;
+			else 
 				
 
 					
 
-				elsif (BiDet = '1') then
+				if (BiDet = '1') then
                 paintR <= birdR;
                 paintG <= birdG;
                 paintB <= birdB;
@@ -951,8 +922,10 @@ begin
                 paintB <= '1';
 
             end if;
+				
+			end if;
+			end if;
 
-        end if;
     end process paintScreen;
 	 
 	 --if between 100 and 540 pixels horizontally

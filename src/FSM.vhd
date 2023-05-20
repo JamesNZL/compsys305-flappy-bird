@@ -10,7 +10,7 @@ entity fsm is
 
         -- bird states
         hit_obstacle, hit_floor : in std_logic;
-        bird_hovering, bird_invincible : out std_logic;
+        bird_hovering : out std_logic;
 
         lives_out : out signed(1 downto 0);
         menu_enable : out std_logic;
@@ -24,10 +24,13 @@ architecture state_driver of fsm is
     signal state, next_state : game_state;
     signal difficulty : mode_memory;
     signal bird_died : std_logic;
+    signal bird_invincible : std_logic;
     signal lives : signed(1 downto 0) := TO_SIGNED(3, 2);
 begin
 
     lives_out <= lives;
+    bird_hovering <= '1' when ((state = TrainingModeInit) or (state = HardModeInit)) else
+                     '0';
 
     sync_proc : process (clk)
     begin
@@ -43,58 +46,65 @@ begin
     decode_output : process (state, menu_navigator_1, menu_navigator_2, mouse_right, mouse_left, lives, hit_obstacle, hit_floor)
     begin
 
-        movement_enable <= '0';
-        menu_enable <= '0';
-
         case state is
             when DrawMenu =>
 
+                bird_died <= '0';
                 menu_enable <= '1';
+                movement_enable <= '0';
 
             when TrainingModeInit =>
 
-                bird_hovering <= '1';
+                movement_enable <= '0';
+                menu_enable <= '0';
 
             when HardModeInit =>
 
-                bird_hovering <= '1';
+                movement_enable <= '0';
+                menu_enable <= '0';
 
             when Gaming =>
 
+                menu_enable <= '0';
                 movement_enable <= '1';
-                -- if (difficulty = TrainingMode) then
-                --     if (hit_obstacle = '1') then
-                --         if (lives /= 0) then
-                --             lives <= lives - 1;
-                --             bird_invincible <= '1'; --TODO: For 2 seconds
-                --         else
-                --             bird_died <= '1';
-                --         end if;
-                --     elsif (hit_floor = '1') then
-                --         bird_died <= '1';
-                --     end if;
-                -- else
-                --     if ((hit_obstacle = '1') or (hit_floor = '1')) then
-                --         bird_died <= '1';
-                --     end if;
-                -- end if;
+                if (difficulty = TrainingMode) then
+                    if (hit_obstacle = '1') then
+                        if (lives = 0) then
+                            bird_died <= '1';
+                        elsif (bird_invincible = '0') then
+                            lives <= lives - 1;
+                            bird_invincible <= '1'; --TODO: For 2 seconds
+                        end if;
+                    elsif (hit_floor = '1') then
+                        bird_died <= '1';
+                    else
+                        bird_invincible <= '0';
+                    end if;
+                else
+                    if ((hit_obstacle = '1') or (hit_floor = '1')) then
+                        bird_died <= '1';
+                    end if;
+                end if;
 
             when Paused =>
 
                 movement_enable <= '0';
+                menu_enable <= '0';
 
             when Dead =>
 
                 movement_enable <= '0';
+                menu_enable <= '0';
 
             when others =>
 
                 movement_enable <= '0';
+                menu_enable <= '0';
 
         end case;
     end process;
 
-    decode_next_state : process (state, menu_navigator_1, menu_navigator_2, mouse_right, mouse_left)
+    decode_next_state : process (state, menu_navigator_1, menu_navigator_2, mouse_right, mouse_left, bird_died)
     begin
         case state is
             when DrawMenu =>
@@ -139,7 +149,7 @@ begin
 
                 next_state <= Paused;
 
-                if (mouse_right = '1') then
+                if (mouse_left = '1') then
                     next_state <= Gaming;
                 end if;
 

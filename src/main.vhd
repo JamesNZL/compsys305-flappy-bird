@@ -73,7 +73,7 @@ architecture flappy_bird of main is
 
             -- bird states
             hit_obstacle, hit_floor : in std_logic;
-            bird_hovering, bird_invincible : out std_logic;
+            bird_hovering : out std_logic;
 
             lives_out : out signed(1 downto 0);
             menu_enable : out std_logic;
@@ -93,7 +93,7 @@ architecture flappy_bird of main is
 
     component bird
         port (
-            clk, reset, enable, flap : in std_logic;
+            clk, reset, enable, flap, hovering : in std_logic;
             pixel_row, pixel_column : in signed(9 downto 0);
             red, green, blue, in_pixel, died : out std_logic);
     end component;
@@ -148,6 +148,7 @@ architecture flappy_bird of main is
     signal hit_obstacle, hit_floor : std_logic;
 
     signal bird_r, bird_g, bird_b : std_logic;
+    signal bird_hovering : std_logic;
     signal bird_det : std_logic;
     signal bird_died : std_logic := '0';
 
@@ -196,8 +197,7 @@ begin
         mouse_left => mouse_left_event,
         hit_obstacle => hit_obstacle,
         hit_floor => hit_floor,
-        -- bird_hovering => null,
-        -- bird_invincible => null,
+        bird_hovering => bird_hovering,
         -- lives_out => null,
         -- menu_enable => null,
         movement_enable => movement_enable);
@@ -219,6 +219,7 @@ begin
         reset => not key0,
         enable => movement_enable,
         flap => mouse_left_event,
+        hovering => bird_hovering,
         pixel_row => y_pixel,
         pixel_column => x_pixel,
         red => bird_r,
@@ -302,7 +303,7 @@ begin
     begin
         if rising_edge(clk) then
 
-            if (bird_det = '1' nand obs_det = '1') then
+            if (bird_det = '1' and obs_det = '1') then
                 hit_obstacle <= '1';
             else
                 hit_obstacle <= '0';

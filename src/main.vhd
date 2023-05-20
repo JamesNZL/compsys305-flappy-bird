@@ -116,6 +116,7 @@ architecture flappy_bird of main is
 
     signal vgaClk                                       : std_logic;
     signal paintR, paintG, paintB                       : std_logic;
+	 signal heartR, heartG, heartB                       : std_logic;
     signal scoreR, scoreG, scoreB                       : std_logic;
     signal birdR, birdG, birdB                          : std_logic;
     signal obsOneR, obsOneG, obsOneB                    : std_logic;
@@ -129,18 +130,15 @@ architecture flappy_bird of main is
     signal ObOneDet, ObTwoDet, ObDet                    : std_logic;
     signal ObOneTick, ObTwoTick, tensTick, hundredsTick : std_logic;
     signal scoreOnes, scoreTens                         : std_logic_vector(3 downto 0);
-    signal BiDet                                        : std_logic;
+    signal BiDet, inHeart                               : std_logic;
     signal BiDied                                       : std_logic := '0';
     signal charAddress                                  : std_logic_vector(5 downto 0);
     signal fontrow, fontcol                             : std_logic_vector (2 downto 0);
     signal charOUTPUT                                   : std_logic;
-	 signal homescreenEnable                             : std_logic;
+	 signal homescreenEnable                             : std_logic := '1';
+	 signal trainingMode                                 : std_logic := '0';
     signal counter                                      : std_logic_vector(2 downto 0) := "000";
-    signal counter2, counter3, counter4, counter5, counter6,counter7, counter8, counter9, counter10, counter11, counter12, counter13, counter14 : std_logic_vector(2 downto 0) := "000";
-    signal counter15, counter16, counter17, counter18, counter19, counter20, counter21, counter22, counter23, counter24, counter25, counter26 : std_logic_vector(2 downto 0) := "000";
-    signal counter27, counter28, counter29, counter30, counter31, counter32, counter33, counter34, counter35, counter36, counter37, counter38 : std_logic_vector(2 downto 0) := "000";
-
-
+    
 begin
 
     vert_sync_out <= vsync;
@@ -282,8 +280,7 @@ begin
     -------------DRAWING--------------
 
     paintScreen : process (vgaClk)
-        variable int_value : integer;
-        variable flag      : integer range 0 to 1 := 0;
+
     begin
         if (rising_edge(vgaClk)) then
 		  
@@ -298,29 +295,14 @@ begin
             if ((xPixel >= 185  and xPixel < 455) and (yPixel >= 145 and yPixel < 335)) then
 				
 				---FLAPPYBIRD PRINTED
-				    if ((xPixel >= 200 and xPixel < 216) and (yPixel >= 150 and yPixel < 158)) then 
+				    if ((xPixel >= 200 and xPixel < 216) and (yPixel >= 150 and yPixel < 166)) then 
 					 
 
 						 charAddress <= "000110";
 						
+            fontcol <= std_logic_vector(xPixel - 200)(3 downto 1);
+				fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
 
-						 fontcol <= counter;
-						 fontrow <= counter2;
-
-						 if (flag = 1) then
-							  if (counter = "111") then
-									counter  <= "000";
-									counter2 <= std_logic_vector(unsigned(counter2) + 1);
-									if (counter2 = "111") then
-										 counter2 <= "000";
-									end if;
-							  else
-									counter <= std_logic_vector(unsigned(counter) + 1);
-
-							  end if;
-						 end if;
-						 
-						 flag := (flag + 1) mod 2;
 					if (charOUTPUT = '1') then
 						 paintR <= '1';
 						 paintG <= '1';
@@ -332,28 +314,12 @@ begin
 					end if;
 
 					 
-					 elsif ((xPixel >= 216 and xPixel < 232) and (yPixel >= 150 and yPixel < 158)) then
+					 elsif ((xPixel >= 216 and xPixel < 232) and (yPixel >= 150 and yPixel < 166)) then
 						 charAddress <= "001100";
 
-						 fontcol <= counter3;
-						 fontrow <= counter4;
-						 
-						 
-						 if (flag = 1) then
+						 fontcol <= std_logic_vector(xPixel - 216)(3 downto 1);
+				       fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
 
-							 if (counter3 = "111") then
-								  counter3 <= "000";
-								  counter4 <= std_logic_vector(unsigned(counter4) + 1);
-								  if (counter4 = "111") then
-										counter4 <= "000";
-								  end if;
-							 else
-								  counter3 <= std_logic_vector(unsigned(counter3) + 1);
-							 end if;
-							 
-						 end if;
-						 
-						 flag := (flag + 1) mod 2;
 
 						if (charOUTPUT = '1') then
 							 paintR <= '1';
@@ -366,29 +332,14 @@ begin
 						end if;
 
 						 
-					elsif ((xPixel >= 232 and xPixel < 248) and (yPixel >= 150 and yPixel < 158)) then
+					elsif ((xPixel >= 232 and xPixel < 248) and (yPixel >= 150 and yPixel < 166)) then
 						 
 						 charAddress <= "000001";
 
-						 fontcol <= counter5;
-						 fontrow <= counter6;
+						fontcol <= std_logic_vector(xPixel - 232)(3 downto 1);
+				      fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
 						 
-						 
-						 if (flag = 1) then
 
-							 if (counter5 = "111") then
-								  counter5 <= "000";
-								  counter6 <= std_logic_vector(unsigned(counter6) + 1);
-								  if (counter6 = "111") then
-										counter6 <= "000";
-								  end if;
-							 else
-								  counter5 <= std_logic_vector(unsigned(counter5) + 1);
-							 end if;
-							 
-						 end if;
-						 
-						 flag := (flag + 1) mod 2;
 						 if (charOUTPUT = '1') then
 					 paintR <= '1';
 					 paintG <= '1';
@@ -403,24 +354,11 @@ begin
 						 
 					
 						
-				elsif ((xPixel >= 248 and xPixel < 264) and (yPixel >= 150 and yPixel < 158)) then
+				elsif ((xPixel >= 248 and xPixel < 264) and (yPixel >= 150 and yPixel < 166)) then
 					  charAddress <= "010000";
-					  fontcol <= counter7;
-					  fontrow <= counter8;
-
-					  if (flag = 1) then
-							if (counter7 = "111") then
-								 counter7 <= "000";
-								 counter8 <= std_logic_vector(unsigned(counter8) + 1);
-								 if (counter8 = "111") then
-									  counter8 <= "000";
-								 end if;
-							else
-								 counter7 <= std_logic_vector(unsigned(counter7) + 1);
-							end if;
-					  end if;
-
-					  flag := (flag + 1) mod 2;
+					  
+					  fontcol <= std_logic_vector(xPixel - 248)(3 downto 1);
+				     fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
 
 					if (charOUTPUT = '1') then
 					 paintR <= '1';
@@ -433,24 +371,11 @@ begin
 				end if;
 
 					  
-				elsif ((xPixel >= 264 and xPixel < 280) and (yPixel >= 150 and yPixel < 158)) then
+				elsif ((xPixel >= 264 and xPixel < 280) and (yPixel >= 150 and yPixel < 166)) then
 						  charAddress <= "010000";
-						  fontcol <= counter9;
-						  fontrow <= counter10;
-
-						  if (flag = 1) then
-								if (counter9 = "111") then
-									 counter9 <= "000";
-									 counter10 <= std_logic_vector(unsigned(counter10) + 1);
-									 if (counter10 = "111") then
-										  counter10 <= "000";
-									 end if;
-								else
-									 counter9 <= std_logic_vector(unsigned(counter9) + 1);
-								end if;
-						  end if;
-
-						  flag := (flag + 1) mod 2;
+						 
+						 fontcol <= std_logic_vector(xPixel - 264)(3 downto 1);
+				       fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
 
 						 if (charOUTPUT = '1') then
 					 paintR <= '1';
@@ -463,24 +388,11 @@ begin
 				end if;
 
 						  
-			 elsif ((xPixel >= 280 and xPixel < 296) and (yPixel >= 150 and yPixel < 158)) then
+			 elsif ((xPixel >= 280 and xPixel < 296) and (yPixel >= 150 and yPixel < 166)) then
 				  charAddress <= "011001";
-				  fontcol <= counter11;
-				  fontrow <= counter12;
-
-				  if (flag = 1) then
-						if (counter11 = "111") then
-							 counter11 <= "000";
-							 counter12 <= std_logic_vector(unsigned(counter12) + 1);
-							 if (counter12 = "111") then
-								  counter12 <= "000";
-							 end if;
-						else
-							 counter11 <= std_logic_vector(unsigned(counter11) + 1);
-						end if;
-				  end if;
-
-				  flag := (flag + 1) mod 2;
+				  
+				  fontcol <= std_logic_vector(xPixel - 280)(3 downto 1);
+				  fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
 
 				  if (charOUTPUT = '1') then
 					 paintR <= '1';
@@ -493,24 +405,11 @@ begin
 				end if;
 
 				  
-			elsif ((xPixel >= 320 and xPixel < 336) and (yPixel >= 150 and yPixel < 158)) then
+			elsif ((xPixel >= 320 and xPixel < 336) and (yPixel >= 150 and yPixel < 166)) then
 				  charAddress <= "000010";
-				  fontcol <= counter13;
-				  fontrow <= counter14;
-
-				  if (flag = 1) then
-						if (counter13 = "111") then
-							 counter13 <= "000";
-							 counter14 <= std_logic_vector(unsigned(counter14) + 1);
-							 if (counter14 = "111") then
-								  counter14 <= "000";
-							 end if;
-						else
-							 counter13 <= std_logic_vector(unsigned(counter13) + 1);
-						end if;
-				  end if;
-
-				  flag := (flag + 1) mod 2;
+				  
+				  fontcol <= std_logic_vector(xPixel - 320)(3 downto 1);
+				  fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
 
 				  if (charOUTPUT = '1') then
 					 paintR <= '1';
@@ -523,24 +422,11 @@ begin
 				end if;
 
 				  
-	   elsif ((xPixel >= 336 and xPixel < 352) and (yPixel >= 150 and yPixel < 158)) then
+	   elsif ((xPixel >= 336 and xPixel < 352) and (yPixel >= 150 and yPixel < 166)) then
 						  charAddress <= "001001";
-						  fontcol <= counter15;
-						  fontrow <= counter16;
-
-						  if (flag = 1) then
-								if (counter15 = "111") then
-									 counter15 <= "000";
-									 counter16 <= std_logic_vector(unsigned(counter16) + 1);
-									 if (counter16 = "111") then
-										  counter16 <= "000";
-									 end if;
-								else
-									 counter15 <= std_logic_vector(unsigned(counter15) + 1);
-								end if;
-						  end if;
-
-						  flag := (flag + 1) mod 2;
+						 
+						 fontcol <= std_logic_vector(xPixel - 336)(3 downto 1);
+				       fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
 
 						  if (charOUTPUT = '1') then
 					 paintR <= '1';
@@ -552,24 +438,11 @@ begin
 					 paintB <= '0';
 				end if;
 
-					elsif ((xPixel >= 352 and xPixel < 368) and (yPixel >= 150 and yPixel < 158)) then
+					elsif ((xPixel >= 352 and xPixel < 368) and (yPixel >= 150 and yPixel < 166)) then
 						  charAddress <= "010010";
-						  fontcol <= counter17;
-						  fontrow <= counter18;
-
-						  if (flag = 1) then
-								if (counter17 = "111") then
-									 counter17 <= "000";
-									 counter18 <= std_logic_vector(unsigned(counter18) + 1);
-									 if (counter18 = "111") then
-										  counter18 <= "000";
-									 end if;
-								else
-									 counter17 <= std_logic_vector(unsigned(counter17) + 1);
-								end if;
-						  end if;
-
-						  flag := (flag + 1) mod 2;
+						 
+						 fontcol <= std_logic_vector(xPixel - 368)(3 downto 1);
+				       fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
 
 						if (charOUTPUT = '1') then
 					 paintR <= '1';
@@ -582,24 +455,10 @@ begin
 				end if;
 
 						  
-					elsif ((xPixel >= 368 and xPixel < 384) and (yPixel >= 150 and yPixel < 158)) then
+					elsif ((xPixel >= 368 and xPixel < 384) and (yPixel >= 150 and yPixel < 166)) then
 					  charAddress <= "000100";
-					  fontcol <= counter19;
-					  fontrow <= counter20;
-
-					  if (flag = 1) then
-							if (counter19 = "111") then
-								 counter19 <= "000";
-								 counter20 <= std_logic_vector(unsigned(counter20) + 1);
-								 if (counter20 = "111") then
-									  counter20 <= "000";
-								 end if;
-							else
-								 counter19 <= std_logic_vector(unsigned(counter19) + 1);
-							end if;
-					  end if;
-
-					  flag := (flag + 1) mod 2;
+					 fontcol <= std_logic_vector(xPixel - 368)(3 downto 1);
+				    fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
 
 					if (charOUTPUT = '1') then
 					 paintR <= '1';
@@ -615,24 +474,11 @@ begin
 					  
 			  ----TRAIN PRINTED--------
 					  
-				elsif ((xPixel >= 190 and xPixel < 206) and (yPixel >= 200 and yPixel < 208)) then
+				elsif ((xPixel >= 190 and xPixel < 206) and (yPixel >= 200 and yPixel < 216)) then
 					  charAddress <= "010100";
-					  fontcol <= counter37;
-					  fontrow <= counter38;
-
-					  if (flag = 1) then
-							if (counter37 = "111") then
-								 counter37 <= "000";
-								 counter38 <= std_logic_vector(unsigned(counter38) + 1);
-								 if (counter38 = "111") then
-									  counter38 <= "000";
-								 end if;
-							else
-								 counter37 <= std_logic_vector(unsigned(counter37) + 1);
-							end if;
-					  end if;
-
-					  flag := (flag + 1) mod 2;
+					 
+					 fontcol <= std_logic_vector(xPixel - 190)(3 downto 1);
+				    fontrow <= std_logic_vector(yPixel - 200)(3 downto 1);
 
 					 if (charOUTPUT = '1') then
 					 paintR <= '1';
@@ -645,24 +491,13 @@ begin
 				end if;
 
 					  
-				elsif ((xPixel >= 206 and xPixel < 222) and (yPixel >= 200 and yPixel < 208)) then
+				elsif ((xPixel >= 206 and xPixel < 222) and (yPixel >= 200 and yPixel < 216)) then
 					 charAddress <= "010010";
-					 fontcol <= counter21;
-					 fontrow <= counter22;
+					
+					 
+					 fontcol <= std_logic_vector(xPixel - 206)(3 downto 1);
+				    fontrow <= std_logic_vector(yPixel - 200)(3 downto 1);
 
-					 if (flag = 1) then
-						  if (counter21 = "111") then
-								counter21 <= "000";
-								counter22 <= std_logic_vector(unsigned(counter22) + 1);
-								if (counter22 = "111") then
-									 counter22 <= "000";
-								end if;
-						  else
-								counter21 <= std_logic_vector(unsigned(counter21) + 1);
-						  end if;
-					 end if;
-
-					 flag := (flag + 1) mod 2;
 			if (charOUTPUT = '1') then
 				 paintR <= '1';
 				 paintG <= '1';
@@ -673,24 +508,12 @@ begin
 				 paintB <= '0';
 			end if;
 
-			elsif ((xPixel >= 222 and xPixel < 238) and (yPixel >= 200 and yPixel < 208)) then
+			elsif ((xPixel >= 222 and xPixel < 238) and (yPixel >= 200 and yPixel < 216)) then
 				 charAddress <= "000001";
-				 fontcol <= counter23;
-				 fontrow <= counter24;
+				 
+					 fontcol <= std_logic_vector(xPixel - 222)(3 downto 1);
+				    fontrow <= std_logic_vector(yPixel - 200)(3 downto 1);
 
-				 if (flag = 1) then
-					  if (counter23 = "111") then
-							counter23 <= "000";
-							counter24 <= std_logic_vector(unsigned(counter24) + 1);
-							if (counter24 = "111") then
-								 counter24 <= "000";
-							end if;
-					  else
-							counter23 <= std_logic_vector(unsigned(counter23) + 1);
-					  end if;
-				 end if;
-
-				 flag := (flag + 1) mod 2;
 			if (charOUTPUT = '1') then
 				 paintR <= '1';
 				 paintG <= '1';
@@ -702,24 +525,12 @@ begin
 			end if;
 
 				 
-			elsif ((xPixel >= 238 and xPixel < 254) and (yPixel >= 200 and yPixel < 208)) then
+			elsif ((xPixel >= 238 and xPixel < 254) and (yPixel >= 200 and yPixel < 216)) then
 				 charAddress <= "001001";
-				 fontcol <= counter25;
-				 fontrow <= counter26;
+			 
+					 fontcol <= std_logic_vector(xPixel - 238)(3 downto 1);
+				    fontrow <= std_logic_vector(yPixel - 200)(3 downto 1);
 
-				 if (flag = 1) then
-					  if (counter25 = "111") then
-							counter25 <= "000";
-							counter26 <= std_logic_vector(unsigned(counter26) + 1);
-							if (counter26 = "111") then
-								 counter26 <= "000";
-							end if;
-					  else
-							counter25 <= std_logic_vector(unsigned(counter25) + 1);
-					  end if;
-				 end if;
-
-				 flag := (flag + 1) mod 2;
 
 				if (charOUTPUT = '1') then
 				 paintR <= '1';
@@ -734,24 +545,11 @@ begin
 
 
 					
-			elsif ((xPixel >= 254 and xPixel < 270) and (yPixel >= 200 and yPixel < 208)) then
+			elsif ((xPixel >= 254 and xPixel < 270) and (yPixel >= 200 and yPixel < 216)) then
 				 charAddress <= "001110";
-				 fontcol <= counter27;
-				 fontrow <= counter28;
-
-				 if (flag = 1) then
-					  if (counter27 = "111") then
-							counter27 <= "000";
-							counter28 <= std_logic_vector(unsigned(counter28) + 1);
-							if (counter28 = "111") then
-								 counter28 <= "000";
-							end if;
-					  else
-							counter27 <= std_logic_vector(unsigned(counter27) + 1);
-					  end if;
-				 end if;
-
-				 flag := (flag + 1) mod 2;
+				 
+					 fontcol <= std_logic_vector(xPixel - 254)(3 downto 1);
+				    fontrow <= std_logic_vector(yPixel - 200)(3 downto 1);
 
 		   if (charOUTPUT = '1') then
 				 paintR <= '1';
@@ -769,24 +567,14 @@ begin
 		
 		
 		
-		elsif ((xPixel >= 190 and xPixel < 206) and (yPixel >= 250 and yPixel < 258)) then
+		elsif ((xPixel >= 190 and xPixel < 206) and (yPixel >= 250 and yPixel < 268)) then
 			 charAddress <= "000111";
-			 fontcol <= counter29;
-			 fontrow <= counter30;
+			 
+					 fontcol <= std_logic_vector(xPixel - 190)(3 downto 1);
+				    fontrow <= std_logic_vector(yPixel - 250)(3 downto 1);
 
-			 if (flag = 1) then
-				  if (counter29 = "111") then
-						counter29 <= "000";
-						counter30 <= std_logic_vector(unsigned(counter30) + 1);
-						if (counter30 = "111") then
-							 counter30 <= "000";
-						end if;
-				  else
-						counter29 <= std_logic_vector(unsigned(counter29) + 1);
-				  end if;
-			 end if;
 
-			 flag := (flag + 1) mod 2;
+
 			if (charOUTPUT = '1') then
 				 paintR <= '1';
 				 paintG <= '1';
@@ -798,24 +586,11 @@ begin
 			end if;
 
 
-			elsif ((xPixel >= 206 and xPixel < 222) and (yPixel >= 250 and yPixel < 258)) then
+			elsif ((xPixel >= 206 and xPixel < 222) and (yPixel >= 250 and yPixel < 268)) then
 				 charAddress <= "000001";
-				 fontcol <= counter31;
-				 fontrow <= counter32;
-
-				 if (flag = 1) then
-					  if (counter31 = "111") then
-							counter31 <= "000";
-							counter32 <= std_logic_vector(unsigned(counter32) + 1);
-							if (counter32 = "111") then
-								 counter32 <= "000";
-							end if;
-					  else
-							counter31 <= std_logic_vector(unsigned(counter31) + 1);
-					  end if;
-				 end if;
-
-				 flag := (flag + 1) mod 2;
+				
+				 fontcol <= std_logic_vector(xPixel - 206)(3 downto 1);
+				 fontrow <= std_logic_vector(yPixel - 250)(3 downto 1);
 
 				if (charOUTPUT = '1') then
 				 paintR <= '1';
@@ -828,24 +603,12 @@ begin
 			end if;
 
 								
-			elsif ((xPixel >= 222 and xPixel < 238) and (yPixel >= 250 and yPixel < 258)) then
+			elsif ((xPixel >= 222 and xPixel < 238) and (yPixel >= 250 and yPixel < 268)) then
 				 charAddress <= "001101";
-				 fontcol <= counter33;
-				 fontrow <= counter34;
-
-				 if (flag = 1) then
-					  if (counter33 = "111") then
-							counter33 <= "000";
-							counter34 <= std_logic_vector(unsigned(counter34) + 1);
-							if (counter34 = "111") then
-								 counter34 <= "000";
-							end if;
-					  else
-							counter33 <= std_logic_vector(unsigned(counter33) + 1);
-					  end if;
-				 end if;
-
-				 flag := (flag + 1) mod 2;
+				
+				 fontcol <= std_logic_vector(xPixel - 222)(3 downto 1);
+				 fontrow <= std_logic_vector(yPixel - 250)(3 downto 1);
+					 
 				if (charOUTPUT = '1') then
 					 paintR <= '1';
 					 paintG <= '1';
@@ -858,24 +621,11 @@ begin
 
 								  
 							 
-			elsif ((xPixel >= 238 and xPixel < 254) and (yPixel >= 250 and yPixel < 258)) then
+			elsif ((xPixel >= 238 and xPixel < 254) and (yPixel >= 250 and yPixel < 268)) then
 				 charAddress <= "000101";
-				 fontcol <= counter35;
-				 fontrow <= counter36;
-
-				 if (flag = 1) then
-					  if (counter35 = "111") then
-							counter35 <= "000";
-							counter36 <= std_logic_vector(unsigned(counter36) + 1);
-							if (counter36 = "111") then
-								 counter36 <= "000";
-							end if;
-					  else
-							counter35 <= std_logic_vector(unsigned(counter35) + 1);
-					  end if;
-				 end if;
-
-				 flag := (flag + 1) mod 2;
+			
+			 fontcol <= std_logic_vector(xPixel - 238)(3 downto 1);
+			 fontrow <= std_logic_vector(yPixel - 250)(3 downto 1);
 
 				if (charOUTPUT = '1') then
 				 paintR <= '1';
@@ -901,11 +651,10 @@ begin
                    paintB <= '1';
 						 
 						end if;
-			end if;
+			
 			else 
-				
-
-					
+			
+			
 
 				if (BiDet = '1') then
                 paintR <= birdR;
@@ -923,10 +672,100 @@ begin
 
             end if;
 				
-			end if;
+				end if;
+				
+		  else
+		  
+		  if (inHeart = '1') then
+                paintR <= heartR;
+                paintG <= heartG;
+                paintB <= heartB;
+			
+
+				elsif (BiDet = '1') then
+                paintR <= birdR;
+                paintG <= birdG;
+                paintB <= birdB;
+            elsif (ObDet = '1') then
+                paintR <= (obsOneR or obsTwoR);
+                paintG <= (obsOneG or obsTwoG);
+                paintB <= (obsOneB or obsTwoB);
+
+            else
+                paintR <= '0';
+                paintG <= '1';
+                paintB <= '1';
+
+            end if;
+				
+				end if;
+				
 			end if;
 
     end process paintScreen;
+	 
+hearts: process (vgaClk)
+
+    begin
+	 
+		if (trainingMode = '1') then
+        if (rising_edge(vgaClk)) then
+		  
+		  if ((xPixel >= 10 and xPixel < 42) and (yPixel >= 10 and yPixel < 42)) then
+				
+				charAddress <= "000000";
+				
+				fontcol <= std_logic_vector(xPixel - 10)(4 downto 2);
+				fontrow <= std_logic_vector(yPixel - 10)(4 downto 2);
+
+				
+				 heartR <= charOUTPUT;
+				 heartG <= '0';
+				 heartB <= '0';
+				 
+				 inHeart <= charOUTPUT;
+			
+				 
+			
+			elsif ((xPixel >= 45 and xPixel < 77) and (yPixel >= 10 and yPixel < 42)) then
+				
+				charAddress <= "000000";
+				
+				fontcol <= std_logic_vector(xPixel - 45)(4 downto 2);
+				fontrow <= std_logic_vector(yPixel - 10)(4 downto 2);
+
+				
+				 heartR <= charOUTPUT;
+				 heartG <= '0';
+				 heartB <= '0';
+				 
+				inHeart <= charOUTPUT;
+			
+			
+			 elsif ((xPixel >= 80 and xPixel < 112) and (yPixel >= 10 and yPixel < 42)) then
+				
+				charAddress <= "000000";
+				
+				fontcol <= std_logic_vector(xPixel - 80)(4 downto 2);
+				fontrow <= std_logic_vector(yPixel - 10)(4 downto 2);
+
+				
+				 heartR <= charOUTPUT;
+				 heartG <= '0';
+				 heartB <= '0';
+	
+				 inHeart <= charOUTPUT;
+			
+			else 
+			inHeart <= '0';
+			
+			end if;
+			
+			
+			end if;
+			end if;
+			
+			end process;
 	 
 	 --if between 100 and 540 pixels horizontally
 	 --if between 80 and 400 pixels vertically

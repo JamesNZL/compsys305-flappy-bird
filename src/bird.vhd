@@ -14,16 +14,23 @@ architecture behavior of bird is
     signal drawBirdYellow : std_logic;
 	 signal drawBirdWhite : std_logic;
 	 signal drawBirdBlack : std_logic;
-    signal size1 : signed(9 downto 0);
-	 signal size : signed(9 downto 0);
-    signal yPos : signed(9 downto 0);
-    signal xPos1 : signed(10 downto 0);
+    signal size : signed(9 downto 0);
+	 signal size1 : signed(9 downto 0);
 	 signal size2 : signed(9 downto 0);
 	 signal size3 : signed(9 downto 0);
 	 signal size4 : signed(9 downto 0);
-    signal xPos2 : signed(10 downto 0);
-	 signal xPos3 : signed(10 downto 0);
-	 signal xPos4 : signed(10 downto 0);
+	 signal size5 : signed(9 downto 0);
+	 signal size6 : signed(9 downto 0);
+	 signal size7 : signed(9 downto 0);
+	 signal yPos : signed(9 downto 0);
+    signal xPos323 : signed(10 downto 0);
+    signal xPos324 : signed(10 downto 0);
+	 signal xPos326 : signed(10 downto 0);
+	 signal xPos311 : signed(10 downto 0);
+	 signal xPos313 : signed(10 downto 0);
+	 signal xPos314 : signed(10 downto 0);
+	 signal xPos315 : signed(10 downto 0);
+	 signal xPos316 : signed(10 downto 0);
     signal yVelocity : signed(9 downto 0);
     signal STOPGOINGUP : std_logic; -- TODO: do we still need this?
     signal reset : std_logic;
@@ -31,25 +38,30 @@ architecture behavior of bird is
 
 begin
 
-size <= TO_SIGNED(24, 10);
+    size <= TO_SIGNED(28, 10);
 --    -- xPos and yPos show the (x,y) for the centre of bird
 --    xPos <= TO_SIGNED(320, 11);
-	 
-	 size1 <= TO_SIGNED(3, 10);
-	 size2 <= TO_SIGNED(4, 10);
-	 size3 <= TO_SIGNED(5, 10);
-	 size4 <= TO_SIGNED(6, 10);
+    
+	 size1 <= TO_SIGNED(1, 10);
+	 size2 <= TO_SIGNED(2, 10);
+	 size3 <= TO_SIGNED(3, 10);
+	 size4 <= TO_SIGNED(4, 10);
+	 size5 <= TO_SIGNED(5, 10);
+	 size6 <= TO_SIGNED(6, 10);
+	 size7 <= TO_SIGNED(7, 10);
 
 
 
-    xPos1 <= TO_SIGNED(323, 11);
-	 
 
-    xPos2 <= TO_SIGNED(326, 11);
+    xPos323 <= TO_SIGNED(323, 11);
+	 xPos324 <= TO_SIGNED(324, 11);
+	 xPos326 <= TO_SIGNED(326, 11);
 	 
-	 xPos3 <= TO_SIGNED(324, 11);
-	 
-	 xPos4 <= TO_SIGNED(314, 11);
+	 xPos311 <= TO_SIGNED(315, 11);
+	 xPos313 <= TO_SIGNED(317, 11);
+	 xPos314 <= TO_SIGNED(318, 11);
+	 xPos315 <= TO_SIGNED(319, 11);
+	 xPos316 <= TO_SIGNED(320, 11);
 	 
 
 	 
@@ -59,35 +71,63 @@ size <= TO_SIGNED(24, 10);
 --                '0'; -- y_pos - size <= pixel_row <= y_pos + size
 --					 
 drawBirdYellow <= '1' when (
-  (('0' & xPos1) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos1 + size1) and ('0' & yPos) = pixel_row) or
-  (('0' & xPos1) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos1 + size1) and ('0' & (yPos + 1)) = pixel_row) or
+--head
+  (('0' & xPos323) <= ('0' & pixel_column + size2) and ('0' & pixel_column <= '0' & xPos323 + size2) and ('0' & yPos) = pixel_row) or
+  (('0' & xPos323) <= ('0' & pixel_column + size3) and ('0' & pixel_column <= '0' & xPos323 + size3) and ('0' & (yPos + 1)) = pixel_row) or
+  (('0' & xPos323) <= ('0' & pixel_column + size3) and ('0' & pixel_column <= '0' & xPos323 + size3) and ('0' & (yPos + 2)) = pixel_row) or
   
-  (('0' & xPos3) <= ('0' & pixel_column + size2) and ('0' & pixel_column <= '0' & xPos3 + size2) and ('0' & (yPos + 2)) = pixel_row) or
+  (('0' & xPos324) <= ('0' & pixel_column + size4) and ('0' & pixel_column <= '0' & xPos324 + size4) and ('0' & (yPos + 3)) = pixel_row) or
+  (('0' & xPos324) <= ('0' & pixel_column + size4) and ('0' & pixel_column <= '0' & xPos324 + size4) and ('0' & (yPos + 4)) = pixel_row) or
  
-  (('0' & xPos2) <= ('0' & pixel_column + size3) and ('0' & pixel_column <= '0' & xPos2 + size3) and ('0' & (yPos + 3)) = pixel_row) or
-  (('0' & xPos1) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos1 + size1) and ('0' & (yPos + 4)) = pixel_row) or
-  (('0' & xPos1) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos1 + size1) and ('0' & (yPos + 5)) = pixel_row) or
+  (('0' & xPos326) <= ('0' & pixel_column + size6) and ('0' & pixel_column <= '0' & xPos326 + size6) and ('0' & (yPos + 5)) = pixel_row) or
+  (('0' & xPos326) <= ('0' & pixel_column + size6) and ('0' & pixel_column <= '0' & xPos326 + size6) and ('0' & (yPos + 6)) = pixel_row) or
+  (('0' & xPos323) <= ('0' & pixel_column + size3) and ('0' & pixel_column <= '0' & xPos323 + size3) and ('0' & (yPos + 7)) = pixel_row) or
+  (('0' & xPos323) <= ('0' & pixel_column + size3) and ('0' & pixel_column <= '0' & xPos323 + size3) and ('0' & (yPos + 8)) = pixel_row) or
+  (('0' & xPos323) <= ('0' & pixel_column + size2) and ('0' & pixel_column <= '0' & xPos323 + size2) and ('0' & (yPos + 9)) = pixel_row) or
+  (('0' & xPos323) <= ('0' & pixel_column + size2) and ('0' & pixel_column <= '0' & xPos323 + size2) and ('0' & (yPos + 10)) = pixel_row) or
+ 
+  --body
+  (('0' & xPos315) <= ('0' & pixel_column + size5) and ('0' & pixel_column <= '0' & xPos315 + size5) and ('0' & (yPos + 11)) = pixel_row) or
+  (('0' & xPos314) <= ('0' & pixel_column + size6) and ('0' & pixel_column <= '0' & xPos314 + size6) and ('0' & (yPos + 12)) = pixel_row) or
+  (('0' & xPos313) <= ('0' & pixel_column + size7) and ('0' & pixel_column <= '0' & xPos313 + size7) and ('0' & (yPos + 13)) = pixel_row) or
   
-  (('0' & xPos4) <= ('0' & pixel_column + size2) and ('0' & pixel_column <= '0' & xPos4 + size2) and ('0' & (yPos + 6)) = pixel_row) or
-  (('0' & xPos4) <= ('0' & pixel_column + size3) and ('0' & pixel_column <= '0' & xPos4 + size3) and ('0' & (yPos + 7)) = pixel_row) or
-  (('0' & xPos4) <= ('0' & pixel_column + size4) and ('0' & pixel_column <= '0' & xPos4 + size4) and ('0' & (yPos + 8)) = pixel_row) or
-  (('0' & xPos4) <= ('0' & pixel_column + size4) and ('0' & pixel_column <= '0' & xPos4 + size4) and ('0' & (yPos + 9)) = pixel_row) or
-  (('0' & xPos4) <= ('0' & pixel_column + size4) and ('0' & pixel_column <= '0' & xPos4 + size4) and ('0' & (yPos + 10)) = pixel_row) or
-  (('0' & xPos4) <= ('0' & pixel_column + size4) and ('0' & pixel_column <= '0' & xPos4 + size4) and ('0' & (yPos + 11)) = pixel_row) or
-  (('0' & xPos4) <= ('0' & pixel_column + size4) and ('0' & pixel_column <= '0' & xPos4 + size4) and ('0' & (yPos + 12)) = pixel_row) or
-  (('0' & xPos4) <= ('0' & pixel_column + size4) and ('0' & pixel_column <= '0' & xPos4 + size4) and ('0' & (yPos + 13)) = pixel_row) or
-  (('0' & xPos4) <= ('0' & pixel_column + size4) and ('0' & pixel_column <= '0' & xPos4 + size4) and ('0' & (yPos + 14)) = pixel_row) or
-  (('0' & xPos4) <= ('0' & pixel_column + size3) and ('0' & pixel_column <= '0' & xPos4 + size3) and ('0' & (yPos + 15)) = pixel_row) or
-  (('0' & xPos4) <= ('0' & pixel_column + size2) and ('0' & pixel_column <= '0' & xPos4 + size2) and ('0' & (yPos + 16)) = pixel_row)
-
+  (('0' & xPos313) <= ('0' & pixel_column + size7) and ('0' & pixel_column <= '0' & xPos313 + size7) and ('0' & (yPos + 14)) = pixel_row) or
+  (('0' & xPos313) <= ('0' & pixel_column + size7) and ('0' & pixel_column <= '0' & xPos313 + size7) and ('0' & (yPos + 15)) = pixel_row) or
+  (('0' & xPos313) <= ('0' & pixel_column + size7) and ('0' & pixel_column <= '0' & xPos313 + size7) and ('0' & (yPos + 16)) = pixel_row) or
+  (('0' & xPos313) <= ('0' & pixel_column + size7) and ('0' & pixel_column <= '0' & xPos313 + size7) and ('0' & (yPos + 17)) = pixel_row) or
+  (('0' & xPos313) <= ('0' & pixel_column + size7) and ('0' & pixel_column <= '0' & xPos313 + size7) and ('0' & (yPos + 18)) = pixel_row) or
+  (('0' & xPos313) <= ('0' & pixel_column + size7) and ('0' & pixel_column <= '0' & xPos313 + size7) and ('0' & (yPos + 19)) = pixel_row) or
+  
+  (('0' & xPos313) <= ('0' & pixel_column + size6) and ('0' & pixel_column <= '0' & xPos313 + size6) and ('0' & (yPos + 20)) = pixel_row) or
+  (('0' & xPos313) <= ('0' & pixel_column + size5) and ('0' & pixel_column <= '0' & xPos313 + size5) and ('0' & (yPos + 21)) = pixel_row) or
+  
+  --feet
+  
+  (('0' & xPos311) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos311 + size1) and ('0' & (yPos + 22)) = pixel_row) or
+  (('0' & xPos316) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos316 + size1) and ('0' & (yPos + 22)) = pixel_row) or
+  
+  (('0' & xPos311) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos311 + size1) and ('0' & (yPos + 23)) = pixel_row) or
+  (('0' & xPos316) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos316 + size1) and ('0' & (yPos + 23)) = pixel_row) or
+  
+  (('0' & xPos311) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos311 + size1) and ('0' & (yPos + 24)) = pixel_row) or
+  (('0' & xPos316) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos316 + size1) and ('0' & (yPos + 24)) = pixel_row) or
+  
+  (('0' & xPos311) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos311 + size1) and ('0' & (yPos + 25)) = pixel_row) or
+  (('0' & xPos316) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos316 + size1) and ('0' & (yPos + 25)) = pixel_row) or
+  
+  (('0' & xPos311) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos311 + size1) and ('0' & (yPos + 26)) = pixel_row) or
+  (('0' & xPos316) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos316 + size1) and ('0' & (yPos + 26)) = pixel_row) or
+  
+  (('0' & xPos311) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos311 + size1) and ('0' & (yPos + 27)) = pixel_row) or
+  (('0' & xPos316) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos316 + size1) and ('0' & (yPos + 27)) = pixel_row) or
+  
+  (('0' & xPos311) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos311 + size1) and ('0' & (yPos + 28)) = pixel_row) or
+  (('0' & xPos316) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos316 + size1) and ('0' & (yPos + 28)) = pixel_row) 
+  
 )
 else
   '0';
   
-drawBirdWhite <= '1' when ( (('0' & xPos3) = ('0' & pixel_column)) and ('0' & (yPos+2) = pixel_row))
-else 
-'0';
-
 
 
 

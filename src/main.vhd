@@ -130,13 +130,13 @@ architecture flappy_bird of main is
     signal ObOneDet, ObTwoDet, ObDet                    : std_logic;
     signal ObOneTick, ObTwoTick, tensTick, hundredsTick : std_logic;
     signal scoreOnes, scoreTens                         : std_logic_vector(3 downto 0);
-    signal BiDet, inHeart                               : std_logic;
+    signal BiDet, inHeart, inScore                      : std_logic;
     signal BiDied                                       : std_logic := '0';
     signal charAddress                                  : std_logic_vector(5 downto 0);
     signal fontrow, fontcol                             : std_logic_vector (2 downto 0);
     signal charOUTPUT                                   : std_logic;
-	 signal homescreenEnable                             : std_logic := '1';
-	 signal trainingMode                                 : std_logic := '0';
+	 signal homescreenEnable                             : std_logic := '0';
+	 --signal trainingMode                                 : std_logic := '0';
     signal counter                                      : std_logic_vector(2 downto 0) := "000";
     
 begin
@@ -280,6 +280,7 @@ begin
     -------------DRAWING--------------
 
     paintScreen : process (vgaClk)
+	 
 
     begin
         if (rising_edge(vgaClk)) then
@@ -654,7 +655,7 @@ begin
 			
 			else 
 			
-			
+
 
 				if (BiDet = '1') then
                 paintR <= birdR;
@@ -680,6 +681,11 @@ begin
                 paintR <= heartR;
                 paintG <= heartG;
                 paintB <= heartB;
+					 
+			elsif (inScore = '1') then
+                paintR <= ScoreR;
+                paintG <= ScoreG;
+                paintB <= ScoreB;
 			
 
 				elsif (BiDet = '1') then
@@ -705,10 +711,10 @@ begin
     end process paintScreen;
 	 
 hearts: process (vgaClk)
+variable int_value : integer;
 
     begin
 	 
-		if (trainingMode = '1') then
         if (rising_edge(vgaClk)) then
 		  
 		  if ((xPixel >= 10 and xPixel < 42) and (yPixel >= 10 and yPixel < 42)) then
@@ -755,14 +761,56 @@ hearts: process (vgaClk)
 				 heartB <= '0';
 	
 				 inHeart <= charOUTPUT;
+				 
+			 elsif ((xPixel >= 120  and xPixel < 152) and (yPixel >= 10 and yPixel < 42)) then
+
+               
+                int_value := to_integer(unsigned(scoreTens)) + 48;
+                charAddress <= std_logic_vector(to_unsigned(int_value, 6));
+					 
+					 fontcol <= std_logic_vector(xPixel - 120)(4 downto 2);
+			       fontrow <= std_logic_vector(yPixel - 10)(4 downto 2);
+					
+
+
+                if (charOUTPUT = '1') then
+                    scoreR <= '0';
+                    scoreG <= '0';
+                    scoreB <= '0';
+						  
+						  end if;
+						  
+					inScore <= charOUTPUT;
+               
+					 
+			    elsif ((xPixel >= 155 and xPixel < 187) and (yPixel >= 10 and yPixel < 42)) then
+                
+                int_value := to_integer(unsigned(scoreOnes)) + 48;
+                charAddress <= std_logic_vector(to_unsigned(int_value, 6));
+
+                fontcol <= std_logic_vector(xPixel - 155)(4 downto 2);
+			       fontrow <= std_logic_vector(yPixel - 10)(4 downto 2);
+					
+
+                if (charOUTPUT = '1') then
+                    scoreR <= '0';
+                    scoreG <= '0';
+                    scoreB <= '0'; 
+						  
+						  end if;
+						  
+					inScore <= charOUTPUT;
+						  
+						  
+              
 			
 			else 
 			inHeart <= '0';
+			inscore <= '0';
 			
 			end if;
 			
 			
-			end if;
 			end if;
 			
 			end process;

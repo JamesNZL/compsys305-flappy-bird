@@ -38,7 +38,7 @@ architecture behavior of bird is
 
 begin
 
-    size <= TO_SIGNED(28, 10);
+    size <= TO_SIGNED(25, 10);
 --    -- xPos and yPos show the (x,y) for the centre of bird
 --    xPos <= TO_SIGNED(320, 11);
     
@@ -113,16 +113,9 @@ drawBirdYellow <= '1' when (
   (('0' & xPos316) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos316 + size1) and ('0' & (yPos + 24)) = pixel_row) or
   
   (('0' & xPos311) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos311 + size1) and ('0' & (yPos + 25)) = pixel_row) or
-  (('0' & xPos316) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos316 + size1) and ('0' & (yPos + 25)) = pixel_row) or
+  (('0' & xPos316) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos316 + size1) and ('0' & (yPos + 25)) = pixel_row) 
   
-  (('0' & xPos311) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos311 + size1) and ('0' & (yPos + 26)) = pixel_row) or
-  (('0' & xPos316) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos316 + size1) and ('0' & (yPos + 26)) = pixel_row) or
   
-  (('0' & xPos311) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos311 + size1) and ('0' & (yPos + 27)) = pixel_row) or
-  (('0' & xPos316) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos316 + size1) and ('0' & (yPos + 27)) = pixel_row) or
-  
-  (('0' & xPos311) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos311 + size1) and ('0' & (yPos + 28)) = pixel_row) or
-  (('0' & xPos316) <= ('0' & pixel_column + size1) and ('0' & pixel_column <= '0' & xPos316 + size1) and ('0' & (yPos + 28)) = pixel_row) 
   
 )
 else

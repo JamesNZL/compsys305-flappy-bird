@@ -19,7 +19,7 @@ entity fsm is
 end entity fsm;
 
 architecture state_driver of fsm is
-    type game_state is (DrawMenu, TrainingModeInit, HardModeInit, Gaming, Paused, Dead);
+    type game_state is (DrawMenu, TrainingModeInit, HardModeInit, Gaming, Paused, Invincible, Dead);
     type mode_memory is (TrainingMode, HardMode);
     signal state, next_state : game_state;
     signal difficulty : mode_memory;
@@ -29,8 +29,6 @@ architecture state_driver of fsm is
 begin
 
     lives_out <= lives;
-    bird_hovering <= '1' when ((state = TrainingModeInit) or (state = HardModeInit)) else
-                     '0';
 
     sync_proc : process (clk)
     begin
@@ -46,6 +44,7 @@ begin
     decode_output : process (state, menu_navigator_1, menu_navigator_2, mouse_right, mouse_left, lives, hit_obstacle, hit_floor)
     begin
 
+        bird_hovering <= '0';
         case state is
             when DrawMenu =>
 
@@ -55,11 +54,13 @@ begin
 
             when TrainingModeInit =>
 
+                bird_hovering <= '1';
                 movement_enable <= '0';
                 menu_enable <= '0';
 
             when HardModeInit =>
 
+                bird_hovering <= '1';
                 movement_enable <= '0';
                 menu_enable <= '0';
 
@@ -67,6 +68,7 @@ begin
 
                 menu_enable <= '0';
                 movement_enable <= '1';
+                bird_invincible <= '0';
                 if (difficulty = TrainingMode) then
                     if (hit_obstacle = '1') then
                         if (lives = 0) then
@@ -77,8 +79,6 @@ begin
                         end if;
                     elsif (hit_floor = '1') then
                         bird_died <= '1';
-                    else
-                        bird_invincible <= '0';
                     end if;
                 else
                     if ((hit_obstacle = '1') or (hit_floor = '1')) then
@@ -91,6 +91,9 @@ begin
                 movement_enable <= '0';
                 menu_enable <= '0';
 
+            when Invincible =>
+                movement_enable <= '1';
+                menu_enable <= '0';
             when Dead =>
 
                 movement_enable <= '0';
@@ -143,11 +146,19 @@ begin
                     next_state <= Dead;
                 elsif (mouse_right = '1') then
                     next_state <= Paused;
+                elsif (bird_invincible = '1') then
+                    next_state <= Invincible;
                 end if;
 
             when Paused =>
 
                 next_state <= Paused;
+
+                if (mouse_left = '1') then
+                    next_state <= Gaming;
+                end if;
+
+            when Invincible =>
 
                 if (mouse_left = '1') then
                     next_state <= Gaming;

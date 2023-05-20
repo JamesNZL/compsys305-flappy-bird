@@ -40,7 +40,7 @@ begin
         end if;
     end process;
 
-    decide_output : process (state, menu_navigator_1, menu_navigator_2, mouse_right, mouse_left)
+    decode_output : process (state, menu_navigator_1, menu_navigator_2, mouse_right, mouse_left, lives, hit_obstacle, hit_floor)
     begin
 
         movement_enable <= '0';
@@ -52,7 +52,7 @@ begin
                 menu_enable <= '1';
 
             when TrainingModeInit =>
-
+                movement_enable <= '1';
                 bird_hovering <= '1';
 
             when HardModeInit =>
@@ -61,23 +61,23 @@ begin
 
             when Gaming =>
 
-                movement_enable <= '1';
-                if (difficulty = TrainingMode) then
-                    if (hit_obstacle = '1') then
-                        if (lives /= 0) then
-                            lives <= lives - 1;
-                            bird_invincible <= '1'; --TODO: For 2 seconds
-                        else
-                            bird_died <= '1';
-                        end if;
-                    elsif (hit_floor = '1') then
-                        bird_died <= '1';
-                    end if;
-                else
-                    if ((hit_obstacle = '1') or (hit_floor = '1')) then
-                        bird_died <= '1';
-                    end if;
-                end if;
+                -- movement_enable <= '1';
+                -- if (difficulty = TrainingMode) then
+                --     if (hit_obstacle = '1') then
+                --         if (lives /= 0) then
+                --             lives <= lives - 1;
+                --             bird_invincible <= '1'; --TODO: For 2 seconds
+                --         else
+                --             bird_died <= '1';
+                --         end if;
+                --     elsif (hit_floor = '1') then
+                --         bird_died <= '1';
+                --     end if;
+                -- else
+                --     if ((hit_obstacle = '1') or (hit_floor = '1')) then
+                --         bird_died <= '1';
+                --     end if;
+                -- end if;
 
             when Paused =>
 
@@ -94,7 +94,7 @@ begin
         end case;
     end process;
 
-    decide_next_state : process (state, menu_navigator_1, menu_navigator_2, mouse_right, mouse_left)
+    decode_next_state : process (state, menu_navigator_1, menu_navigator_2, mouse_right, mouse_left)
     begin
         next_state <= DrawMenu;
         case state is
@@ -110,9 +110,11 @@ begin
 
             when TrainingModeInit =>
 
-                if (mouse_left = '1') then
-                    next_state <= Gaming;
-                end if;
+                next_state <= TrainingModeInit;
+
+                -- if (mouse_left = '1') then
+                --     next_state <= Gaming;
+                -- end if;
 
             when HardModeInit =>
 

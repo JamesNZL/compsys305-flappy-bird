@@ -188,7 +188,7 @@ begin
 
     state_machine : fsm
     port map(
-        clk => clk,
+        clk => vert_sync,
         reset => not key0,
         menu_navigator_1 => not key3,
         menu_navigator_2 => not key2,

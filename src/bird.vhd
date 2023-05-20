@@ -11,7 +11,6 @@ end bird;
 
 architecture behaviour of bird is
 
-    signal reset_pos : std_logic;
     signal draw_bird : std_logic;
 
     signal size : signed(9 downto 0);
@@ -43,7 +42,10 @@ begin
     begin
         -- Move bird once every vertical sync
         if (rising_edge(clk)) then
-            if (enable = '1') then
+            if (reset = '1') then
+                y_pos <= TO_SIGNED(280, 10);
+                died <= '0';
+            elsif (enable = '1') then
                 if (y_pos <= 479 - size) then
                     if (flap = '1' and flapped_flag = '0') then
                         sub_pixel <= TO_SIGNED(-200, 12);
@@ -61,9 +63,6 @@ begin
                     y_velocity <= shift_right(sub_pixel, 4)(11 downto 2);
                     y_pos <= (y_pos + y_velocity);
                     died <= '0';
-                elsif (reset_pos = '1') then
-                    y_pos <= TO_SIGNED(280, 10);
-                    died <= '0';
                 else
                     y_pos <= 480 - size;
                     died <= '1';
@@ -71,8 +70,5 @@ begin
             end if;
         end if;
     end process move_bird;
-
-    reset_pos <= '1' when (reset = '1' and y_pos >= 479 - size) else
-                 '0';
 
 end behaviour;

@@ -52,7 +52,7 @@ begin
                 menu_enable <= '1';
 
             when TrainingModeInit =>
-                movement_enable <= '1';
+
                 bird_hovering <= '1';
 
             when HardModeInit =>
@@ -61,7 +61,7 @@ begin
 
             when Gaming =>
 
-                -- movement_enable <= '1';
+                movement_enable <= '1';
                 -- if (difficulty = TrainingMode) then
                 --     if (hit_obstacle = '1') then
                 --         if (lives /= 0) then
@@ -96,9 +96,10 @@ begin
 
     decode_next_state : process (state, menu_navigator_1, menu_navigator_2, mouse_right, mouse_left)
     begin
-        next_state <= DrawMenu;
         case state is
             when DrawMenu =>
+
+                next_state <= DrawMenu;
 
                 if (menu_navigator_1 = '1') then
                     difficulty <= TrainingMode;
@@ -112,17 +113,21 @@ begin
 
                 next_state <= TrainingModeInit;
 
-                -- if (mouse_left = '1') then
-                --     next_state <= Gaming;
-                -- end if;
+                if (mouse_left = '1') then
+                    next_state <= Gaming;
+                end if;
 
             when HardModeInit =>
+
+                next_state <= HardModeInit;
 
                 if (mouse_left = '1') then
                     next_state <= Gaming;
                 end if;
 
             when Gaming =>
+
+                next_state <= Gaming;
 
                 if (bird_died = '1') then
                     next_state <= Dead;
@@ -132,11 +137,15 @@ begin
 
             when Paused =>
 
+                next_state <= Paused;
+
                 if (mouse_right = '1') then
                     next_state <= Gaming;
                 end if;
 
             when Dead =>
+
+                next_state <= Dead;
 
                 if (mouse_left = '1') then
                     next_state <= DrawMenu;

@@ -65,6 +65,16 @@ architecture flappy_bird of main is
             pixel_row, pixel_column              : in  signed(9 downto 0);
             red, green, blue, inPixel, scoreTick : out std_logic);
     end component;
+	 
+	  component coin is
+        port (
+            enable, coinEnable, pb1, clk, vert_sync          : in  std_logic;
+            lfsrSeed                             : in  std_logic_vector(8 downto 1);
+            start_xPos                           : in  signed(10 downto 0);
+            pixel_row, pixel_column              : in  signed(9 downto 0);
+            red, green, blue, inPixel, scoreTick : out std_logic);
+    end component;
+
 
     component MOUSE
         port (
@@ -118,6 +128,7 @@ architecture flappy_bird of main is
     signal paintR, paintG, paintB                       : std_logic;
 	 signal heartR, heartG, heartB                       : std_logic;
     signal scoreR, scoreG, scoreB                       : std_logic;
+	 signal coinR, coinG, coinB                          : std_logic;
     signal birdR, birdG, birdB                          : std_logic;
     signal obsOneR, obsOneG, obsOneB                    : std_logic;
     signal obsTwoR, obsTwoG, obsTwoB                    : std_logic;
@@ -128,6 +139,8 @@ architecture flappy_bird of main is
     signal mouseRow, mouseColumn                        : signed(9 downto 0);
     signal movementEnable                               : std_logic := '1';
     signal ObOneDet, ObTwoDet, ObDet                    : std_logic;
+	 signal coinEnable                                   : std_logic;
+	 signal coinDet, coinTick                            : std_logic;
     signal ObOneTick, ObTwoTick, tensTick, hundredsTick : std_logic;
     signal scoreOnes, scoreTens                         : std_logic_vector(3 downto 0);
     signal BiDet, inHeart, inScore                      : std_logic;
@@ -136,7 +149,7 @@ architecture flappy_bird of main is
     signal fontrow, fontcol                             : std_logic_vector (2 downto 0);
     signal charOUTPUT                                   : std_logic;
 	 signal homescreenEnable                             : std_logic := '0';
-	 --signal trainingMode                                 : std_logic := '0';
+	 signal trainingMode                                 : std_logic := '0';
     signal counter                                      : std_logic_vector(2 downto 0) := "000";
     
 begin
@@ -192,6 +205,23 @@ begin
         blue         => obsOneB,
         inPixel      => ObOneDet,
         scoreTick    => ObOneTick);
+		  
+	 coin_one : coin
+    port map(
+        enable       => movementEnable,
+		  coinEnable   => coinEnable,
+        pb1          => pb1,
+        clk          => vgaClk,
+        vert_sync    => vsync,
+        lfsrSeed     => std_logic_vector(xPixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
+        start_xPos   => TO_SIGNED(800, 11),
+        pixel_row    => yPixel,
+        pixel_column => xPixel,
+        red          => coinR,
+        green        => coinG,
+        blue         => coinB,
+        inPixel      => coinDet,
+        scoreTick    => coinTick);
 
     obstacle_two : obstacle
     port map(
@@ -274,6 +304,20 @@ begin
 
         end if;
     end process detectCollisions;
+	 
+	 
+	 detectCoin : process (vgaClk)
+    begin
+        if rising_edge(vgaClk) then
+
+            if (BiDet = '1' and coinDet = '1') then
+                coinEnable <= '0';
+            else
+                coinEnable <= '1';
+            end if;
+
+        end if;
+    end process detectCoin;
 
     ----------------------------------
 
@@ -692,11 +736,17 @@ begin
                 paintR <= birdR;
                 paintG <= birdG;
                 paintB <= birdB;
+				
+				elsif(coinDet = '1' and coinEnable = '1') then
+				    paintR <= coinR;
+                paintG <= coinG;
+                paintB <= coinB;
+					
             elsif (ObDet = '1') then
                 paintR <= (obsOneR or obsTwoR);
                 paintG <= (obsOneG or obsTwoG);
                 paintB <= (obsOneB or obsTwoB);
-
+			
             else
                 paintR <= '0';
                 paintG <= '1';
@@ -714,6 +764,8 @@ hearts: process (vgaClk)
 variable int_value : integer;
 
     begin
+	 
+	 if (homescreenEnable = '0') then 
 	 
         if (rising_edge(vgaClk)) then
 		  
@@ -810,6 +862,8 @@ variable int_value : integer;
 			
 			end if;
 			
+			
+			end if;
 			
 			end if;
 			

@@ -72,7 +72,7 @@ architecture flappy_bird of main is
             lfsrSeed                             : in  std_logic_vector(8 downto 1);
             start_xPos                           : in  signed(10 downto 0);
             pixel_row, pixel_column              : in  signed(9 downto 0);
-            red, green, blue, inPixel, scoreTick : out std_logic);
+            red, green, blue, inPixel, scoreTick, coinLeft : out std_logic);
     end component;
 
 
@@ -139,7 +139,7 @@ architecture flappy_bird of main is
     signal mouseRow, mouseColumn                        : signed(9 downto 0);
     signal movementEnable                               : std_logic := '1';
     signal ObOneDet, ObTwoDet, ObDet                    : std_logic;
-	 signal coinEnable                                   : std_logic;
+	 signal coinEnable, coinGone                         : std_logic;
 	 signal coinDet, coinTick                            : std_logic;
     signal ObOneTick, ObTwoTick, tensTick, hundredsTick : std_logic;
     signal scoreOnes, scoreTens                         : std_logic_vector(3 downto 0);
@@ -221,7 +221,8 @@ begin
         green        => coinG,
         blue         => coinB,
         inPixel      => coinDet,
-        scoreTick    => coinTick);
+        scoreTick    => coinTick,
+		  coinLeft     => coinGone);
 
     obstacle_two : obstacle
     port map(
@@ -307,16 +308,23 @@ begin
 	 
 	 
 	 detectCoin : process (vgaClk)
+	 variable flag : std_logic := '1';
     begin
         if rising_edge(vgaClk) then
 
             if (BiDet = '1' and coinDet = '1') then
-                coinEnable <= '0';
-            else
-                coinEnable <= '1';
+					 flag := '0';
+            elsif (coinGone = '1') then
+                flag := '1';
             end if;
+				
+				if (flag = '0') then
+					coinEnable <= '0';
+				else
+					coinEnable <= '1';
 
         end if;
+		  end if;
     end process detectCoin;
 
     ----------------------------------

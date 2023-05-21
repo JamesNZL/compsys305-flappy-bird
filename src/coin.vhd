@@ -8,7 +8,7 @@ entity coin is
         lfsrSeed : in std_logic_vector(8 downto 1);
         start_xPos : in signed(10 downto 0);
         pixel_row, pixel_column : in signed(9 downto 0);
-        red, green, blue, inPixel, scoreTick : out std_logic);
+        red, green, blue, inPixel, scoreTick, coinLeft : out std_logic);
 end coin;
 
 architecture behavior of coin is
@@ -67,13 +67,16 @@ begin
                 if ((reset = '0') and (xPos > (-pipeWidth))) then -- TODO: does this need a '0' concatenated in front?
                     xPos <= xPos - xVelocity;
                     lfsrClock <= '0';
+						  coinLeft <= '0';
                 elsif (reset = '1') then
                     xPos <= start_xPos + pipeWidth;
                     lfsrClock <= '0';
+						  coinLeft <= '0';
                 else
                     -- Wrap around
                     xPos <= TO_SIGNED(639, 11) + pipeWidth;
                     lfsrClock <= '1';
+						  coinLeft <= '1';
                 end if;
 
             end if;

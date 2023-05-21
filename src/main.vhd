@@ -70,9 +70,10 @@ architecture flappy_bird of main is
             clk, reset : in std_logic;
             menu_navigator_1, menu_navigator_2 : in std_logic;
             mouse_right, mouse_left : in std_logic;
+            ob_1_hit, ob_2_hit, ob_1_pass, ob_2_pass : in std_logic;
 
             -- bird states
-            hit_obstacle, hit_floor : in std_logic;
+            hit_floor : in std_logic;
             bird_hovering : out std_logic;
 
             lives_out : out signed(1 downto 0);
@@ -145,7 +146,7 @@ architecture flappy_bird of main is
     signal mouse_row, mouse_column : signed(9 downto 0);
 
     signal movement_enable : std_logic;
-    signal hit_obstacle, hit_floor : std_logic;
+    signal hit_obstacle_1, hit_obstacle_2, hit_floor : std_logic;
 
     signal bird_r, bird_g, bird_b : std_logic;
     signal bird_hovering : std_logic;
@@ -195,7 +196,10 @@ begin
         menu_navigator_2 => not key2,
         mouse_right => mouse_right_event,
         mouse_left => mouse_left_event,
-        hit_obstacle => hit_obstacle,
+        ob_1_hit => hit_obstacle_1,
+        ob_2_hit => hit_obstacle_2,
+        ob_1_pass => obs_one_tick,
+        ob_2_pass => obs_two_tick,
         hit_floor => hit_floor,
         bird_hovering => bird_hovering,
         -- lives_out => null,
@@ -303,10 +307,13 @@ begin
     begin
         if rising_edge(clk) then
 
-            if (bird_det = '1' and obs_det = '1') then
-                hit_obstacle <= '1';
+            if (bird_det = '1' and obs_one_det = '1') then
+                hit_obstacle_1 <= '1';
+            elsif (bird_det = '1' and obs_two_det = '1') then
+                hit_obstacle_2 <= '1';
             else
-                hit_obstacle <= '0';
+                hit_obstacle_1 <= '0';
+                hit_obstacle_2 <= '0';
             end if;
 
             if (bird_det = '1' and floor_det = '1') then
@@ -330,14 +337,14 @@ begin
                 paint_r <= bird_r;
                 paint_g <= bird_g;
                 paint_b <= bird_b;
-            elsif (obs_det = '1') then
-                paint_r <= (obs_one_r or obs_two_r); -- TODO: change to support 4 bit colour
-                paint_g <= (obs_one_g or obs_two_g);
-                paint_b <= (obs_one_b or obs_two_b);
             elsif (floor_det = '1') then
                 paint_r <= floor_r;
                 paint_g <= floor_g;
                 paint_b <= floor_b;
+            elsif (obs_det = '1') then
+                paint_r <= (obs_one_r or obs_two_r); -- TODO: change to support 4 bit colour
+                paint_g <= (obs_one_g or obs_two_g);
+                paint_b <= (obs_one_b or obs_two_b);
             else
                 paint_r <= '0';
                 paint_g <= '1';

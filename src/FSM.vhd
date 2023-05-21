@@ -31,18 +31,22 @@ begin
 
     lives_out <= lives;
 
-    last_seen <= '0' when ((ob_1_hit = '1' or last_seen = '0' or ob_1_pass = '1') and ob_2_pass = '0')
-                 else
-                 '1' when ((ob_2_hit = '1' or last_seen = '1' or ob_2_pass = '1') and ob_1_pass = '0');
+    -- last_seen <= '0' when ((ob_1_hit = '1' or last_seen = '0' or ob_1_pass = '1') and (ob_2_pass = '0' and ob_2_hit = '0'))
+    --              else
+    --              '1' when ((ob_2_hit = '1' or last_seen = '1' or ob_2_pass = '1') and (ob_2_pass = '0' and ob_2_hit = '0'));
 
     lives_calculator : process (ob_1_hit, ob_2_hit, ob_1_pass, ob_2_pass, reset)
     begin
-        if (ob_1_hit = '1' and last_seen /= '0') then
-            lives <= lives - 1;
-        elsif (ob_2_hit = '1' and last_seen /= '1') then
-            lives <= lives - 1;
-        elsif (reset = '1') then
+        if ((ob_1_hit = '1' or last_seen = '0' or ob_1_pass = '1') and (ob_2_pass = '0' and ob_2_hit = '0')) then
+            last_seen <= '0';
+        elsif ((ob_2_hit = '1' or last_seen = '1' or ob_2_pass = '1') and (ob_1_pass = '0' and ob_1_hit = '0')) then
+            last_seen <= '1';
+        end if;
+
+        if (reset = '1') then
             lives <= TO_SIGNED(3, 2);
+        elsif ((ob_1_hit = '1' and last_seen /= '0') or (ob_2_hit = '1' and last_seen /= '1')) then
+            lives <= lives - 1;
         end if;
     end process;
 

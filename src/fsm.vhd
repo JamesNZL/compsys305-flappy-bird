@@ -27,6 +27,7 @@ architecture state_driver of fsm is
 
     signal bird_died : std_logic;
 
+    signal JaMeS_fLaG : std_logic := '0';
     signal lives : unsigned(1 downto 0) := TO_UNSIGNED(3, 2);
 begin
 
@@ -36,7 +37,10 @@ begin
     begin
         if (Reset = '1') then
             lives <= TO_UNSIGNED(3, 2);
-        elsif ((obs_one_hit = '1' or obs_two_hit = '1) and lives /= 0) then
+        elsif (obs_one_hit = '0' and obs_two_hit = '0') then
+            JaMeS_fLaG <= '0';
+        elsif ((obs_one_hit = '1' or obs_two_hit = '1') and JaMeS_fLaG = '0' and lives /= 0) then
+            JaMeS_fLaG <= '1';
             lives <= lives - 1;
         end if;
     end process;

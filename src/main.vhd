@@ -352,6 +352,12 @@ begin
 
     ----------------------------------
 
+    LEDR(0) <= obs_one_pass;
+    LEDR(1) <= obs_two_pass;
+
+    LEDR(3) <= obs_one_hit;
+    LEDR(4) <= obs_two_hit;
+
     -------------DRAWING--------------
 
     paint_screen : process (clk)

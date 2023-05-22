@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 entity fsm is
     port (
-        clk, reset : in std_logic;
+        Clk, Reset : in std_logic;
         menu_navigator_1, menu_navigator_2 : in std_logic;
         mouse_right, mouse_left : in std_logic;
         obs_one_hit, obs_two_hit : in std_logic;
@@ -27,34 +27,36 @@ architecture state_driver of fsm is
 
     signal bird_died : std_logic;
 
-    signal JaMeS_fLaG : std_logic := '0';
+    signal live_lost_flag : std_logic := '0';
     signal lives : unsigned(1 downto 0) := TO_UNSIGNED(3, 2);
 begin
 
     lives_out <= lives;
 
-    lives_calculator : process (Reset, obs_one_hit, obs_two_hit)
+    calculate_lives : process (Clk, Reset, obs_one_hit, obs_two_hit)
     begin
-        if (Reset = '1') then
-            lives <= TO_UNSIGNED(3, 2);
-        elsif (obs_one_hit = '0' and obs_two_hit = '0') then
-            JaMeS_fLaG <= '0';
-        elsif ((obs_one_hit = '1' or obs_two_hit = '1') and JaMeS_fLaG = '0' and lives /= 0) then
-            JaMeS_fLaG <= '1';
-            lives <= lives - 1;
+        if (rising_edge(Clk)) then
+            if (Reset = '1') then
+                lives <= TO_UNSIGNED(3, 2);
+            elsif (obs_one_hit = '0' and obs_two_hit = '0') then
+                live_lost_flag <= '0';
+            elsif ((obs_one_hit = '1' or obs_two_hit = '1') and live_lost_flag = '0') then
+                lives <= lives - 1;
+                live_lost_flag <= '1';
+            end if;
         end if;
-    end process;
+    end process calculate_lives;
 
-    sync_proc : process (clk)
+    sync_proc : process (Clk)
     begin
-        if rising_edge(clk) then
+        if rising_edge(Clk) then
             if (Reset = '1') then
                 state <= DrawMenu;
             else
                 state <= next_state;
             end if;
         end if;
-    end process;
+    end process sync_proc;
 
     decode_output : process (state, menu_navigator_1, menu_navigator_2, mouse_right, mouse_left, lives, obs_one_hit, obs_two_hit, hit_floor)
     begin
@@ -111,7 +113,7 @@ begin
                 menu_enable <= '0';
 
         end case;
-    end process;
+    end process decode_output;
 
     decode_next_state : process (state, menu_navigator_1, menu_navigator_2, mouse_right, mouse_left, bird_died)
     begin
@@ -175,6 +177,6 @@ begin
                 next_state <= DrawMenu;
 
         end case;
-    end process;
+    end process decode_next_state;
 
 end state_driver;

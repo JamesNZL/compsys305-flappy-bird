@@ -34,9 +34,7 @@ entity main is
         PS2_CLK : inout std_logic;
         PS2_DAT : inout std_logic;
         HEX1 : out std_logic_vector(6 downto 0);
-        HEX0 : out std_logic_vector(6 downto 0);
-        LEDR : out std_logic_vector(9 downto 0)
-    );
+        HEX0 : out std_logic_vector(6 downto 0));
 end main;
 
 architecture flappy_bird of main is
@@ -351,12 +349,6 @@ begin
     end process detect_collisions;
 
     ----------------------------------
-
-    LEDR(0) <= obs_one_pass;
-    LEDR(1) <= obs_two_pass;
-
-    LEDR(3) <= obs_one_hit;
-    LEDR(4) <= obs_two_hit;
 
     -------------DRAWING--------------
 

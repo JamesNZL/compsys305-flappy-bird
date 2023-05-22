@@ -147,7 +147,7 @@ architecture flappy_bird of main is
     signal mouse_row, mouse_column : signed(9 downto 0);
 
     signal movement_enable : std_logic;
-    signal hit_obstacle_1, hit_obstacle_2, hit_floor : std_logic;
+    signal obs_one_hit, obs_two_hit, hit_floor : std_logic := '0';
 
     signal bird_r, bird_g, bird_b : std_logic;
     signal bird_hovering : std_logic;
@@ -164,8 +164,8 @@ architecture flappy_bird of main is
     signal obs_one_tick, obs_two_tick : std_logic;
     signal obs_one_pass, obs_two_pass : std_logic;
 
-    signal JAMES_FLAG_ONE : std_logic := '0';
-    signal JAMES_FLAG_TWO : std_logic := '0';
+    signal obs_one_hit_flag : std_logic := '0';
+    signal obs_two_hit_flag : std_logic := '0';
 
     signal score_tens_tick, score_hundreds_tick : std_logic;
     signal score_ones, score_tens : std_logic_vector(3 downto 0);
@@ -202,8 +202,8 @@ begin
         menu_navigator_2 => not key2,
         mouse_right => mouse_right_event,
         mouse_left => mouse_left_event,
-        obs_one_hit => hit_obstacle_1,
-        obs_two_hit => hit_obstacle_2,
+        obs_one_hit => obs_one_hit,
+        obs_two_hit => obs_two_hit,
         hit_floor => hit_floor,
         bird_hovering => bird_hovering,
         lives_out => current_lives,
@@ -315,22 +315,28 @@ begin
 
             -- OBSTACLE ONE DETECTION
 
-            if (bird_det = '1' and obs_one_det = '1' and JAMES_FLAG_ONE = '0') then
-                hit_obstacle_1 <= '1';
-                JAMES_FLAG_ONE <= '1';
-            elsif (hit_obstacle_1 = '1' and obs_one_pass = '1') then
-                hit_obstacle_1 <= '0';
-                JAMES_FLAG_ONE <= '0';
+            if (key0 = '0') then
+                obs_one_hit <= '0';
+                obs_one_hit_flag <= '0';
+            elsif (obs_one_pass = '1') then
+                obs_one_hit <= '0';
+                obs_one_hit_flag <= '0';
+            elsif (bird_det = '1' and obs_one_det = '1' and obs_one_hit_flag = '0') then
+                obs_one_hit <= '1';
+                obs_one_hit_flag <= '1';
             end if;
 
             -- OBSTACLE TWO DETECTION
 
-            if (bird_det = '1' and obs_two_det = '1' and JAMES_FLAG_TWO = '0') then
-                hit_obstacle_1 <= '1';
-                JAMES_FLAG_TWO <= '1';
-            elsif (hit_obstacle_1 = '1' and obs_two_pass = '1') then
-                hit_obstacle_1 <= '0';
-                JAMES_FLAG_TWO <= '0';
+            if (key0 = '0') then
+                obs_two_hit <= '0';
+                obs_two_hit_flag <= '0';
+            elsif (obs_two_pass = '1') then
+                obs_two_hit <= '0';
+                obs_two_hit_flag <= '0';
+            elsif (bird_det = '1' and obs_two_det = '1' and obs_two_hit_flag = '0') then
+                obs_two_hit <= '1';
+                obs_two_hit_flag <= '1';
             end if;
 
             -- FLOOR DETECTION
@@ -345,16 +351,6 @@ begin
     end process detect_collisions;
 
     ----------------------------------
-
-    LEDR(0) <= obs_one_pass;
-    LEDR(1) <= obs_two_pass;
-
-    LEDR(3) <= obs_one_det;
-    LEDR(4) <= hit_obstacle_1;
-    LEDR(5) <= obs_two_det;
-    LEDR(6) <= hit_obstacle_2;
-
-    LEDR(7) <= collisions_enable;
 
     -------------DRAWING--------------
 

@@ -71,7 +71,7 @@ architecture flappy_bird of main is
             clk, reset : in std_logic;
             menu_navigator_1, menu_navigator_2 : in std_logic;
             mouse_right, mouse_left : in std_logic;
-            obs_one_hit, obs_two_hit, obs_one_pass, obs_two_pass : in std_logic;
+            obs_one_hit, obs_two_hit : in std_logic;
 
             -- bird states
             hit_floor : in std_logic;
@@ -79,7 +79,6 @@ architecture flappy_bird of main is
 
             lives_out : out unsigned(1 downto 0);
             menu_enable : out std_logic;
-            collisions_enable : out std_logic;
 
             movement_enable : out std_logic);
     end component;
@@ -164,7 +163,9 @@ architecture flappy_bird of main is
     signal obs_one_det, obs_two_det, obs_det : std_logic;
     signal obs_one_tick, obs_two_tick : std_logic;
     signal obs_one_pass, obs_two_pass : std_logic;
-    signal collisions_enable : std_logic;
+
+    signal JAMES_FLAG_ONE : std_logic := '0';
+    signal JAMES_FLAG_TWO : std_logic := '0';
 
     signal score_tens_tick, score_hundreds_tick : std_logic;
     signal score_ones, score_tens : std_logic_vector(3 downto 0);
@@ -203,13 +204,10 @@ begin
         mouse_left => mouse_left_event,
         obs_one_hit => hit_obstacle_1,
         obs_two_hit => hit_obstacle_2,
-        obs_one_pass => obs_one_pass,
-        obs_two_pass => obs_two_pass,
         hit_floor => hit_floor,
         bird_hovering => bird_hovering,
         lives_out => current_lives,
         -- menu_enable => null,
-        collisions_enable => collisions_enable,
         movement_enable => movement_enable);
 
     mousey_mouse : mouse
@@ -315,19 +313,27 @@ begin
     begin
         if rising_edge(clk) then
 
-            -- if (collisions_enable = '1') then
-            if (bird_det = '1' and obs_one_det = '1') then
+            -- OBSTACLE ONE DETECTION
+
+            if (bird_det = '1' and obs_one_det = '1' and JAMES_FLAG_ONE = '0') then
                 hit_obstacle_1 <= '1';
-            elsif (bird_det = '1' and obs_two_det = '1') then
-                hit_obstacle_2 <= '1';
-            else
+                JAMES_FLAG_ONE = '1';
+            elsif (hit_obstacle_1 = '1' and obs_one_pass = '1') then
                 hit_obstacle_1 <= '0';
-                hit_obstacle_2 <= '0';
+                JAMES_FLAG_ONE = '0';
             end if;
-            -- elsif (collisions_enable = '0') then
-            --     hit_obstacle_1 <= '0';
-            --     hit_obstacle_2 <= '0';
-            -- end if;
+
+            -- OBSTACLE TWO DETECTION
+
+            if (bird_det = '1' and obs_two_det = '1' and JAMES_FLAG_TWO = '0') then
+                hit_obstacle_1 <= '1';
+                JAMES_FLAG_TWO = '1';
+            elsif (hit_obstacle_1 = '1' and obs_two_pass = '1') then
+                hit_obstacle_1 <= '0';
+                JAMES_FLAG_TWO = '0';
+            end if;
+
+            -- FLOOR DETECTION
 
             if (bird_det = '1' and floor_det = '1') then
                 hit_floor <= '1';

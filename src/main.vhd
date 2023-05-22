@@ -317,12 +317,11 @@ begin
 					 coinTick <= '1';
 					 flag := '0';
 					 flag1 := '0';
-				elsif (flag1 = '0') then
-					coinTick <= '0';
             elsif (coinGone = '1') then
                 flag := '1';
 					 flag1 := '1';
-					 coinTick <= '0';
+				elsif (flag1 = '0') then
+					coinTick <= '0';
             end if;
 				
 				if (flag = '0') then

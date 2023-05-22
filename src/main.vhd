@@ -317,20 +317,20 @@ begin
 
             if (bird_det = '1' and obs_one_det = '1' and JAMES_FLAG_ONE = '0') then
                 hit_obstacle_1 <= '1';
-                JAMES_FLAG_ONE = '1';
+                JAMES_FLAG_ONE <= '1';
             elsif (hit_obstacle_1 = '1' and obs_one_pass = '1') then
                 hit_obstacle_1 <= '0';
-                JAMES_FLAG_ONE = '0';
+                JAMES_FLAG_ONE <= '0';
             end if;
 
             -- OBSTACLE TWO DETECTION
 
             if (bird_det = '1' and obs_two_det = '1' and JAMES_FLAG_TWO = '0') then
                 hit_obstacle_1 <= '1';
-                JAMES_FLAG_TWO = '1';
+                JAMES_FLAG_TWO <= '1';
             elsif (hit_obstacle_1 = '1' and obs_two_pass = '1') then
                 hit_obstacle_1 <= '0';
-                JAMES_FLAG_TWO = '0';
+                JAMES_FLAG_TWO <= '0';
             end if;
 
             -- FLOOR DETECTION

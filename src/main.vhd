@@ -359,18 +359,18 @@ begin
 
 						 charAddress <= "000110";
 						
-            fontcol <= std_logic_vector(xPixel - 200)(3 downto 1);
-				fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
+                   fontcol <= std_logic_vector(xPixel - 200)(3 downto 1);
+				       fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
 
-					if (charOUTPUT = '1') then
-						 paintR <= '1';
-						 paintG <= '1';
-						 paintB <= '1';
-					else
-						 paintR <= '0';
-						 paintG <= '0';
-						 paintB <= '0';
-					end if;
+							if (charOUTPUT = '1') then
+								 paintR <= '1';
+								 paintG <= '1';
+								 paintB <= '1';
+							else
+								 paintR <= '0';
+								 paintG <= '0';
+								 paintB <= '0';
+							end if;
 
 					 
 					 elsif ((xPixel >= 216 and xPixel < 232) and (yPixel >= 150 and yPixel < 166)) then
@@ -379,6 +379,42 @@ begin
 						 fontcol <= std_logic_vector(xPixel - 216)(3 downto 1);
 				       fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
 
+
+							if (charOUTPUT = '1') then
+								 paintR <= '1';
+								 paintG <= '1';
+								 paintB <= '1';
+							else
+								 paintR <= '0';
+								 paintG <= '0';
+								 paintB <= '0';
+							end if;
+
+						 
+					elsif ((xPixel >= 232 and xPixel < 248) and (yPixel >= 150 and yPixel < 166)) then
+						 
+						charAddress <= "000001";
+
+						fontcol <= std_logic_vector(xPixel - 232)(3 downto 1);
+				      fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
+						 
+
+						if (charOUTPUT = '1') then
+							 paintR <= '1';
+							 paintG <= '1';
+							 paintB <= '1';
+						else
+							 paintR <= '0';
+							 paintG <= '0';
+							 paintB <= '0';
+						end if;
+						
+				elsif ((xPixel >= 248 and xPixel < 264) and (yPixel >= 150 and yPixel < 166)) then
+					  
+					 charAddress <= "010000";
+					  
+					 fontcol <= std_logic_vector(xPixel - 248)(3 downto 1);
+				    fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
 
 						if (charOUTPUT = '1') then
 							 paintR <= '1';
@@ -390,78 +426,41 @@ begin
 							 paintB <= '0';
 						end if;
 
-						 
-					elsif ((xPixel >= 232 and xPixel < 248) and (yPixel >= 150 and yPixel < 166)) then
-						 
-						 charAddress <= "000001";
-
-						fontcol <= std_logic_vector(xPixel - 232)(3 downto 1);
-				      fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
-						 
-
-						 if (charOUTPUT = '1') then
-					 paintR <= '1';
-					 paintG <= '1';
-					 paintB <= '1';
-				else
-					 paintR <= '0';
-					 paintG <= '0';
-					 paintB <= '0';
-				end if;
-
-
-						 
-					
-						
-				elsif ((xPixel >= 248 and xPixel < 264) and (yPixel >= 150 and yPixel < 166)) then
-					  charAddress <= "010000";
-					  
-					  fontcol <= std_logic_vector(xPixel - 248)(3 downto 1);
-				     fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
-
-					if (charOUTPUT = '1') then
-					 paintR <= '1';
-					 paintG <= '1';
-					 paintB <= '1';
-				else
-					 paintR <= '0';
-					 paintG <= '0';
-					 paintB <= '0';
-				end if;
-
 					  
 				elsif ((xPixel >= 264 and xPixel < 280) and (yPixel >= 150 and yPixel < 166)) then
-						  charAddress <= "010000";
+						  
+					charAddress <= "010000";
 						 
-						 fontcol <= std_logic_vector(xPixel - 264)(3 downto 1);
-				       fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
-
-						 if (charOUTPUT = '1') then
-					 paintR <= '1';
-					 paintG <= '1';
-					 paintB <= '1';
-				else
-					 paintR <= '0';
-					 paintG <= '0';
-					 paintB <= '0';
-				end if;
+					fontcol <= std_logic_vector(xPixel - 264)(3 downto 1);
+				   fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
+									 
+							if (charOUTPUT = '1') then
+								 paintR <= '1';
+								 paintG <= '1';
+								 paintB <= '1';
+							else
+								 paintR <= '0';
+								 paintG <= '0';
+								 paintB <= '0';
+							end if;
 
 						  
 			 elsif ((xPixel >= 280 and xPixel < 296) and (yPixel >= 150 and yPixel < 166)) then
+				  
 				  charAddress <= "011001";
 				  
 				  fontcol <= std_logic_vector(xPixel - 280)(3 downto 1);
 				  fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
 
-				  if (charOUTPUT = '1') then
-					 paintR <= '1';
-					 paintG <= '1';
-					 paintB <= '1';
-				else
-					 paintR <= '0';
-					 paintG <= '0';
-					 paintB <= '0';
-				end if;
+					 if (charOUTPUT = '1') then
+						 paintR <= '1';
+						 paintG <= '1';
+						 paintB <= '1';
+					else
+						 paintR <= '0';
+						 paintG <= '0';
+						 paintB <= '0';
+					end if;
 
 				  
 			elsif ((xPixel >= 320 and xPixel < 336) and (yPixel >= 150 and yPixel < 166)) then
@@ -470,56 +469,61 @@ begin
 				  fontcol <= std_logic_vector(xPixel - 320)(3 downto 1);
 				  fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
 
-				  if (charOUTPUT = '1') then
-					 paintR <= '1';
-					 paintG <= '1';
-					 paintB <= '1';
-				else
-					 paintR <= '0';
-					 paintG <= '0';
-					 paintB <= '0';
-				end if;
+					 if (charOUTPUT = '1') then
+						 paintR <= '1';
+						 paintG <= '1';
+						 paintB <= '1';
+					else
+						 paintR <= '0';
+						 paintG <= '0';
+						 paintB <= '0';
+					end if;
 
 				  
-	   elsif ((xPixel >= 336 and xPixel < 352) and (yPixel >= 150 and yPixel < 166)) then
-						  charAddress <= "001001";
+	      elsif ((xPixel >= 336 and xPixel < 352) and (yPixel >= 150 and yPixel < 166)) then
+			 
+				 charAddress <= "001001";
+							 
+				 fontcol <= std_logic_vector(xPixel - 336)(3 downto 1);
+				 fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
+
+					if (charOUTPUT = '1') then
+						 paintR <= '1';
+						 paintG <= '1';
+						 paintB <= '1';
+					else
+						 paintR <= '0';
+						 paintG <= '0';
+						 paintB <= '0';
+					end if;
+
+			elsif ((xPixel >= 352 and xPixel < 368) and (yPixel >= 150 and yPixel < 166)) then
+						
+					charAddress <= "010010";
 						 
-						 fontcol <= std_logic_vector(xPixel - 336)(3 downto 1);
-				       fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
+					fontcol <= std_logic_vector(xPixel - 368)(3 downto 1);
+				   fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
 
-						  if (charOUTPUT = '1') then
-					 paintR <= '1';
-					 paintG <= '1';
-					 paintB <= '1';
-				else
-					 paintR <= '0';
-					 paintG <= '0';
-					 paintB <= '0';
-				end if;
-
-					elsif ((xPixel >= 352 and xPixel < 368) and (yPixel >= 150 and yPixel < 166)) then
-						  charAddress <= "010010";
-						 
-						 fontcol <= std_logic_vector(xPixel - 368)(3 downto 1);
-				       fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
-
-						if (charOUTPUT = '1') then
-					 paintR <= '1';
-					 paintG <= '1';
-					 paintB <= '1';
-				else
-					 paintR <= '0';
-					 paintG <= '0';
-					 paintB <= '0';
-				end if;
+					if (charOUTPUT = '1') then
+						 paintR <= '1';
+						 paintG <= '1';
+						 paintB <= '1';
+					else
+						 paintR <= '0';
+						 paintG <= '0';
+						 paintB <= '0';
+					end if;
 
 						  
-					elsif ((xPixel >= 368 and xPixel < 384) and (yPixel >= 150 and yPixel < 166)) then
-					  charAddress <= "000100";
+			
+	      elsif ((xPixel >= 368 and xPixel < 384) and (yPixel >= 150 and yPixel < 166)) then
+					  
+					 charAddress <= "000100";
+					 
 					 fontcol <= std_logic_vector(xPixel - 368)(3 downto 1);
 				    fontrow <= std_logic_vector(yPixel - 150)(3 downto 1);
 
-					if (charOUTPUT = '1') then
+				if (charOUTPUT = '1') then
 					 paintR <= '1';
 					 paintG <= '1';
 					 paintB <= '1';
@@ -529,8 +533,7 @@ begin
 					 paintB <= '0';
 				end if;
 
-					  
-					  
+								  
 			  ----TRAIN PRINTED--------
 					  
 				elsif ((xPixel >= 190 and xPixel < 206) and (yPixel >= 200 and yPixel < 216)) then
@@ -539,7 +542,7 @@ begin
 					 fontcol <= std_logic_vector(xPixel - 190)(3 downto 1);
 				    fontrow <= std_logic_vector(yPixel - 200)(3 downto 1);
 
-					 if (charOUTPUT = '1') then
+				if (charOUTPUT = '1') then
 					 paintR <= '1';
 					 paintG <= '1';
 					 paintB <= '1';

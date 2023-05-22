@@ -72,7 +72,7 @@ architecture flappy_bird of main is
             lfsrSeed                             : in  std_logic_vector(8 downto 1);
             start_xPos                           : in  signed(10 downto 0);
             pixel_row, pixel_column              : in  signed(9 downto 0);
-            red, green, blue, inPixel, scoreTick, coinLeft : out std_logic);
+            red, green, blue, inPixel, coinLeft : out std_logic);
     end component;
 
 
@@ -140,7 +140,8 @@ architecture flappy_bird of main is
     signal movementEnable                               : std_logic := '1';
     signal ObOneDet, ObTwoDet, ObDet                    : std_logic;
 	 signal coinEnable, coinGone                         : std_logic;
-	 signal coinDet, coinTick                            : std_logic;
+	 signal coinDet                                      : std_logic;
+	 signal coinTick                                     : std_logic := '0';
     signal ObOneTick, ObTwoTick, tensTick, hundredsTick : std_logic;
     signal scoreOnes, scoreTens                         : std_logic_vector(3 downto 0);
     signal BiDet, inHeart, inScore                      : std_logic;
@@ -221,7 +222,6 @@ begin
         green        => coinG,
         blue         => coinB,
         inPixel      => coinDet,
-        scoreTick    => coinTick,
 		  coinLeft     => coinGone);
 
     obstacle_two : obstacle
@@ -243,7 +243,7 @@ begin
     scoringOnes : scoreCounter
     port map(
         Clk          => vgaClk,
-        Tick         => (ObOneTick or ObTwoTick),
+        Tick         => (ObOneTick or ObTwoTick or coinTick),
         Reset        => pb1,
         setNextDigit => tensTick,
         Q_Out        => scoreOnes);
@@ -309,13 +309,20 @@ begin
 	 
 	 detectCoin : process (vgaClk)
 	 variable flag : std_logic := '1';
+	 variable flag1 : std_logic := '1';
     begin
         if rising_edge(vgaClk) then
 
-            if (BiDet = '1' and coinDet = '1') then
+            if (BiDet = '1' and coinDet = '1' and flag1 = '1') then
+					 coinTick <= '1';
 					 flag := '0';
+					 flag1 := '0';
+				elsif (flag1 = '0') then
+					coinTick <= '0';
             elsif (coinGone = '1') then
                 flag := '1';
+					 flag1 := '1';
+					 coinTick <= '0';
             end if;
 				
 				if (flag = '0') then

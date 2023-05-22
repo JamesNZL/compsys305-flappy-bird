@@ -8,7 +8,7 @@ entity coin is
         lfsrSeed : in std_logic_vector(8 downto 1);
         start_xPos : in signed(10 downto 0);
         pixel_row, pixel_column : in signed(9 downto 0);
-        red, green, blue, inPixel, scoreTick, coinLeft : out std_logic);
+        red, green, blue, inPixel, coinLeft : out std_logic);
 end coin;
 
 architecture behavior of coin is
@@ -49,8 +49,6 @@ begin
     drawCoin <= '0' when (reset = '1') else
                 '1' when (('0' & xPos <= '0' & pixel_column + pipeWidth) and ('0' & pixel_column <= '0' & xPos + pipeWidth) and (('0' & yPos <= pixel_row + pipeWidth) and ('0' & pixel_row <= yPos + pipeWidth))) else
                 '0';
-
-    --scoreTick <= '1' when ((xPos >= 300) and (xPos <= 340)) else '0';
 
     inPixel <= drawCoin;
 	

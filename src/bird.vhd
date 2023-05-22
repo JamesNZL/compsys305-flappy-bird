@@ -6,7 +6,7 @@ entity bird is
     port (
         clk, reset, enable, flap, hovering : in std_logic;
         pixel_row, pixel_column : in signed(9 downto 0);
-        red, green, blue, in_pixel, died : out std_logic);
+        red, green, blue, in_pixel, hit_floor : out std_logic);
 end bird;
 
 architecture behaviour of bird is
@@ -45,7 +45,7 @@ begin
             if (reset = '1') then
                 sub_pixel <= TO_SIGNED(0, 12);
                 y_pos <= TO_SIGNED(280, 10);
-                died <= '0';
+                hit_floor <= '0';
             elsif (hovering = '1') then
                 if (y_pos >= 300) then
                     sub_pixel <= (sub_pixel - 8);
@@ -73,10 +73,10 @@ begin
 
                     y_velocity <= shift_right(sub_pixel, 4)(11 downto 2);
                     y_pos <= (y_pos + y_velocity);
-                    died <= '0';
+                    hit_floor <= '0';
                 else
                     y_pos <= 480 - size;
-                    died <= '1';
+                    hit_floor <= '1';
                 end if;
             end if;
         end if;

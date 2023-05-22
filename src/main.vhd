@@ -34,7 +34,8 @@ entity main is
         PS2_CLK : inout std_logic;
         PS2_DAT : inout std_logic;
         HEX1 : out std_logic_vector(6 downto 0);
-        HEX0 : out std_logic_vector(6 downto 0)
+        HEX0 : out std_logic_vector(6 downto 0);
+        LEDR : out std_logic_vector(9 downto 0)
     );
 end main;
 
@@ -70,14 +71,15 @@ architecture flappy_bird of main is
             clk, reset : in std_logic;
             menu_navigator_1, menu_navigator_2 : in std_logic;
             mouse_right, mouse_left : in std_logic;
-            ob_1_hit, ob_2_hit, ob_1_pass, ob_2_pass : in std_logic;
+            obs_one_hit, obs_two_hit, obs_one_pass, obs_two_pass : in std_logic;
 
             -- bird states
             hit_floor : in std_logic;
             bird_hovering : out std_logic;
 
-            lives_out : out signed(1 downto 0);
+            lives_out : out unsigned(1 downto 0);
             menu_enable : out std_logic;
+            collisions_enable : out std_logic;
 
             movement_enable : out std_logic);
     end component;
@@ -96,7 +98,7 @@ architecture flappy_bird of main is
         port (
             clk, reset, enable, flap, hovering : in std_logic;
             pixel_row, pixel_column : in signed(9 downto 0);
-            red, green, blue, in_pixel, died : out std_logic);
+            red, green, blue, in_pixel, hit_floor : out std_logic);
     end component;
 
     component floor is
@@ -112,7 +114,7 @@ architecture flappy_bird of main is
             lfsr_seed : in std_logic_vector(8 downto 1);
             start_x_pos : in signed(10 downto 0);
             pixel_row, pixel_column : in signed(9 downto 0);
-            red, green, blue, in_pixel, score_tick : out std_logic);
+            red, green, blue, in_pixel, score_tick, collision_tick : out std_logic);
     end component;
 
     component score_counter is
@@ -151,7 +153,8 @@ architecture flappy_bird of main is
     signal bird_r, bird_g, bird_b : std_logic;
     signal bird_hovering : std_logic;
     signal bird_det : std_logic;
-    signal bird_died : std_logic := '0';
+    signal bird_hit_floor : std_logic := '0';
+    signal current_lives : unsigned(1 downto 0);
 
     signal floor_r, floor_g, floor_b : std_logic;
     signal floor_det : std_logic;
@@ -160,6 +163,8 @@ architecture flappy_bird of main is
     signal obs_two_r, obs_two_g, obs_two_b : std_logic;
     signal obs_one_det, obs_two_det, obs_det : std_logic;
     signal obs_one_tick, obs_two_tick : std_logic;
+    signal obs_one_pass, obs_two_pass : std_logic;
+    signal collisions_enable : std_logic;
 
     signal score_tens_tick, score_hundreds_tick : std_logic;
     signal score_ones, score_tens : std_logic_vector(3 downto 0);
@@ -196,14 +201,15 @@ begin
         menu_navigator_2 => not key2,
         mouse_right => mouse_right_event,
         mouse_left => mouse_left_event,
-        ob_1_hit => hit_obstacle_1,
-        ob_2_hit => hit_obstacle_2,
-        ob_1_pass => obs_one_tick,
-        ob_2_pass => obs_two_tick,
+        obs_one_hit => hit_obstacle_1,
+        obs_two_hit => hit_obstacle_2,
+        obs_one_pass => obs_one_pass,
+        obs_two_pass => obs_two_pass,
         hit_floor => hit_floor,
         bird_hovering => bird_hovering,
-        -- lives_out => null,
+        lives_out => current_lives,
         -- menu_enable => null,
+        collisions_enable => collisions_enable,
         movement_enable => movement_enable);
 
     mousey_mouse : mouse
@@ -230,7 +236,7 @@ begin
         green => bird_g,
         blue => bird_b,
         in_pixel => bird_det,
-        died => bird_died);
+        hit_floor => bird_hit_floor);
 
     gnd : floor
     port map(
@@ -256,7 +262,8 @@ begin
         green => obs_one_g,
         blue => obs_one_b,
         in_pixel => obs_one_det,
-        score_tick => obs_one_tick);
+        score_tick => obs_one_tick,
+        collision_tick => obs_one_pass);
 
     obstacle_two : obstacle
     port map(
@@ -271,7 +278,8 @@ begin
         green => obs_two_g,
         blue => obs_two_b,
         in_pixel => obs_two_det,
-        score_tick => obs_two_tick);
+        score_tick => obs_two_tick,
+        collision_tick => obs_two_pass);
 
     score_counter_ones : score_counter
     port map(
@@ -307,6 +315,7 @@ begin
     begin
         if rising_edge(clk) then
 
+            -- if (collisions_enable = '1') then
             if (bird_det = '1' and obs_one_det = '1') then
                 hit_obstacle_1 <= '1';
             elsif (bird_det = '1' and obs_two_det = '1') then
@@ -315,6 +324,10 @@ begin
                 hit_obstacle_1 <= '0';
                 hit_obstacle_2 <= '0';
             end if;
+            -- elsif (collisions_enable = '0') then
+            --     hit_obstacle_1 <= '0';
+            --     hit_obstacle_2 <= '0';
+            -- end if;
 
             if (bird_det = '1' and floor_det = '1') then
                 hit_floor <= '1';
@@ -327,6 +340,16 @@ begin
 
     ----------------------------------
 
+    LEDR(0) <= obs_one_pass;
+    LEDR(1) <= obs_two_pass;
+
+    LEDR(3) <= obs_one_det;
+    LEDR(4) <= hit_obstacle_1;
+    LEDR(5) <= obs_two_det;
+    LEDR(6) <= hit_obstacle_2;
+
+    LEDR(7) <= collisions_enable;
+
     -------------DRAWING--------------
 
     paint_screen : process (clk)
@@ -334,9 +357,28 @@ begin
         if (rising_edge(clk)) then
 
             if (bird_det = '1') then
-                paint_r <= bird_r;
-                paint_g <= bird_g;
-                paint_b <= bird_b;
+                -- TODO: remove later
+                if (current_lives = 3) then
+                    paint_r <= bird_r;
+                    paint_g <= bird_g;
+                    paint_b <= bird_b;
+                elsif (current_lives = 2) then
+                    paint_r <= '0';
+                    paint_g <= '1';
+                    paint_b <= '0';
+                elsif (current_lives = 1) then
+                    paint_r <= '0';
+                    paint_g <= '0';
+                    paint_b <= '1';
+                elsif (current_lives = 0) then
+                    paint_r <= '1';
+                    paint_g <= '0';
+                    paint_b <= '0';
+                else
+                    paint_r <= '0';
+                    paint_g <= '0';
+                    paint_b <= '0';
+                end if;
             elsif (floor_det = '1') then
                 paint_r <= floor_r;
                 paint_g <= floor_g;

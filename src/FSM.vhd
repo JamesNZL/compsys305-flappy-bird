@@ -7,14 +7,15 @@ entity fsm is
         clk, reset : in std_logic;
         menu_navigator_1, menu_navigator_2 : in std_logic;
         mouse_right, mouse_left : in std_logic;
-        ob_1_hit, ob_2_hit, ob_1_pass, ob_2_pass : in std_logic;
+        obs_one_hit, obs_two_hit, obs_one_pass, obs_two_pass : in std_logic;
 
         -- bird states
         hit_floor : in std_logic;
         bird_hovering : out std_logic;
 
-        lives_out : out signed(1 downto 0);
+        lives_out : out unsigned(1 downto 0);
         menu_enable : out std_logic;
+        collisions_enable : out std_logic;
 
         movement_enable : out std_logic);
 end entity fsm;
@@ -24,31 +25,47 @@ architecture state_driver of fsm is
     type mode_memory is (TrainingMode, HardMode);
     signal state, next_state : game_state;
     signal difficulty : mode_memory;
+
     signal bird_died : std_logic;
-    signal last_seen : std_logic;
-    signal lives : signed(1 downto 0) := TO_SIGNED(3, 2);
+
+    signal collisions_temp : std_logic := '1';
+    signal RENAME_ME_FLAG : std_logic := '0';
+    signal lives : unsigned(1 downto 0) := TO_UNSIGNED(3, 2);
 begin
 
     lives_out <= lives;
+    collisions_enable <= collisions_temp;
 
-    -- last_seen <= '0' when ((ob_1_hit = '1' or last_seen = '0' or ob_1_pass = '1') and (ob_2_pass = '0' and ob_2_hit = '0'))
-    --              else
-    --              '1' when ((ob_2_hit = '1' or last_seen = '1' or ob_2_pass = '1') and (ob_2_pass = '0' and ob_2_hit = '0'));
+    -- collisions_temp <= '0' when ((obs_one_hit = '1' or obs_two_hit = '1' or collisions_temp = '0') and (obs_one_pass = '0' or obs_two_pass = '0')) else
+    --                   '1' when (collisions_temp = '1' or obs_one_pass = '1' or obs_two_pass = '1');
 
-    lives_calculator : process (ob_1_hit, ob_2_hit, ob_1_pass, ob_2_pass, reset)
+    lives_calculator : process (Reset, obs_one_hit, obs_two_hit, obs_one_pass, obs_two_pass)
     begin
-        if ((ob_1_hit = '1' or last_seen = '0' or ob_1_pass = '1') and (ob_2_pass = '0' and ob_2_hit = '0')) then
-            last_seen <= '0';
-        elsif ((ob_2_hit = '1' or last_seen = '1' or ob_2_pass = '1') and (ob_1_pass = '0' and ob_1_hit = '0')) then
-            last_seen <= '1';
+        if (Reset = '1') then
+            lives <= TO_UNSIGNED(3, 2);
+        elsif (obs_one_pass = '1' or obs_two_pass = '1') then
+            RENAME_ME_FLAG <= '0';
+        elsif ((obs_one_hit = '1' or obs_two_hit = '1') and RENAME_ME_FLAG = '0' and lives /= 0) then
+            lives <= lives - 1;
+            RENAME_ME_FLAG <= '1';
         end if;
 
-        if (reset = '1') then
-            lives <= TO_SIGNED(3, 2);
-        elsif ((ob_1_hit = '1' and last_seen /= '0') or (ob_2_hit = '1' and last_seen /= '1')) then
-            lives <= lives - 1;
-        end if;
+        -- if ((obs_one_hit = '1' or last_seen = '0' or obs_one_pass = '1') and (obs_two_pass = '0' and obs_two_hit = '0')) then
+        --     last_seen <= '0';
+        -- elsif ((obs_two_hit = '1' or last_seen = '1' or obs_two_pass = '1') and (obs_one_pass = '0' and obs_one_hit = '0')) then
+        --     last_seen <= '1';
+        -- end if;
+
+        -- if (reset = '1') then
+        --     lives <= TO_SIGNED(3, 2);
+        -- elsif ((obs_one_hit = '1' and last_seen /= '0') or (obs_two_hit = '1' and last_seen /= '1')) then
+        --     lives <= lives - 1;
+        -- end if;
     end process;
+
+    -- TODO: decrement lives if obs_one_hit or obs_two_hit 
+    -- TODO: disable collisions until obs_one_pass or obs_two_pass
+    -- TODO: re-enable collisions
 
     sync_proc : process (clk)
     begin
@@ -61,7 +78,7 @@ begin
         end if;
     end process;
 
-    decode_output : process (state, menu_navigator_1, menu_navigator_2, mouse_right, mouse_left, lives, ob_1_hit, ob_2_hit, hit_floor)
+    decode_output : process (state, menu_navigator_1, menu_navigator_2, mouse_right, mouse_left, lives, obs_one_hit, obs_two_hit, hit_floor)
     begin
 
         bird_hovering <= '0';
@@ -95,7 +112,7 @@ begin
                         bird_died <= '1';
                     end if;
                 else
-                    if (ob_1_hit = '1' or ob_2_hit = '1' or hit_floor = '1') then
+                    if (obs_one_hit = '1' or obs_two_hit = '1' or hit_floor = '1') then
                         bird_died <= '1';
                     end if;
                 end if;

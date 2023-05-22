@@ -8,7 +8,7 @@ entity obstacle is
         lfsr_seed : in std_logic_vector(8 downto 1);
         start_x_pos : in signed(10 downto 0);
         pixel_row, pixel_column : in signed(9 downto 0);
-        red, green, blue, in_pixel, score_tick : out std_logic);
+        red, green, blue, in_pixel, score_tick, collision_tick : out std_logic);
 end obstacle;
 
 architecture behaviour of obstacle is
@@ -56,6 +56,9 @@ begin
 
     score_tick <= '1' when ((x_pos >= 300) and (x_pos <= 340)) else
                   '0';
+
+    collision_tick <= '1' when ((x_pos >= 200) and (x_pos <= 240)) else
+                      '0';
 
     in_pixel <= draw_obs;
 

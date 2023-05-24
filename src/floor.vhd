@@ -20,7 +20,7 @@ begin
 
     in_pixel <= draw_floor;
 
-    red <= draw_floor;
+    red <= '0';
     green <= '0';
     blue <= '0';
 

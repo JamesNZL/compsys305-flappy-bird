@@ -802,9 +802,9 @@ begin
                     font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
                     if (character_output = '1') then
-                        score_r <= '0';
-                        score_g <= '0';
-                        score_b <= '0';
+                        paint_r <= '0';
+                        paint_g <= '0';
+                        paint_b <= '0';
                     end if;
 
                     -- Drawing the score (ones)
@@ -817,9 +817,9 @@ begin
                     font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
                     if (character_output = '1') then
-                        score_r <= '0';
-                        score_g <= '0';
-                        score_b <= '0';
+                        paint_r <= '0';
+                        paint_g <= '0';
+                        paint_b <= '0';
                     end if;
 
                     -- TODO: we need some sort of a hearts_det signal
@@ -830,9 +830,9 @@ begin
                     font_col <= std_logic_vector(x_pixel - 10)(4 downto 2);
                     font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
-                    heart_r <= character_output;
-                    heart_g <= '0';
-                    heart_b <= '0';
+                    paint_r <= character_output;
+                    paint_g <= '0';
+                    paint_b <= '0';
 
                     -- Heart 2
                 elsif ((x_pixel >= 45 and x_pixel < 77) and (y_pixel >= 10 and y_pixel < 42) and (display_heart = '1' and current_lives > 1)) then
@@ -841,9 +841,9 @@ begin
                     font_col <= std_logic_vector(x_pixel - 45)(4 downto 2);
                     font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
-                    heart_r <= character_output;
-                    heart_g <= '0';
-                    heart_b <= '0';
+                    paint_r <= character_output;
+                    paint_g <= '0';
+                    paint_b <= '0';
 
                     -- Heart 3
                 elsif ((x_pixel >= 80 and x_pixel < 112) and (y_pixel >= 10 and y_pixel < 42) and (display_heart = '1' and current_lives > 2)) then
@@ -852,9 +852,9 @@ begin
                     font_col <= std_logic_vector(x_pixel - 80)(4 downto 2);
                     font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
-                    heart_r <= character_output;
-                    heart_g <= '0';
-                    heart_b <= '0';
+                    paint_r <= character_output;
+                    paint_g <= '0';
+                    paint_b <= '0';
 
                 elsif (bird_det = '1') then
                     paint_r <= bird_r;

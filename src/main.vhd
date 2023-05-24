@@ -150,7 +150,7 @@ architecture flappy_bird of main is
     signal font_row, font_col : std_logic_vector (2 downto 0);
     signal character_output : std_logic;
 
-    signal home_screen_enable : std_logic;
+    signal menu_enable : std_logic;
 
     signal clk : std_logic;
     signal reset : std_logic;
@@ -235,7 +235,7 @@ begin
         hit_floor => hit_floor,
         bird_hovering => bird_hovering,
         lives_out => current_lives,
-        menu_enable => home_screen_enable,
+        menu_enable => menu_enable,
         heart_display => display_heart,
         reset => reset,
         movement_enable => movement_enable);
@@ -445,8 +445,9 @@ begin
         if (rising_edge(clk)) then
 
             ---BOX PRINTED
-            if (home_screen_enable = '1') then
+            if (menu_enable = '1') then
 
+                -- Drawing the menu
                 if ((x_pixel >= 180 and x_pixel < 460) and (y_pixel >= 140 and y_pixel < 340)) then
 
                     if ((x_pixel >= 185 and x_pixel < 455) and (y_pixel >= 145 and y_pixel < 335)) then
@@ -784,27 +785,14 @@ begin
                     end if;
 
                 else
-
-                    if (bird_det = '1') then
-                        paint_r <= bird_r;
-                        paint_g <= bird_g;
-                        paint_b <= bird_b;
-                    elsif (obs_det = '1') then
-                        paint_r <= (obs_one_r or obs_two_r);
-                        paint_g <= (obs_one_g or obs_two_g);
-                        paint_b <= (obs_one_b or obs_two_b);
-
-                    else
-                        paint_r <= '0';
-                        paint_g <= '1';
-                        paint_b <= '1';
-
-                    end if;
-
+                    paint_r <= '0';
+                    paint_g <= '1';
+                    paint_b <= '1';
                 end if;
 
             else
 
+                -- Drawing the score (tens)
                 if ((x_pixel >= 120 and x_pixel < 152) and (y_pixel >= 10 and y_pixel < 42)) then
 
                     int_value := to_integer(unsigned(score_tens)) + 48;
@@ -817,9 +805,9 @@ begin
                         score_r <= '0';
                         score_g <= '0';
                         score_b <= '0';
-
                     end if;
 
+                    -- Drawing the score (ones)
                 elsif ((x_pixel >= 155 and x_pixel < 187) and (y_pixel >= 10 and y_pixel < 42)) then
 
                     int_value := to_integer(unsigned(score_ones)) + 48;
@@ -832,116 +820,41 @@ begin
                         score_r <= '0';
                         score_g <= '0';
                         score_b <= '0';
-
                     end if;
 
-                elsif ((x_pixel >= 10 and x_pixel < 42) and (y_pixel >= 10 and y_pixel < 42)) then
+                    -- TODO: we need some sort of a hearts_det signal
+                    -- Heart 1
+                elsif ((x_pixel >= 10 and x_pixel < 42) and (y_pixel >= 10 and y_pixel < 42) and (display_heart = '1' and current_lives > 0)) then
+                    character_address <= "000000";
 
-                    if (display_heart = '1') then
+                    font_col <= std_logic_vector(x_pixel - 10)(4 downto 2);
+                    font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
-                        if (current_lives = 3) then
+                    heart_r <= character_output;
+                    heart_g <= '0';
+                    heart_b <= '0';
 
-                            character_address <= "000000";
+                    -- Heart 2
+                elsif ((x_pixel >= 45 and x_pixel < 77) and (y_pixel >= 10 and y_pixel < 42) and (display_heart = '1' and current_lives > 1)) then
+                    character_address <= "000000";
 
-                            font_col <= std_logic_vector(x_pixel - 10)(4 downto 2);
-                            font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
+                    font_col <= std_logic_vector(x_pixel - 45)(4 downto 2);
+                    font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
-                            heart_r <= character_output;
-                            heart_g <= '0';
-                            heart_b <= '0';
-                        end if;
-                    end if;
+                    heart_r <= character_output;
+                    heart_g <= '0';
+                    heart_b <= '0';
 
-                elsif ((x_pixel >= 45 and x_pixel < 77) and (y_pixel >= 10 and y_pixel < 42)) then
+                    -- Heart 3
+                elsif ((x_pixel >= 80 and x_pixel < 112) and (y_pixel >= 10 and y_pixel < 42) and (display_heart = '1' and current_lives > 2)) then
+                    character_address <= "000000";
 
-                    if (display_heart = '1') then
+                    font_col <= std_logic_vector(x_pixel - 80)(4 downto 2);
+                    font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
-                        if (current_lives = 3) then
-
-                            character_address <= "000000";
-
-                            font_col <= std_logic_vector(x_pixel - 45)(4 downto 2);
-                            font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
-
-                            heart_r <= character_output;
-                            heart_g <= '0';
-                            heart_b <= '0';
-                        end if;
-                    end if;
-
-                elsif ((x_pixel >= 80 and x_pixel < 112) and (y_pixel >= 10 and y_pixel < 42)) then
-
-                    if (display_heart = '1') then
-
-                        if (current_lives = 3) then
-
-                            character_address <= "000000";
-
-                            font_col <= std_logic_vector(x_pixel - 80)(4 downto 2);
-                            font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
-
-                            heart_r <= character_output;
-                            heart_g <= '0';
-                            heart_b <= '0';
-
-                        end if;
-
-                    end if;
-
-                elsif ((x_pixel >= 10 and x_pixel < 42) and (y_pixel >= 10 and y_pixel < 42)) then
-
-                    if (display_heart = '1') then
-
-                        if (current_lives = 2) then
-
-                            character_address <= "000000";
-
-                            font_col <= std_logic_vector(x_pixel - 10)(4 downto 2);
-                            font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
-
-                            heart_r <= character_output;
-                            heart_g <= '0';
-                            heart_b <= '0';
-
-                        end if;
-                    end if;
-
-                elsif ((x_pixel >= 45 and x_pixel < 77) and (y_pixel >= 10 and y_pixel < 42)) then
-
-                    if (display_heart = '1') then
-
-                        if (current_lives = 2) then
-
-                            character_address <= "000000";
-
-                            font_col <= std_logic_vector(x_pixel - 45)(4 downto 2);
-                            font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
-
-                            heart_r <= character_output;
-                            heart_g <= '0';
-                            heart_b <= '0';
-
-                        end if;
-                    end if;
-
-                elsif ((x_pixel >= 10 and x_pixel < 42) and (y_pixel >= 10 and y_pixel < 42)) then
-
-                    if (display_heart = '1') then
-
-                        if (current_lives = 1) then
-
-                            character_address <= "000000";
-
-                            font_col <= std_logic_vector(x_pixel - 10)(4 downto 2);
-                            font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
-
-                            heart_r <= character_output;
-                            heart_g <= '0';
-                            heart_b <= '0';
-
-                        end if;
-
-                    end if;
+                    heart_r <= character_output;
+                    heart_g <= '0';
+                    heart_b <= '0';
 
                 elsif (bird_det = '1') then
                     paint_r <= bird_r;
@@ -969,9 +882,7 @@ begin
                     paint_b <= '1';
 
                 end if;
-
             end if;
-
         end if;
 
     end process paint_screen;

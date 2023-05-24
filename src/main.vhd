@@ -754,7 +754,7 @@ begin
 
                             ----PRINT GAME-----
 
-                        elsif ((x_pixel >= 190 and x_pixel < 206) and (y_pixel >= 250 and y_pixel < 268)) then
+                        elsif ((x_pixel >= 190 and x_pixel < 206) and (y_pixel >= 250 and y_pixel < 266)) then
                             character_address <= "000111";
 
                             font_col <= std_logic_vector(x_pixel - 190)(3 downto 1);
@@ -770,7 +770,7 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 206 and x_pixel < 222) and (y_pixel >= 250 and y_pixel < 268)) then
+                        elsif ((x_pixel >= 206 and x_pixel < 222) and (y_pixel >= 250 and y_pixel < 266)) then
                             character_address <= "000001";
 
                             font_col <= std_logic_vector(x_pixel - 206)(3 downto 1);
@@ -786,7 +786,7 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 222 and x_pixel < 238) and (y_pixel >= 250 and y_pixel < 268)) then
+                        elsif ((x_pixel >= 222 and x_pixel < 238) and (y_pixel >= 250 and y_pixel < 266)) then
                             character_address <= "001101";
 
                             font_col <= std_logic_vector(x_pixel - 222)(3 downto 1);
@@ -802,7 +802,7 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 238 and x_pixel < 254) and (y_pixel >= 250 and y_pixel < 268)) then
+                        elsif ((x_pixel >= 238 and x_pixel < 254) and (y_pixel >= 250 and y_pixel < 266)) then
                             character_address <= "000101";
 
                             font_col <= std_logic_vector(x_pixel - 238)(3 downto 1);

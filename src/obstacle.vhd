@@ -8,10 +8,10 @@ entity obstacle is
         lfsr_seed : in std_logic_vector(8 downto 1);
         start_x_pos : in signed(10 downto 0);
         pixel_row, pixel_column : in signed(9 downto 0);
-        red, green, blue, in_pixel, score_tick : out std_logic);
+        red, green, blue, in_pixel, score_tick, collision_tick : out std_logic);
 end obstacle;
 
-architecture behavior of obstacle is
+architecture behaviour of obstacle is
 
     component lfsr is
         port (
@@ -57,6 +57,9 @@ begin
     score_tick <= '1' when ((x_pos >= 300) and (x_pos <= 340)) else
                   '0';
 
+    collision_tick <= '1' when ((x_pos >= 200) and (x_pos <= 240)) else
+                      '0';
+
     in_pixel <= draw_obs;
 
     red <= '0';
@@ -66,13 +69,13 @@ begin
     move_obstacle : process (clk)
     begin
         if (rising_edge(clk)) then
-            if (enable = '1') then
+            if (reset = '1') then
+                x_pos <= start_x_pos + pipe_width;
+                lfsr_clk <= '0';
+            elsif (enable = '1') then
 
                 if ((reset = '0') and (x_pos > (-pipe_width))) then
                     x_pos <= x_pos - x_velocity;
-                    lfsr_clk <= '0';
-                elsif (reset = '1') then
-                    x_pos <= start_x_pos + pipe_width;
                     lfsr_clk <= '0';
                 else
                     -- Wrap around
@@ -84,4 +87,4 @@ begin
         end if;
     end process move_obstacle;
 
-end behavior;
+end behaviour;

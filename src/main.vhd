@@ -25,8 +25,7 @@ library work;
 entity main is
     port (
         ref_clk : in std_logic;
-        pb1 : in std_logic;
-        pb2 : in std_logic;
+        key0, key1, key2, key3 : in std_logic;
         red_out : out std_logic;
         green_out : out std_logic;
         blue_out : out std_logic;
@@ -35,8 +34,7 @@ entity main is
         PS2_CLK : inout std_logic;
         PS2_DAT : inout std_logic;
         HEX1 : out std_logic_vector(6 downto 0);
-        HEX0 : out std_logic_vector(6 downto 0)
-    );
+        HEX0 : out std_logic_vector(6 downto 0));
 end main;
 
 architecture flappy_bird of main is
@@ -66,6 +64,23 @@ architecture flappy_bird of main is
         );
     end component;
 
+    component fsm
+        port (
+            clk, reset : in std_logic;
+            menu_navigator_1, menu_navigator_2 : in std_logic;
+            mouse_right, mouse_left : in std_logic;
+            obs_one_hit, obs_two_hit : in std_logic;
+
+            -- bird states
+            hit_floor : in std_logic;
+            bird_hovering : out std_logic;
+
+            lives_out : out unsigned(1 downto 0);
+            menu_enable : out std_logic;
+
+            movement_enable : out std_logic);
+    end component;
+
     component mouse
         port (
             clock_25Mhz, reset : in std_logic;
@@ -78,9 +93,16 @@ architecture flappy_bird of main is
 
     component bird
         port (
-            clk, reset, enable, flap : in std_logic;
+            clk, reset, enable, flap, hovering : in std_logic;
             pixel_row, pixel_column : in signed(9 downto 0);
-            red, green, blue, in_pixel, died : out std_logic);
+            red, green, blue, in_pixel, hit_floor : out std_logic);
+    end component;
+
+    component floor is
+        port (
+            clk, reset : in std_logic;
+            pixel_row, pixel_column : in signed(9 downto 0);
+            red, green, blue, in_pixel : out std_logic);
     end component;
 
     component obstacle is
@@ -89,7 +111,7 @@ architecture flappy_bird of main is
             lfsr_seed : in std_logic_vector(8 downto 1);
             start_x_pos : in signed(10 downto 0);
             pixel_row, pixel_column : in signed(9 downto 0);
-            red, green, blue, in_pixel, score_tick : out std_logic);
+            red, green, blue, in_pixel, score_tick, collision_tick : out std_logic);
     end component;
 
     component score_counter is
@@ -122,16 +144,26 @@ architecture flappy_bird of main is
     signal mouse_left_event, mouse_right_event : std_logic;
     signal mouse_row, mouse_column : signed(9 downto 0);
 
-    signal movement_enable : std_logic := '1';
+    signal movement_enable : std_logic;
+    signal obs_one_hit, obs_two_hit, hit_floor : std_logic := '0';
 
     signal bird_r, bird_g, bird_b : std_logic;
+    signal bird_hovering : std_logic;
     signal bird_det : std_logic;
-    signal bird_died : std_logic := '0';
+    signal bird_hit_floor : std_logic := '0';
+    signal current_lives : unsigned(1 downto 0);
+
+    signal floor_r, floor_g, floor_b : std_logic;
+    signal floor_det : std_logic;
 
     signal obs_one_r, obs_one_g, obs_one_b : std_logic;
     signal obs_two_r, obs_two_g, obs_two_b : std_logic;
     signal obs_one_det, obs_two_det, obs_det : std_logic;
     signal obs_one_tick, obs_two_tick : std_logic;
+    signal obs_one_pass, obs_two_pass : std_logic;
+
+    signal obs_one_hit_flag : std_logic := '0';
+    signal obs_two_hit_flag : std_logic := '0';
 
     signal score_tens_tick, score_hundreds_tick : std_logic;
     signal score_ones, score_tens : std_logic_vector(3 downto 0);
@@ -160,6 +192,22 @@ begin
         pixel_column => x_pixel,
         pixel_row => y_pixel);
 
+    state_machine : fsm
+    port map(
+        clk => vert_sync,
+        reset => not key0,
+        menu_navigator_1 => not key3,
+        menu_navigator_2 => not key2,
+        mouse_right => mouse_right_event,
+        mouse_left => mouse_left_event,
+        obs_one_hit => obs_one_hit,
+        obs_two_hit => obs_two_hit,
+        hit_floor => hit_floor,
+        bird_hovering => bird_hovering,
+        lives_out => current_lives,
+        -- menu_enable => null,
+        movement_enable => movement_enable);
+
     mousey_mouse : mouse
     port map(
         clock_25Mhz => clk,
@@ -174,21 +222,33 @@ begin
     elon : bird
     port map(
         clk => vert_sync,
-        reset => not pb1,
+        reset => not key0,
         enable => movement_enable,
         flap => mouse_left_event,
+        hovering => bird_hovering,
         pixel_row => y_pixel,
         pixel_column => x_pixel,
         red => bird_r,
         green => bird_g,
         blue => bird_b,
         in_pixel => bird_det,
-        died => bird_died);
+        hit_floor => bird_hit_floor);
+
+    gnd : floor
+    port map(
+        clk => clk,
+        reset => not key0,
+        pixel_row => y_pixel,
+        pixel_column => x_pixel,
+        red => floor_r,
+        green => floor_g,
+        blue => floor_b,
+        in_pixel => floor_det);
 
     obstacle_one : obstacle
     port map(
         clk => vert_sync,
-        reset => not pb1,
+        reset => not key0,
         enable => movement_enable,
         lfsr_seed => std_logic_vector(x_pixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
         start_x_pos => TO_SIGNED(640, 11),
@@ -198,12 +258,13 @@ begin
         green => obs_one_g,
         blue => obs_one_b,
         in_pixel => obs_one_det,
-        score_tick => obs_one_tick);
+        score_tick => obs_one_tick,
+        collision_tick => obs_one_pass);
 
     obstacle_two : obstacle
     port map(
         clk => vert_sync,
-        reset => not pb1,
+        reset => not key0,
         enable => movement_enable,
         lfsr_seed => std_logic_vector(y_pixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
         start_x_pos => TO_SIGNED(960, 11),
@@ -213,12 +274,13 @@ begin
         green => obs_two_g,
         blue => obs_two_b,
         in_pixel => obs_two_det,
-        score_tick => obs_two_tick);
+        score_tick => obs_two_tick,
+        collision_tick => obs_two_pass);
 
     score_counter_ones : score_counter
     port map(
         clk => clk,
-        reset => not pb1,
+        reset => not key0,
         tick => (obs_one_tick or obs_two_tick),
         set_next_digit => score_tens_tick,
         score_out => score_ones);
@@ -226,7 +288,7 @@ begin
     score_counter_tens : score_counter
     port map(
         clk => clk,
-        reset => not pb1,
+        reset => not key0,
         tick => score_tens_tick,
         set_next_digit => score_hundreds_tick,
         score_out => score_tens);
@@ -243,21 +305,47 @@ begin
 
     -------------COLLISIONS--------------
 
-    --TODO: Pseudo randomize maybe with linear shift register
-
     obs_det <= (obs_one_det or obs_two_det);
 
     detect_collisions : process (clk)
     begin
         if rising_edge(clk) then
 
-            if (((movement_enable = '1') and (bird_det = '1' nand obs_det = '1') and (bird_died = '0')) or (pb1 = '0')) then
-                movement_enable <= '1';
-            else
-                movement_enable <= '0';
+            -- OBSTACLE ONE DETECTION
+
+            if (key0 = '0') then
+                obs_one_hit <= '0';
+                obs_one_hit_flag <= '0';
+            elsif (obs_one_pass = '1') then
+                obs_one_hit <= '0';
+                obs_one_hit_flag <= '0';
+            elsif (bird_det = '1' and obs_one_det = '1' and obs_one_hit_flag = '0') then
+                obs_one_hit <= '1';
+                obs_one_hit_flag <= '1';
             end if;
 
+            -- OBSTACLE TWO DETECTION
+
+            if (key0 = '0') then
+                obs_two_hit <= '0';
+                obs_two_hit_flag <= '0';
+            elsif (obs_two_pass = '1') then
+                obs_two_hit <= '0';
+                obs_two_hit_flag <= '0';
+            elsif (bird_det = '1' and obs_two_det = '1' and obs_two_hit_flag = '0') then
+                obs_two_hit <= '1';
+                obs_two_hit_flag <= '1';
+            end if;
+
+            -- FLOOR DETECTION
+
+            if (bird_det = '1' and floor_det = '1') then
+                hit_floor <= '1';
+            else
+                hit_floor <= '0';
+            end if;
         end if;
+
     end process detect_collisions;
 
     ----------------------------------
@@ -269,9 +357,32 @@ begin
         if (rising_edge(clk)) then
 
             if (bird_det = '1') then
-                paint_r <= bird_r;
-                paint_g <= bird_g;
-                paint_b <= bird_b;
+                -- TODO: remove later
+                if (current_lives = 3) then
+                    paint_r <= bird_r;
+                    paint_g <= bird_g;
+                    paint_b <= bird_b;
+                elsif (current_lives = 2) then
+                    paint_r <= '0';
+                    paint_g <= '1';
+                    paint_b <= '0';
+                elsif (current_lives = 1) then
+                    paint_r <= '0';
+                    paint_g <= '0';
+                    paint_b <= '1';
+                elsif (current_lives = 0) then
+                    paint_r <= '1';
+                    paint_g <= '0';
+                    paint_b <= '0';
+                else
+                    paint_r <= '0';
+                    paint_g <= '0';
+                    paint_b <= '0';
+                end if;
+            elsif (floor_det = '1') then
+                paint_r <= floor_r;
+                paint_g <= floor_g;
+                paint_b <= floor_b;
             elsif (obs_det = '1') then
                 paint_r <= (obs_one_r or obs_two_r); -- TODO: change to support 4 bit colour
                 paint_g <= (obs_one_g or obs_two_g);

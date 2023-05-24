@@ -1200,6 +1200,8 @@ begin
 									 character_address <= "110011";
 									 elsif(level = 4) then
 									 character_address <= "110100";
+									 else
+									 character_address <= "110001";
 									 end if;
 
                             font_col <= std_logic_vector(x_pixel - 106)(3 downto 1);

@@ -17,7 +17,7 @@ begin
 
     run_lfsr : process (clk, reset)
     begin
-        if (reset = '0') then
+        if (reset = '1') then
             current_state <= seed;
         elsif rising_edge(clk) then
             if (enable = '1') then

@@ -200,6 +200,8 @@ architecture flappy_bird of main is
     signal score_det : std_logic;
 
     signal level : unsigned(2 downto 0);
+	 signal level_r, level_g, level_b : std_logic;
+	 signal level_det : std_logic;
 
 begin
 
@@ -489,6 +491,13 @@ begin
                 paint_r <= heart_r;
                 paint_g <= heart_g;
                 paint_b <= heart_b;
+					 
+				elsif (level_det = '1') then
+				
+					 paint_r <= level_r;
+                paint_g <= level_g;
+                paint_b <= level_b;
+					 
 
             elsif (bird_det = '1') then
                 paint_r <= bird_r;
@@ -888,7 +897,7 @@ begin
                             ----PRINT GAME-----
 
                         elsif ((x_pixel >= 190 and x_pixel < 206) and (y_pixel >= 280 and y_pixel < 296)) then
-                            character_address <= "000111";
+                            character_address <= "010000";
 
                             font_col <= std_logic_vector(x_pixel - 190)(3 downto 1);
                             font_row <= std_logic_vector(y_pixel - 280)(3 downto 1);
@@ -904,7 +913,7 @@ begin
                             end if;
 
                         elsif ((x_pixel >= 206 and x_pixel < 222) and (y_pixel >= 280 and y_pixel < 296)) then
-                            character_address <= "000001";
+                            character_address <= "001100";
 
                             font_col <= std_logic_vector(x_pixel - 206)(3 downto 1);
                             font_row <= std_logic_vector(y_pixel - 280)(3 downto 1);
@@ -920,7 +929,7 @@ begin
                             end if;
 
                         elsif ((x_pixel >= 222 and x_pixel < 238) and (y_pixel >= 280 and y_pixel < 296)) then
-                            character_address <= "001101";
+                            character_address <= "000001";
 
                             font_col <= std_logic_vector(x_pixel - 222)(3 downto 1);
                             font_row <= std_logic_vector(y_pixel - 280)(3 downto 1);
@@ -936,7 +945,7 @@ begin
                             end if;
 
                         elsif ((x_pixel >= 238 and x_pixel < 254) and (y_pixel >= 280 and y_pixel < 296)) then
-                            character_address <= "000101";
+                            character_address <= "011001";
 
                             font_col <= std_logic_vector(x_pixel - 238)(3 downto 1);
                             font_row <= std_logic_vector(y_pixel - 280)(3 downto 1);
@@ -1106,6 +1115,105 @@ begin
                     end if;
 
                     score_det <= character_output;
+						  
+					---print level--------
+						  
+					elsif ((x_pixel >= 10 and x_pixel < 26) and (y_pixel >= 442 and y_pixel < 458)) then
+                            character_address <= "001100";
+
+                            font_col <= std_logic_vector(x_pixel - 10)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 442)(3 downto 1);
+
+                            if (character_output = '1') then
+										level_r <= '1';
+										level_g <= '1';
+										level_b <= '1';
+								    end if;
+									 
+									  level_det <= character_output;
+
+                        elsif ((x_pixel >= 26 and x_pixel < 42) and (y_pixel >= 442 and y_pixel < 458)) then
+                            character_address <= "000101";
+
+                            font_col <= std_logic_vector(x_pixel - 26)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 442)(3 downto 1);
+
+                            if (character_output = '1') then
+										level_r <= '1';
+										level_g <= '1';
+										level_b <= '1';
+								    end if;
+									 
+									 level_det <= character_output;
+
+                        elsif ((x_pixel >= 42 and x_pixel < 58) and (y_pixel >= 442 and y_pixel < 458)) then
+                            character_address <= "010110";
+
+                            font_col <= std_logic_vector(x_pixel - 42)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 442)(3 downto 1);
+
+                            if (character_output = '1') then
+										level_r <= '1';
+										level_g <= '1';
+										level_b <= '1';
+								    end if;
+									 
+									 level_det <= character_output;
+
+                        elsif ((x_pixel >= 58 and x_pixel < 74) and (y_pixel >= 442 and y_pixel < 458)) then
+                            character_address <= "000101";
+
+                            font_col <= std_logic_vector(x_pixel - 58)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 442)(3 downto 1);
+
+                            if (character_output = '1') then
+										level_r <= '1';
+										level_g <= '1';
+										level_b <= '1';
+								    end if;
+									 
+									 level_det <= character_output;
+
+                        elsif ((x_pixel >= 74 and x_pixel < 90) and (y_pixel >= 442 and y_pixel < 458)) then
+                            character_address <= "001100";
+
+                            font_col <= std_logic_vector(x_pixel - 74)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 442)(3 downto 1);
+									 
+									 if (character_output = '1') then
+										level_r <= '1';
+										level_g <= '1';
+										level_b <= '1';
+								    end if;
+									 
+									 level_det <= character_output;
+
+							 ---LEVEL ---- 
+									 
+								elsif ((x_pixel >= 106 and x_pixel < 122) and (y_pixel >= 442 and y_pixel < 458)) then
+                            
+									 if (level = 1) then
+									 character_address <= "110001";
+									 elsif (level = 2) then 
+									 character_address <= "110010";
+									 elsif(level = 3) then 
+									 character_address <= "110011";
+									 elsif(level = 4) then
+									 character_address <= "110100";
+									 end if;
+
+                            font_col <= std_logic_vector(x_pixel - 106)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 442)(3 downto 1);
+
+                            if (character_output = '1') then
+										level_r <= '1';
+										level_g <= '1';
+										level_b <= '1';
+								    end if;
+									 
+									 level_det <= character_output;
+
+					
 
                     -- Heart 1
                 elsif ((x_pixel >= 85 and x_pixel < 117) and (y_pixel >= 10 and y_pixel < 42) and (display_heart = '1' and current_lives > 0)) then

@@ -533,11 +533,11 @@ begin
                     if ((x_pixel >= 175 and x_pixel < 465) and (y_pixel >= 135 and y_pixel < 345)) then
 
                         ---FLAPPYBIRD PRINTED
-                        if ((x_pixel >= 200 and x_pixel < 216) and (y_pixel >= 150 and y_pixel < 166)) then
+                        if ((x_pixel >= 225 and x_pixel < 241) and (y_pixel >= 150 and y_pixel < 166)) then
 
                             character_address <= "000110";
 
-                            font_col <= std_logic_vector(x_pixel - 200)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 225)(3 downto 1);
                             font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
                             if (character_output = '1') then
@@ -550,10 +550,10 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 216 and x_pixel < 232) and (y_pixel >= 150 and y_pixel < 166)) then
+                        elsif ((x_pixel >= 241 and x_pixel < 257) and (y_pixel >= 150 and y_pixel < 166)) then
                             character_address <= "001100";
 
-                            font_col <= std_logic_vector(x_pixel - 216)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 241)(3 downto 1);
                             font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
                             if (character_output = '1') then
@@ -566,11 +566,11 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 232 and x_pixel < 248) and (y_pixel >= 150 and y_pixel < 166)) then
+                        elsif ((x_pixel >= 257 and x_pixel < 273) and (y_pixel >= 150 and y_pixel < 166)) then
 
                             character_address <= "000001";
 
-                            font_col <= std_logic_vector(x_pixel - 232)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 257)(3 downto 1);
                             font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
                             if (character_output = '1') then
@@ -583,11 +583,11 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 248 and x_pixel < 264) and (y_pixel >= 150 and y_pixel < 166)) then
+                        elsif ((x_pixel >= 273 and x_pixel < 289) and (y_pixel >= 150 and y_pixel < 166)) then
 
                             character_address <= "010000";
 
-                            font_col <= std_logic_vector(x_pixel - 248)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 273)(3 downto 1);
                             font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
                             if (character_output = '1') then
@@ -600,11 +600,11 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 264 and x_pixel < 280) and (y_pixel >= 150 and y_pixel < 166)) then
+                        elsif ((x_pixel >= 289 and x_pixel < 305) and (y_pixel >= 150 and y_pixel < 166)) then
 
                             character_address <= "010000";
 
-                            font_col <= std_logic_vector(x_pixel - 264)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 289)(3 downto 1);
                             font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
                             if (character_output = '1') then
@@ -617,11 +617,11 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 280 and x_pixel < 296) and (y_pixel >= 150 and y_pixel < 166)) then
+                        elsif ((x_pixel >= 305 and x_pixel < 321) and (y_pixel >= 150 and y_pixel < 166)) then
 
                             character_address <= "011001";
 
-                            font_col <= std_logic_vector(x_pixel - 280)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 305)(3 downto 1);
                             font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
                             if (character_output = '1') then
@@ -634,10 +634,10 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 320 and x_pixel < 336) and (y_pixel >= 150 and y_pixel < 166)) then
+                        elsif ((x_pixel >= 345 and x_pixel < 361) and (y_pixel >= 150 and y_pixel < 166)) then
                             character_address <= "000010";
 
-                            font_col <= std_logic_vector(x_pixel - 320)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 345)(3 downto 1);
                             font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
                             if (character_output = '1') then
@@ -650,11 +650,11 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 336 and x_pixel < 352) and (y_pixel >= 150 and y_pixel < 166)) then
+                        elsif ((x_pixel >= 361 and x_pixel < 377) and (y_pixel >= 150 and y_pixel < 166)) then
 
                             character_address <= "001001";
 
-                            font_col <= std_logic_vector(x_pixel - 336)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 361)(3 downto 1);
                             font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
                             if (character_output = '1') then
@@ -667,11 +667,11 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 352 and x_pixel < 368) and (y_pixel >= 150 and y_pixel < 166)) then
+                        elsif ((x_pixel >= 377 and x_pixel < 393) and (y_pixel >= 150 and y_pixel < 166)) then
 
                             character_address <= "010010";
 
-                            font_col <= std_logic_vector(x_pixel - 368)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 377)(3 downto 1);
                             font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
                             if (character_output = '1') then
@@ -684,11 +684,11 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 368 and x_pixel < 384) and (y_pixel >= 150 and y_pixel < 166)) then
+                        elsif ((x_pixel >= 393 and x_pixel < 409) and (y_pixel >= 150 and y_pixel < 166)) then
 
                             character_address <= "000100";
 
-                            font_col <= std_logic_vector(x_pixel - 368)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 393)(3 downto 1);
                             font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
                             if (character_output = '1') then
@@ -703,11 +703,11 @@ begin
 
                             ----TRAIN PRINTED--------
 
-                        elsif ((x_pixel >= 190 and x_pixel < 206) and (y_pixel >= 200 and y_pixel < 216)) then
+                        elsif ((x_pixel >= 190 and x_pixel < 206) and (y_pixel >= 215 and y_pixel < 231)) then
                             character_address <= "010100";
 
                             font_col <= std_logic_vector(x_pixel - 190)(3 downto 1);
-                            font_row <= std_logic_vector(y_pixel - 200)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 215)(3 downto 1);
 
                             if (character_output = '1') then
                                 menu_r <= '1';
@@ -719,11 +719,11 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 206 and x_pixel < 222) and (y_pixel >= 200 and y_pixel < 216)) then
+                        elsif ((x_pixel >= 206 and x_pixel < 222) and (y_pixel >= 215 and y_pixel < 231)) then
                             character_address <= "010010";
 
                             font_col <= std_logic_vector(x_pixel - 206)(3 downto 1);
-                            font_row <= std_logic_vector(y_pixel - 200)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 215)(3 downto 1);
 
                             if (character_output = '1') then
                                 menu_r <= '1';
@@ -735,11 +735,11 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 222 and x_pixel < 238) and (y_pixel >= 200 and y_pixel < 216)) then
+                        elsif ((x_pixel >= 222 and x_pixel < 238) and (y_pixel >= 215 and y_pixel < 231)) then
                             character_address <= "000001";
 
                             font_col <= std_logic_vector(x_pixel - 222)(3 downto 1);
-                            font_row <= std_logic_vector(y_pixel - 200)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 215)(3 downto 1);
 
                             if (character_output = '1') then
                                 menu_r <= '1';
@@ -751,11 +751,11 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 238 and x_pixel < 254) and (y_pixel >= 200 and y_pixel < 216)) then
+                        elsif ((x_pixel >= 238 and x_pixel < 254) and (y_pixel >= 215 and y_pixel < 231)) then
                             character_address <= "001001";
 
                             font_col <= std_logic_vector(x_pixel - 238)(3 downto 1);
-                            font_row <= std_logic_vector(y_pixel - 200)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 215)(3 downto 1);
 
                             if (character_output = '1') then
                                 menu_r <= '1';
@@ -767,11 +767,11 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 254 and x_pixel < 270) and (y_pixel >= 200 and y_pixel < 216)) then
+                        elsif ((x_pixel >= 254 and x_pixel < 270) and (y_pixel >= 215 and y_pixel < 231)) then
                             character_address <= "001110";
 
                             font_col <= std_logic_vector(x_pixel - 254)(3 downto 1);
-                            font_row <= std_logic_vector(y_pixel - 200)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 215)(3 downto 1);
 
                             if (character_output = '1') then
                                 menu_r <= '1';
@@ -782,14 +782,116 @@ begin
                                 menu_g <= '0';
                                 menu_b <= '0';
                             end if;
+									 
+									 ----PRINY[KEY3]------
+									 
+									 
+									 elsif ((x_pixel >= 354 and x_pixel < 370) and (y_pixel >= 215 and y_pixel < 231)) then
+                            character_address <= "011011";
+
+                            font_col <= std_logic_vector(x_pixel - 354)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 215)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+
+                        elsif ((x_pixel >= 370 and x_pixel < 386) and (y_pixel >= 215 and y_pixel < 231)) then
+                            character_address <= "001011";
+
+                            font_col <= std_logic_vector(x_pixel - 370)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 215)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+
+                        elsif ((x_pixel >= 386 and x_pixel < 402) and (y_pixel >= 215 and y_pixel < 231)) then
+                            character_address <= "000101";
+
+                            font_col <= std_logic_vector(x_pixel - 386)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 215)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+
+                        elsif ((x_pixel >= 402 and x_pixel < 418) and (y_pixel >= 215 and y_pixel < 231)) then
+                            character_address <= "011001";
+
+                            font_col <= std_logic_vector(x_pixel - 402)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 215)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+
+                        elsif ((x_pixel >= 418 and x_pixel < 434) and (y_pixel >= 215 and y_pixel < 231)) then
+                            character_address <= "110011";
+
+                            font_col <= std_logic_vector(x_pixel - 418)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 215)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+									 
+									 
+								elsif ((x_pixel >= 434 and x_pixel < 450) and (y_pixel >= 215 and y_pixel < 231)) then
+                            character_address <= "011101";
+
+                            font_col <= std_logic_vector(x_pixel - 434)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 215)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+
+
 
                             ----PRINT GAME-----
 
-                        elsif ((x_pixel >= 190 and x_pixel < 206) and (y_pixel >= 250 and y_pixel < 266)) then
+                        elsif ((x_pixel >= 190 and x_pixel < 206) and (y_pixel >= 280 and y_pixel < 296)) then
                             character_address <= "000111";
 
                             font_col <= std_logic_vector(x_pixel - 190)(3 downto 1);
-                            font_row <= std_logic_vector(y_pixel - 250)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 280)(3 downto 1);
 
                             if (character_output = '1') then
                                 menu_r <= '1';
@@ -801,11 +903,11 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 206 and x_pixel < 222) and (y_pixel >= 250 and y_pixel < 266)) then
+                        elsif ((x_pixel >= 206 and x_pixel < 222) and (y_pixel >= 280 and y_pixel < 296)) then
                             character_address <= "000001";
 
                             font_col <= std_logic_vector(x_pixel - 206)(3 downto 1);
-                            font_row <= std_logic_vector(y_pixel - 250)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 280)(3 downto 1);
 
                             if (character_output = '1') then
                                 menu_r <= '1';
@@ -817,11 +919,11 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 222 and x_pixel < 238) and (y_pixel >= 250 and y_pixel < 266)) then
+                        elsif ((x_pixel >= 222 and x_pixel < 238) and (y_pixel >= 280 and y_pixel < 296)) then
                             character_address <= "001101";
 
                             font_col <= std_logic_vector(x_pixel - 222)(3 downto 1);
-                            font_row <= std_logic_vector(y_pixel - 250)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 280)(3 downto 1);
 
                             if (character_output = '1') then
                                 menu_r <= '1';
@@ -833,11 +935,11 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 238 and x_pixel < 254) and (y_pixel >= 250 and y_pixel < 266)) then
+                        elsif ((x_pixel >= 238 and x_pixel < 254) and (y_pixel >= 280 and y_pixel < 296)) then
                             character_address <= "000101";
 
                             font_col <= std_logic_vector(x_pixel - 238)(3 downto 1);
-                            font_row <= std_logic_vector(y_pixel - 250)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 280)(3 downto 1);
 
                             if (character_output = '1') then
                                 menu_r <= '1';
@@ -848,6 +950,106 @@ begin
                                 menu_g <= '0';
                                 menu_b <= '0';
                             end if;
+							-----PRINT [KEY2]------
+							
+							
+									 elsif ((x_pixel >= 354 and x_pixel < 370) and (y_pixel >= 280 and y_pixel < 296)) then
+                            character_address <= "011011";
+
+                            font_col <= std_logic_vector(x_pixel - 354)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 280)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+
+                        elsif ((x_pixel >= 370 and x_pixel < 386) and (y_pixel >= 280 and y_pixel < 296)) then
+                            character_address <= "001011";
+
+                            font_col <= std_logic_vector(x_pixel - 370)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 280)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+
+                        elsif ((x_pixel >= 386 and x_pixel < 402) and (y_pixel >= 280 and y_pixel < 296)) then
+                            character_address <= "000101";
+
+                            font_col <= std_logic_vector(x_pixel - 386)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 280)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+
+                        elsif ((x_pixel >= 402 and x_pixel < 418) and (y_pixel >= 280 and y_pixel < 296)) then
+                            character_address <= "011001";
+
+                            font_col <= std_logic_vector(x_pixel - 402)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 280)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+
+                        elsif ((x_pixel >= 418 and x_pixel < 434) and (y_pixel >= 280 and y_pixel < 296)) then
+                            character_address <= "110010";
+
+                            font_col <= std_logic_vector(x_pixel - 418)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 280)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+									 
+									 
+								elsif ((x_pixel >= 434 and x_pixel < 450) and (y_pixel >= 280 and y_pixel < 296)) then
+                            character_address <= "011101";
+
+                            font_col <= std_logic_vector(x_pixel - 434)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 280)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+
 
                         else
                             menu_r <= '0';

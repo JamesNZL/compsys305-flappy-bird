@@ -16,6 +16,7 @@ entity fsm is
         lives_out : out unsigned(1 downto 0);
         menu_enable : out std_logic;
         heart_display : out std_logic;
+		  level_display : out std_logic;
         reset : out std_logic;
 
         movement_enable : out std_logic
@@ -37,6 +38,8 @@ begin
     lives_out <= lives;
     heart_display <= '1' when (difficulty = TrainingMode) else
                      '0';
+	level_display <= '1' when (difficulty = HardMode) else
+							'0';
 
     calculate_lives : process (clk, reset_input, obs_one_hit, obs_two_hit)
     begin

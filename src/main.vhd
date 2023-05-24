@@ -75,6 +75,7 @@ architecture flappy_bird of main is
 
             lives_out : out unsigned(1 downto 0);
             heart_display : out std_logic;
+				level_display : out std_logic;
             menu_enable : out std_logic;
             reset : out std_logic;
 
@@ -202,6 +203,7 @@ architecture flappy_bird of main is
     signal level : unsigned(2 downto 0);
 	 signal level_r, level_g, level_b : std_logic;
 	 signal level_det : std_logic;
+	 signal display_level : std_logic;
 
 begin
 
@@ -243,6 +245,7 @@ begin
         lives_out => current_lives,
         menu_enable => menu_enable,
         heart_display => display_heart,
+		  level_display => display_level,
         reset => reset,
         movement_enable => movement_enable);
 
@@ -1118,7 +1121,7 @@ begin
 						  
 					---print level--------
 						  
-					elsif ((x_pixel >= 10 and x_pixel < 26) and (y_pixel >= 442 and y_pixel < 458)) then
+					elsif ((x_pixel >= 10 and x_pixel < 26) and (y_pixel >= 442 and y_pixel < 458) and (display_level = '1')) then
                             character_address <= "001100";
 
                             font_col <= std_logic_vector(x_pixel - 10)(3 downto 1);
@@ -1132,7 +1135,7 @@ begin
 									 
 									  level_det <= character_output;
 
-                        elsif ((x_pixel >= 26 and x_pixel < 42) and (y_pixel >= 442 and y_pixel < 458)) then
+                        elsif ((x_pixel >= 26 and x_pixel < 42) and (y_pixel >= 442 and y_pixel < 458) and (display_level = '1')) then
                             character_address <= "000101";
 
                             font_col <= std_logic_vector(x_pixel - 26)(3 downto 1);
@@ -1146,7 +1149,7 @@ begin
 									 
 									 level_det <= character_output;
 
-                        elsif ((x_pixel >= 42 and x_pixel < 58) and (y_pixel >= 442 and y_pixel < 458)) then
+                        elsif ((x_pixel >= 42 and x_pixel < 58) and (y_pixel >= 442 and y_pixel < 458) and (display_level = '1')) then
                             character_address <= "010110";
 
                             font_col <= std_logic_vector(x_pixel - 42)(3 downto 1);
@@ -1160,7 +1163,7 @@ begin
 									 
 									 level_det <= character_output;
 
-                        elsif ((x_pixel >= 58 and x_pixel < 74) and (y_pixel >= 442 and y_pixel < 458)) then
+                        elsif ((x_pixel >= 58 and x_pixel < 74) and (y_pixel >= 442 and y_pixel < 458) and (display_level = '1')) then
                             character_address <= "000101";
 
                             font_col <= std_logic_vector(x_pixel - 58)(3 downto 1);
@@ -1174,7 +1177,7 @@ begin
 									 
 									 level_det <= character_output;
 
-                        elsif ((x_pixel >= 74 and x_pixel < 90) and (y_pixel >= 442 and y_pixel < 458)) then
+                        elsif ((x_pixel >= 74 and x_pixel < 90) and (y_pixel >= 442 and y_pixel < 458) and (display_level = '1')) then
                             character_address <= "001100";
 
                             font_col <= std_logic_vector(x_pixel - 74)(3 downto 1);
@@ -1190,7 +1193,7 @@ begin
 
 							 ---LEVEL ---- 
 									 
-								elsif ((x_pixel >= 106 and x_pixel < 122) and (y_pixel >= 442 and y_pixel < 458)) then
+								elsif ((x_pixel >= 106 and x_pixel < 122) and (y_pixel >= 442 and y_pixel < 458) and (display_level = '1')) then
                             
 									 if (level = 0) then
 									 character_address <= "110001";

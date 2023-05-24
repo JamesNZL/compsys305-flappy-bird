@@ -44,8 +44,7 @@ architecture flappy_bird of main is
             refclk : in std_logic;
             rst : in std_logic;
             outclk_0 : out std_logic;
-            locked : out std_logic
-        );
+            locked : out std_logic);
     end component;
 
     component vga_sync
@@ -60,8 +59,7 @@ architecture flappy_bird of main is
             horiz_sync_out : out std_logic;
             vert_sync_out : out std_logic;
             pixel_column : out signed(9 downto 0);
-            pixel_row : out signed(9 downto 0)
-        );
+            pixel_row : out signed(9 downto 0));
     end component;
 
     component fsm
@@ -79,15 +77,6 @@ architecture flappy_bird of main is
             menu_enable : out std_logic;
 
             movement_enable : out std_logic);
-    end component;
-
-    component coin is
-        port (
-            enable, coin_enable, pb1, clk, vert_sync : in std_logic;
-            lfsrSeed : in std_logic_vector(8 downto 1);
-            start_xPos : in signed(10 downto 0);
-            pixel_row, pixel_column : in signed(9 downto 0);
-            red, green, blue, inPixel, coinLeft : out std_logic);
     end component;
 
     component mouse
@@ -121,6 +110,15 @@ architecture flappy_bird of main is
             start_x_pos : in signed(10 downto 0);
             pixel_row, pixel_column : in signed(9 downto 0);
             red, green, blue, in_pixel, score_tick, collision_tick : out std_logic);
+    end component;
+
+    component coin is
+        port (
+            clk, reset, enable, draw_enable : in std_logic;
+            lfsr_seed : in std_logic_vector(8 downto 1);
+            start_x_pos : in signed(10 downto 0);
+            pixel_row, pixel_column : in signed(9 downto 0);
+            red, green, blue, in_pixel, coin_gone : out std_logic);
     end component;
 
     component score_counter is
@@ -305,20 +303,19 @@ begin
 
     coin_one : coin
     port map(
-        clk => clk,
+        clk => vert_sync,
+        reset => not key0,
         enable => movement_enable,
-        coin_enable => coin_enable,
-        pb1 => KEY0,
-        vert_sync => vert_sync,
-        lfsrSeed => std_logic_vector(x_pixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
-        start_xPos => TO_SIGNED(800, 11),
+        draw_enable => coin_enable,
+        lfsr_seed => std_logic_vector(x_pixel(7 downto 0) xor y_pixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
+        start_x_pos => TO_SIGNED(800, 11),
         pixel_row => y_pixel,
         pixel_column => x_pixel,
         red => coin_r,
         green => coin_g,
         blue => coin_b,
-        inPixel => coin_det,
-        coinLeft => coin_gone);
+        in_pixel => coin_det,
+        coin_gone => coin_gone);
 
     score_display : char_rom
     port map(

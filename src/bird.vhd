@@ -4,9 +4,9 @@ use ieee.numeric_std.all;
 
 entity bird is
     port (
-        enable, pb1, pb2, clk, vert_sync : in std_logic;
+        clk, reset, enable, flap, hovering : in std_logic;
         pixel_row, pixel_column : in signed(9 downto 0);
-        red, green, blue, inPixel, died : out std_logic);
+        red, green, blue, in_pixel, hit_floor : out std_logic);
 end bird;
 
 architecture behaviour of bird is

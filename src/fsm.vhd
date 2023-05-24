@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 entity fsm is
     port (
-        Clk, Reset : in std_logic;
+        clk, reset : in std_logic;
         menu_navigator_1, menu_navigator_2 : in std_logic;
         mouse_right, mouse_left : in std_logic;
         obs_one_hit, obs_two_hit : in std_logic;
@@ -33,10 +33,10 @@ begin
 
     lives_out <= lives;
 
-    calculate_lives : process (Clk, Reset, obs_one_hit, obs_two_hit)
+    calculate_lives : process (clk, reset, obs_one_hit, obs_two_hit)
     begin
-        if (rising_edge(Clk)) then
-            if (Reset = '1') then
+        if (rising_edge(clk)) then
+            if (reset = '1') then
                 lives <= TO_UNSIGNED(3, 2);
             elsif (obs_one_hit = '0' and obs_two_hit = '0') then
                 live_lost_flag <= '0';
@@ -47,10 +47,10 @@ begin
         end if;
     end process calculate_lives;
 
-    sync_proc : process (Clk)
+    sync_proc : process (clk)
     begin
-        if rising_edge(Clk) then
-            if (Reset = '1') then
+        if rising_edge(clk) then
+            if (reset = '1') then
                 state <= DrawMenu;
             else
                 state <= next_state;

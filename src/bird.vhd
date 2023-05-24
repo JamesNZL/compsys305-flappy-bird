@@ -4,12 +4,14 @@ use ieee.numeric_std.all;
 
 entity bird is
     port (
-        enable, pb1, pb2, clk, vert_sync : in std_logic;
+        clk, reset, enable, flap, hovering : in std_logic;
         pixel_row, pixel_column : in signed(9 downto 0);
-        red, green, blue, inPixel, died : out std_logic);
+        red, green, blue, in_pixel, hit_floor : out std_logic);
 end bird;
 
-architecture behavior of bird is
+architecture behaviour of bird is
+
+    signal draw_bird : std_logic;
 
     signal drawBirdYellow : std_logic;
     signal drawBirdWhite : std_logic;
@@ -22,7 +24,7 @@ architecture behavior of bird is
     signal size5 : signed(9 downto 0);
     signal size6 : signed(9 downto 0);
     signal size7 : signed(9 downto 0);
-    signal yPos : signed(9 downto 0);
+    signal y_pos : signed(9 downto 0);
     signal xPos323 : signed(10 downto 0);
     signal xPos324 : signed(10 downto 0);
     signal xPos326 : signed(10 downto 0);
@@ -31,10 +33,9 @@ architecture behavior of bird is
     signal xPos314 : signed(10 downto 0);
     signal xPos315 : signed(10 downto 0);
     signal xPos316 : signed(10 downto 0);
-    signal yVelocity : signed(9 downto 0);
-    signal STOPGOINGUP : std_logic; -- TODO: do we still need this?
-    signal reset : std_logic;
-    signal subpixel : signed(11 downto 0);
+    signal y_velocity : signed(9 downto 0);
+    signal flapped_flag : std_logic; -- TODO: do we still need this?
+    signal sub_pixel : signed(11 downto 0);
 
 begin
 
@@ -142,40 +143,48 @@ begin
     --	end if;
     --	end process colourbird;
 
-    moveBird : process (vert_sync)
+    move_bird : process (clk)
     begin
         -- Move bird once every vertical sync
-        if (rising_edge(vert_sync)) then
-            if (enable = '1') then
-                if (yPos <= 479 - size) then
-                    if (pb2 = '1' and STOPGOINGUP = '0') then
-                        subpixel <= TO_SIGNED(-200, 12);
-                        STOPGOINGUP <= '1';
-                    elsif (yVelocity < 10) then
-                        subpixel <= (subpixel + 10);
-                    elsif (yPos >= 479 - size) then
-                        subpixel <= TO_SIGNED(0, 12);
+        if (rising_edge(clk)) then
+            if (reset = '1') then
+                sub_pixel <= TO_SIGNED(0, 12);
+                y_pos <= TO_SIGNED(280, 10);
+                hit_floor <= '0';
+            elsif (hovering = '1') then
+                if (y_pos >= 300) then
+                    sub_pixel <= (sub_pixel - 8);
+                elsif (y_pos <= 260) then
+                    sub_pixel <= (sub_pixel + 8);
+                end if;
+
+                y_velocity <= shift_right(sub_pixel, 4)(11 downto 2);
+                y_pos <= (y_pos + y_velocity);
+
+            elsif (enable = '1') then
+                if (y_pos <= 479 - size) then
+                    if (flap = '1' and flapped_flag = '0') then
+                        sub_pixel <= TO_SIGNED(-200, 12);
+                        flapped_flag <= '1';
+                    elsif (y_velocity < 10) then
+                        sub_pixel <= (sub_pixel + 10);
+                    elsif (y_pos >= 479 - size) then
+                        sub_pixel <= TO_SIGNED(0, 12);
                     end if;
 
-                    if (pb2 = '0') then
-                        STOPGOINGUP <= '0';
+                    if (flap = '0') then
+                        flapped_flag <= '0';
                     end if;
 
-                    yVelocity <= shift_right(subpixel, 4)(11 downto 2);
-                    yPos <= (yPos + yVelocity);
-                    died <= '0';
-                elsif reset = '1' then
-                    yPos <= TO_SIGNED(280, 10);
-                    died <= '0';
+                    y_velocity <= shift_right(sub_pixel, 4)(11 downto 2);
+                    y_pos <= (y_pos + y_velocity);
+                    hit_floor <= '0';
                 else
-                    yPos <= 480 - size;
-                    died <= '1';
+                    y_pos <= 480 - size;
+                    hit_floor <= '1';
                 end if;
             end if;
         end if;
-    end process moveBird;
+    end process move_bird;
 
-    reset <= '1' when (pb1 = '0' and yPos >= 479 - size) else
-             '0';
-
-end behavior;
+end behaviour;

@@ -442,8 +442,8 @@ refer to the applicable agreement for further details.
 	(port
 		(pt 264 64)
 		(output)
-		(text "left_button" (rect 0 0 53 12)(font "Arial" ))
-		(text "left_button" (rect 199 59 252 71)(font "Arial" ))
+		(text "mouse_left" (rect 0 0 53 12)(font "Arial" ))
+		(text "mouse_left" (rect 199 59 252 71)(font "Arial" ))
 		(line (pt 264 64)(pt 248 64))
 	)
 	(port

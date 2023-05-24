@@ -50,6 +50,8 @@ begin
     gap_centre <= signed(lfsr_out) + TO_SIGNED(240, 10);
 
     draw_obs <= '0' when (reset = '1') else
+                '1' when (('0' & x_pos <= '0' & pixel_column + pipe_width + 3) and ('0' & pixel_column <= '0' & x_pos + pipe_width + 3) and ((('0' & pixel_row <= gap_centre - gap_size) and('0' & pixel_row >= gap_centre - gap_size - 30)) or (('0' & pixel_row >= gap_centre + gap_size) and ('0' & pixel_row <= gap_centre + gap_size + 30)))) else
+                '1' when ((x_pos <= pixel_column + pipe_width + 3) and (pixel_column <= x_pos + pipe_width + 3) and (((pixel_row <= gap_centre - gap_size) and(pixel_row >= gap_centre - gap_size - 30)) or ((pixel_row >= gap_centre + gap_size) and (pixel_row <= gap_centre + gap_size + 30)))) else
                 '1' when (('0' & x_pos <= '0' & pixel_column + pipe_width) and ('0' & pixel_column <= '0' & x_pos + pipe_width) and (('0' & gap_centre >= pixel_row + gap_size) or ('0' & pixel_row >= gap_centre + gap_size))) else
                 '1' when ((x_pos <= pixel_column + pipe_width) and (pixel_column <= x_pos + pipe_width) and ((gap_centre >= pixel_row + gap_size) or (pixel_row >= gap_centre + gap_size))) else
                 '0';

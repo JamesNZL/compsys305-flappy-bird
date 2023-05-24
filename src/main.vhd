@@ -150,8 +150,6 @@ architecture flappy_bird of main is
     signal font_row, font_col : std_logic_vector (2 downto 0);
     signal character_output : std_logic;
 
-    signal menu_enable : std_logic;
-
     signal clk : std_logic;
     signal reset : std_logic;
 
@@ -161,6 +159,9 @@ architecture flappy_bird of main is
 
     signal mouse_left_event, mouse_right_event : std_logic;
     signal mouse_row, mouse_column : signed(9 downto 0);
+
+    signal menu_enable : std_logic;
+    signal menu_r, menu_g, menu_b : std_logic;
 
     signal movement_enable : std_logic;
     signal obs_one_hit, obs_two_hit, hit_floor : std_logic := '0';
@@ -189,13 +190,13 @@ architecture flappy_bird of main is
     signal coin_tick : std_logic := '0';
 
     signal heart_r, heart_g, heart_b : std_logic;
-    signal in_heart : std_logic;
+    signal heart_det : std_logic;
     signal display_heart : std_logic;
 
     signal score_tens_tick, score_hundreds_tick : std_logic;
     signal score_ones, score_tens : std_logic_vector(3 downto 0);
     signal score_r, score_g, score_b : std_logic;
-    signal in_score : std_logic;
+    signal score_det : std_logic;
 
 begin
 
@@ -438,13 +439,61 @@ begin
     -------------DRAWING--------------
 
     paint_screen : process (clk)
-
-        variable int_value : integer;
-
     begin
         if (rising_edge(clk)) then
 
             ---BOX PRINTED
+            if (menu_enable = '1') then
+
+                paint_r <= menu_r;
+                paint_g <= menu_g;
+                paint_b <= menu_b;
+
+            elsif (score_det = '1') then
+                paint_r <= score_r;
+                paint_g <= score_g;
+                paint_b <= score_b;
+
+            elsif (heart_det = '1') then
+                paint_r <= heart_r;
+                paint_g <= heart_g;
+                paint_b <= heart_b;
+
+            elsif (bird_det = '1') then
+                paint_r <= bird_r;
+                paint_g <= bird_g;
+                paint_b <= bird_b;
+
+            elsif (coin_det = '1' and coin_enable = '1') then
+                paint_r <= coin_r;
+                paint_g <= coin_g;
+                paint_b <= coin_b;
+
+            elsif (floor_det = '1') then
+                paint_r <= floor_r;
+                paint_g <= floor_g;
+                paint_b <= floor_b;
+
+            elsif (obs_det = '1') then
+                paint_r <= (obs_one_r or obs_two_r);
+                paint_g <= (obs_one_g or obs_two_g);
+                paint_b <= (obs_one_b or obs_two_b);
+
+            else
+                paint_r <= '0';
+                paint_g <= '1';
+                paint_b <= '1';
+
+            end if;
+        end if;
+    end process paint_screen;
+
+    get_characters : process (clk)
+        variable int_value : integer;
+    begin
+
+        if (rising_edge(clk)) then
+
             if (menu_enable = '1') then
 
                 -- Drawing the menu
@@ -461,13 +510,13 @@ begin
                             font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
                             if (character_output = '1') then
-                                paint_r <= '1';
-                                paint_g <= '1';
-                                paint_b <= '1';
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
                             else
-                                paint_r <= '0';
-                                paint_g <= '0';
-                                paint_b <= '0';
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
                             end if;
 
                         elsif ((x_pixel >= 216 and x_pixel < 232) and (y_pixel >= 150 and y_pixel < 166)) then
@@ -477,13 +526,13 @@ begin
                             font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
                             if (character_output = '1') then
-                                paint_r <= '1';
-                                paint_g <= '1';
-                                paint_b <= '1';
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
                             else
-                                paint_r <= '0';
-                                paint_g <= '0';
-                                paint_b <= '0';
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
                             end if;
 
                         elsif ((x_pixel >= 232 and x_pixel < 248) and (y_pixel >= 150 and y_pixel < 166)) then
@@ -494,13 +543,13 @@ begin
                             font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
                             if (character_output = '1') then
-                                paint_r <= '1';
-                                paint_g <= '1';
-                                paint_b <= '1';
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
                             else
-                                paint_r <= '0';
-                                paint_g <= '0';
-                                paint_b <= '0';
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
                             end if;
 
                         elsif ((x_pixel >= 248 and x_pixel < 264) and (y_pixel >= 150 and y_pixel < 166)) then
@@ -511,13 +560,13 @@ begin
                             font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
                             if (character_output = '1') then
-                                paint_r <= '1';
-                                paint_g <= '1';
-                                paint_b <= '1';
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
                             else
-                                paint_r <= '0';
-                                paint_g <= '0';
-                                paint_b <= '0';
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
                             end if;
 
                         elsif ((x_pixel >= 264 and x_pixel < 280) and (y_pixel >= 150 and y_pixel < 166)) then
@@ -528,13 +577,13 @@ begin
                             font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
                             if (character_output = '1') then
-                                paint_r <= '1';
-                                paint_g <= '1';
-                                paint_b <= '1';
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
                             else
-                                paint_r <= '0';
-                                paint_g <= '0';
-                                paint_b <= '0';
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
                             end if;
 
                         elsif ((x_pixel >= 280 and x_pixel < 296) and (y_pixel >= 150 and y_pixel < 166)) then
@@ -545,13 +594,13 @@ begin
                             font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
                             if (character_output = '1') then
-                                paint_r <= '1';
-                                paint_g <= '1';
-                                paint_b <= '1';
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
                             else
-                                paint_r <= '0';
-                                paint_g <= '0';
-                                paint_b <= '0';
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
                             end if;
 
                         elsif ((x_pixel >= 320 and x_pixel < 336) and (y_pixel >= 150 and y_pixel < 166)) then
@@ -561,13 +610,13 @@ begin
                             font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
                             if (character_output = '1') then
-                                paint_r <= '1';
-                                paint_g <= '1';
-                                paint_b <= '1';
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
                             else
-                                paint_r <= '0';
-                                paint_g <= '0';
-                                paint_b <= '0';
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
                             end if;
 
                         elsif ((x_pixel >= 336 and x_pixel < 352) and (y_pixel >= 150 and y_pixel < 166)) then
@@ -578,13 +627,13 @@ begin
                             font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
                             if (character_output = '1') then
-                                paint_r <= '1';
-                                paint_g <= '1';
-                                paint_b <= '1';
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
                             else
-                                paint_r <= '0';
-                                paint_g <= '0';
-                                paint_b <= '0';
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
                             end if;
 
                         elsif ((x_pixel >= 352 and x_pixel < 368) and (y_pixel >= 150 and y_pixel < 166)) then
@@ -595,13 +644,13 @@ begin
                             font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
                             if (character_output = '1') then
-                                paint_r <= '1';
-                                paint_g <= '1';
-                                paint_b <= '1';
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
                             else
-                                paint_r <= '0';
-                                paint_g <= '0';
-                                paint_b <= '0';
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
                             end if;
 
                         elsif ((x_pixel >= 368 and x_pixel < 384) and (y_pixel >= 150 and y_pixel < 166)) then
@@ -612,13 +661,13 @@ begin
                             font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
                             if (character_output = '1') then
-                                paint_r <= '1';
-                                paint_g <= '1';
-                                paint_b <= '1';
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
                             else
-                                paint_r <= '0';
-                                paint_g <= '0';
-                                paint_b <= '0';
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
                             end if;
 
                             ----TRAIN PRINTED--------
@@ -630,13 +679,13 @@ begin
                             font_row <= std_logic_vector(y_pixel - 200)(3 downto 1);
 
                             if (character_output = '1') then
-                                paint_r <= '1';
-                                paint_g <= '1';
-                                paint_b <= '1';
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
                             else
-                                paint_r <= '0';
-                                paint_g <= '0';
-                                paint_b <= '0';
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
                             end if;
 
                         elsif ((x_pixel >= 206 and x_pixel < 222) and (y_pixel >= 200 and y_pixel < 216)) then
@@ -646,13 +695,13 @@ begin
                             font_row <= std_logic_vector(y_pixel - 200)(3 downto 1);
 
                             if (character_output = '1') then
-                                paint_r <= '1';
-                                paint_g <= '1';
-                                paint_b <= '1';
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
                             else
-                                paint_r <= '0';
-                                paint_g <= '0';
-                                paint_b <= '0';
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
                             end if;
 
                         elsif ((x_pixel >= 222 and x_pixel < 238) and (y_pixel >= 200 and y_pixel < 216)) then
@@ -662,13 +711,13 @@ begin
                             font_row <= std_logic_vector(y_pixel - 200)(3 downto 1);
 
                             if (character_output = '1') then
-                                paint_r <= '1';
-                                paint_g <= '1';
-                                paint_b <= '1';
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
                             else
-                                paint_r <= '0';
-                                paint_g <= '0';
-                                paint_b <= '0';
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
                             end if;
 
                         elsif ((x_pixel >= 238 and x_pixel < 254) and (y_pixel >= 200 and y_pixel < 216)) then
@@ -678,13 +727,13 @@ begin
                             font_row <= std_logic_vector(y_pixel - 200)(3 downto 1);
 
                             if (character_output = '1') then
-                                paint_r <= '1';
-                                paint_g <= '1';
-                                paint_b <= '1';
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
                             else
-                                paint_r <= '0';
-                                paint_g <= '0';
-                                paint_b <= '0';
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
                             end if;
 
                         elsif ((x_pixel >= 254 and x_pixel < 270) and (y_pixel >= 200 and y_pixel < 216)) then
@@ -694,13 +743,13 @@ begin
                             font_row <= std_logic_vector(y_pixel - 200)(3 downto 1);
 
                             if (character_output = '1') then
-                                paint_r <= '1';
-                                paint_g <= '1';
-                                paint_b <= '1';
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
                             else
-                                paint_r <= '0';
-                                paint_g <= '0';
-                                paint_b <= '0';
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
                             end if;
 
                             ----PRINT GAME-----
@@ -712,13 +761,13 @@ begin
                             font_row <= std_logic_vector(y_pixel - 250)(3 downto 1);
 
                             if (character_output = '1') then
-                                paint_r <= '1';
-                                paint_g <= '1';
-                                paint_b <= '1';
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
                             else
-                                paint_r <= '0';
-                                paint_g <= '0';
-                                paint_b <= '0';
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
                             end if;
 
                         elsif ((x_pixel >= 206 and x_pixel < 222) and (y_pixel >= 250 and y_pixel < 268)) then
@@ -728,13 +777,13 @@ begin
                             font_row <= std_logic_vector(y_pixel - 250)(3 downto 1);
 
                             if (character_output = '1') then
-                                paint_r <= '1';
-                                paint_g <= '1';
-                                paint_b <= '1';
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
                             else
-                                paint_r <= '0';
-                                paint_g <= '0';
-                                paint_b <= '0';
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
                             end if;
 
                         elsif ((x_pixel >= 222 and x_pixel < 238) and (y_pixel >= 250 and y_pixel < 268)) then
@@ -744,13 +793,13 @@ begin
                             font_row <= std_logic_vector(y_pixel - 250)(3 downto 1);
 
                             if (character_output = '1') then
-                                paint_r <= '1';
-                                paint_g <= '1';
-                                paint_b <= '1';
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
                             else
-                                paint_r <= '0';
-                                paint_g <= '0';
-                                paint_b <= '0';
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
                             end if;
 
                         elsif ((x_pixel >= 238 and x_pixel < 254) and (y_pixel >= 250 and y_pixel < 268)) then
@@ -760,38 +809,37 @@ begin
                             font_row <= std_logic_vector(y_pixel - 250)(3 downto 1);
 
                             if (character_output = '1') then
-                                paint_r <= '1';
-                                paint_g <= '1';
-                                paint_b <= '1';
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
                             else
-                                paint_r <= '0';
-                                paint_g <= '0';
-                                paint_b <= '0';
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
                             end if;
 
                         else
-                            paint_r <= '0';
-                            paint_g <= '0';
-                            paint_b <= '0';
+                            menu_r <= '0';
+                            menu_g <= '0';
+                            menu_b <= '0';
 
                         end if;
 
                     else
 
-                        paint_r <= '1';
-                        paint_g <= '1';
-                        paint_b <= '1';
+                        menu_r <= '1';
+                        menu_g <= '1';
+                        menu_b <= '1';
 
                     end if;
 
                 else
-                    paint_r <= '0';
-                    paint_g <= '1';
-                    paint_b <= '1';
+                    menu_r <= '0';
+                    menu_g <= '1';
+                    menu_b <= '1';
                 end if;
 
             else
-
                 -- Drawing the score (tens)
                 if ((x_pixel >= 120 and x_pixel < 152) and (y_pixel >= 10 and y_pixel < 42)) then
 
@@ -802,10 +850,12 @@ begin
                     font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
                     if (character_output = '1') then
-                        paint_r <= '0';
-                        paint_g <= '0';
-                        paint_b <= '0';
+                        score_r <= '0';
+                        score_g <= '0';
+                        score_b <= '0';
                     end if;
+
+                    score_det <= character_output;
 
                     -- Drawing the score (ones)
                 elsif ((x_pixel >= 155 and x_pixel < 187) and (y_pixel >= 10 and y_pixel < 42)) then
@@ -817,12 +867,13 @@ begin
                     font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
                     if (character_output = '1') then
-                        paint_r <= '0';
-                        paint_g <= '0';
-                        paint_b <= '0';
+                        score_r <= '0';
+                        score_g <= '0';
+                        score_b <= '0';
                     end if;
 
-                    -- TODO: we need some sort of a hearts_det signal
+                    score_det <= character_output;
+
                     -- Heart 1
                 elsif ((x_pixel >= 10 and x_pixel < 42) and (y_pixel >= 10 and y_pixel < 42) and (display_heart = '1' and current_lives > 0)) then
                     character_address <= "000000";
@@ -830,9 +881,11 @@ begin
                     font_col <= std_logic_vector(x_pixel - 10)(4 downto 2);
                     font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
-                    paint_r <= character_output;
-                    paint_g <= '0';
-                    paint_b <= '0';
+                    heart_r <= character_output;
+                    heart_g <= '0';
+                    heart_b <= '0';
+
+                    heart_det <= character_output;
 
                     -- Heart 2
                 elsif ((x_pixel >= 45 and x_pixel < 77) and (y_pixel >= 10 and y_pixel < 42) and (display_heart = '1' and current_lives > 1)) then
@@ -841,9 +894,11 @@ begin
                     font_col <= std_logic_vector(x_pixel - 45)(4 downto 2);
                     font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
-                    paint_r <= character_output;
-                    paint_g <= '0';
-                    paint_b <= '0';
+                    heart_r <= character_output;
+                    heart_g <= '0';
+                    heart_b <= '0';
+
+                    heart_det <= character_output;
 
                     -- Heart 3
                 elsif ((x_pixel >= 80 and x_pixel < 112) and (y_pixel >= 10 and y_pixel < 42) and (display_heart = '1' and current_lives > 2)) then
@@ -852,40 +907,20 @@ begin
                     font_col <= std_logic_vector(x_pixel - 80)(4 downto 2);
                     font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
-                    paint_r <= character_output;
-                    paint_g <= '0';
-                    paint_b <= '0';
+                    heart_r <= character_output;
+                    heart_g <= '0';
+                    heart_b <= '0';
 
-                elsif (bird_det = '1') then
-                    paint_r <= bird_r;
-                    paint_g <= bird_g;
-                    paint_b <= bird_b;
-
-                elsif (coin_det = '1' and coin_enable = '1') then
-                    paint_r <= coin_r;
-                    paint_g <= coin_g;
-                    paint_b <= coin_b;
-
-                elsif (floor_det = '1') then
-                    paint_r <= floor_r;
-                    paint_g <= floor_g;
-                    paint_b <= floor_b;
-
-                elsif (obs_det = '1') then
-                    paint_r <= (obs_one_r or obs_two_r);
-                    paint_g <= (obs_one_g or obs_two_g);
-                    paint_b <= (obs_one_b or obs_two_b);
+                    heart_det <= character_output;
 
                 else
-                    paint_r <= '0';
-                    paint_g <= '1';
-                    paint_b <= '1';
-
+                    heart_det <= '0';
+                    score_det <= '0';
                 end if;
             end if;
         end if;
 
-    end process paint_screen;
+    end process get_characters;
 
     --if between 100 and 540 pixels horizontally
     --if between 80 and 400 pixels vertically

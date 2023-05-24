@@ -131,68 +131,70 @@ begin
         end case;
     end process decode_output;
 
-    decode_next_state : process (state, menu_navigator_1, menu_navigator_2, mouse_right, mouse_left, bird_died)
+    decode_next_state : process (clk, state, menu_navigator_1, menu_navigator_2, mouse_right, mouse_left, bird_died)
     begin
-        case state is
-            when DrawMenu =>
+        if rising_edge(clk) then
+            case state is
+                when DrawMenu =>
 
-                next_state <= DrawMenu;
-
-                if (menu_navigator_1 = '1') then
-                    difficulty <= TrainingMode;
-                    next_state <= TrainingModeInit;
-                elsif (menu_navigator_2 = '1') then
-                    difficulty <= HardMode;
-                    next_state <= HardModeInit;
-                end if;
-
-            when TrainingModeInit =>
-
-                next_state <= TrainingModeInit;
-
-                if (mouse_left = '1') then
-                    next_state <= Gaming;
-                end if;
-
-            when HardModeInit =>
-
-                next_state <= HardModeInit;
-
-                if (mouse_left = '1') then
-                    next_state <= Gaming;
-                end if;
-
-            when Gaming =>
-
-                next_state <= Gaming;
-
-                if (bird_died = '1') then
-                    next_state <= Dead;
-                elsif (mouse_right = '1') then
-                    next_state <= Paused;
-                end if;
-
-            when Paused =>
-
-                next_state <= Paused;
-
-                if (mouse_left = '1') then
-                    next_state <= Gaming;
-                end if;
-
-            when Dead =>
-
-                next_state <= Dead;
-
-                if (mouse_left = '1') then
                     next_state <= DrawMenu;
-                end if;
 
-            when others =>
+                    if (menu_navigator_1 = '1') then
+                        difficulty <= TrainingMode;
+                        next_state <= TrainingModeInit;
+                    elsif (menu_navigator_2 = '1') then
+                        difficulty <= HardMode;
+                        next_state <= HardModeInit;
+                    end if;
 
-                next_state <= DrawMenu;
+                when TrainingModeInit =>
 
-        end case;
+                    next_state <= TrainingModeInit;
+
+                    if (mouse_left = '1') then
+                        next_state <= Gaming;
+                    end if;
+
+                when HardModeInit =>
+
+                    next_state <= HardModeInit;
+
+                    if (mouse_left = '1') then
+                        next_state <= Gaming;
+                    end if;
+
+                when Gaming =>
+
+                    next_state <= Gaming;
+
+                    if (bird_died = '1') then
+                        next_state <= Dead;
+                    elsif (mouse_right = '1') then
+                        next_state <= Paused;
+                    end if;
+
+                when Paused =>
+
+                    next_state <= Paused;
+
+                    if (mouse_left = '1') then
+                        next_state <= Gaming;
+                    end if;
+
+                when Dead =>
+
+                    next_state <= Dead;
+
+                    if (mouse_left = '1') then
+                        next_state <= DrawMenu;
+                    end if;
+
+                when others =>
+
+                    next_state <= DrawMenu;
+
+            end case;
+        end if;
     end process decode_next_state;
 
 end state_driver;

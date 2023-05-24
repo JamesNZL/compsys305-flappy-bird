@@ -195,8 +195,11 @@ architecture flappy_bird of main is
 
     signal score_tens_tick, score_hundreds_tick : std_logic;
     signal score_ones, score_tens : std_logic_vector(3 downto 0);
+    signal score_colour_r, score_colour_g, score_colour_b : std_logic;
     signal score_r, score_g, score_b : std_logic;
     signal score_det : std_logic;
+
+    signal level : unsigned(2 downto 0);
 
 begin
 
@@ -362,6 +365,34 @@ begin
     port map(
         bcd_digit => score_tens,
         seven_seg_out => HEX1);
+
+    ----------------LEVEL----------------
+
+    level <= unsigned(score_tens)(2 downto 0);
+
+    with level select
+        score_colour_r <= '0' when TO_UNSIGNED(0, 3), -- black
+        '0' when TO_UNSIGNED(1, 3), -- blue
+        '1' when TO_UNSIGNED(2, 3), -- magenta
+        '1' when TO_UNSIGNED(3, 3), -- red
+        '1' when TO_UNSIGNED(4, 3), -- white
+        '1' when others; --white
+    with level select
+        score_colour_g <= '0' when TO_UNSIGNED(0, 3), -- black
+        '0' when TO_UNSIGNED(1, 3), -- blue
+        '0' when TO_UNSIGNED(2, 3), -- magenta
+        '0' when TO_UNSIGNED(3, 3), -- red
+        '1' when TO_UNSIGNED(4, 3), -- white
+        '1' when others; --white
+    with level select
+        score_colour_b <= '0' when TO_UNSIGNED(0, 3), -- black
+        '1' when TO_UNSIGNED(1, 3), -- blue
+        '1' when TO_UNSIGNED(2, 3), -- magenta
+        '0' when TO_UNSIGNED(3, 3), -- red
+        '1' when TO_UNSIGNED(4, 3), -- white
+        '1' when others; --white
+
+    -------------------------------------
 
     -------------COLLISIONS--------------
 
@@ -850,9 +881,9 @@ begin
                     font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
                     if (character_output = '1') then
-                        score_r <= '0';
-                        score_g <= '0';
-                        score_b <= '0';
+                        score_r <= score_colour_r;
+                        score_g <= score_colour_g;
+                        score_b <= score_colour_b;
                     end if;
 
                     score_det <= character_output;
@@ -867,9 +898,9 @@ begin
                     font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
                     if (character_output = '1') then
-                        score_r <= '0';
-                        score_g <= '0';
-                        score_b <= '0';
+                        score_r <= score_colour_r;
+                        score_g <= score_colour_g;
+                        score_b <= score_colour_b;
                     end if;
 
                     score_det <= character_output;

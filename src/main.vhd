@@ -153,7 +153,7 @@ architecture flappy_bird of main is
     signal home_screen_enable : std_logic;
 
     signal clk : std_logic;
-	 signal reset : std_logic;
+    signal reset : std_logic;
 
     signal vert_sync : std_logic;
     signal x_pixel, y_pixel : signed(9 downto 0);
@@ -200,6 +200,7 @@ architecture flappy_bird of main is
 begin
 
     vert_sync_out <= vert_sync;
+    -- reset <= not key0;
 
     clock_div : pll
     port map(
@@ -224,7 +225,7 @@ begin
     state_machine : fsm
     port map(
         clk => vert_sync,
-        reset_input => reset,
+        reset_input => not key0,
         menu_navigator_1 => not key3,
         menu_navigator_2 => not key2,
         mouse_right => mouse_right_event,
@@ -236,6 +237,7 @@ begin
         lives_out => current_lives,
         menu_enable => home_screen_enable,
         heart_display => display_heart,
+        reset => reset,
         movement_enable => movement_enable);
 
     mousey_mouse : mouse
@@ -802,158 +804,176 @@ begin
                 end if;
 
             else
-                if (home_screen_enable = '0') then
 
-                    if ((x_pixel >= 120 and x_pixel < 152) and (y_pixel >= 10 and y_pixel < 42)) then
+                if ((x_pixel >= 120 and x_pixel < 152) and (y_pixel >= 10 and y_pixel < 42)) then
 
-                        int_value := to_integer(unsigned(score_tens)) + 48;
-                        character_address <= std_logic_vector(to_unsigned(int_value, 6));
+                    int_value := to_integer(unsigned(score_tens)) + 48;
+                    character_address <= std_logic_vector(to_unsigned(int_value, 6));
 
-                        font_col <= std_logic_vector(x_pixel - 120)(4 downto 2);
-                        font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
+                    font_col <= std_logic_vector(x_pixel - 120)(4 downto 2);
+                    font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
-                        if (character_output = '1') then
-                            score_r <= '0';
-                            score_g <= '0';
-                            score_b <= '0';
+                    if (character_output = '1') then
+                        score_r <= '0';
+                        score_g <= '0';
+                        score_b <= '0';
 
-                        end if;
-
-                    elsif ((x_pixel >= 155 and x_pixel < 187) and (y_pixel >= 10 and y_pixel < 42)) then
-
-                        int_value := to_integer(unsigned(score_ones)) + 48;
-                        character_address <= std_logic_vector(to_unsigned(int_value, 6));
-
-                        font_col <= std_logic_vector(x_pixel - 155)(4 downto 2);
-                        font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
-
-                        if (character_output = '1') then
-                            score_r <= '0';
-                            score_g <= '0';
-                            score_b <= '0';
-
-                        end if;
                     end if;
+
+                elsif ((x_pixel >= 155 and x_pixel < 187) and (y_pixel >= 10 and y_pixel < 42)) then
+
+                    int_value := to_integer(unsigned(score_ones)) + 48;
+                    character_address <= std_logic_vector(to_unsigned(int_value, 6));
+
+                    font_col <= std_logic_vector(x_pixel - 155)(4 downto 2);
+                    font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
+
+                    if (character_output = '1') then
+                        score_r <= '0';
+                        score_g <= '0';
+                        score_b <= '0';
+
+                    end if;
+
+                elsif ((x_pixel >= 10 and x_pixel < 42) and (y_pixel >= 10 and y_pixel < 42)) then
 
                     if (display_heart = '1') then
 
                         if (current_lives = 3) then
 
-                            if ((x_pixel >= 10 and x_pixel < 42) and (y_pixel >= 10 and y_pixel < 42)) then
+                            character_address <= "000000";
 
-                                character_address <= "000000";
+                            font_col <= std_logic_vector(x_pixel - 10)(4 downto 2);
+                            font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
-                                font_col <= std_logic_vector(x_pixel - 10)(4 downto 2);
-                                font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
+                            heart_r <= character_output;
+                            heart_g <= '0';
+                            heart_b <= '0';
+                        end if;
+                    end if;
 
-                                heart_r <= character_output;
-                                heart_g <= '0';
-                                heart_b <= '0';
+                elsif ((x_pixel >= 45 and x_pixel < 77) and (y_pixel >= 10 and y_pixel < 42)) then
 
-                            elsif ((x_pixel >= 45 and x_pixel < 77) and (y_pixel >= 10 and y_pixel < 42)) then
+                    if (display_heart = '1') then
 
-                                character_address <= "000000";
+                        if (current_lives = 3) then
 
-                                font_col <= std_logic_vector(x_pixel - 45)(4 downto 2);
-                                font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
+                            character_address <= "000000";
 
-                                heart_r <= character_output;
-                                heart_g <= '0';
-                                heart_b <= '0';
+                            font_col <= std_logic_vector(x_pixel - 45)(4 downto 2);
+                            font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
-                            elsif ((x_pixel >= 80 and x_pixel < 112) and (y_pixel >= 10 and y_pixel < 42)) then
+                            heart_r <= character_output;
+                            heart_g <= '0';
+                            heart_b <= '0';
+                        end if;
+                    end if;
 
-                                character_address <= "000000";
+                elsif ((x_pixel >= 80 and x_pixel < 112) and (y_pixel >= 10 and y_pixel < 42)) then
 
-                                font_col <= std_logic_vector(x_pixel - 80)(4 downto 2);
-                                font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
+                    if (display_heart = '1') then
 
-                                heart_r <= character_output;
-                                heart_g <= '0';
-                                heart_b <= '0';
+                        if (current_lives = 3) then
 
-                            end if;
+                            character_address <= "000000";
 
-                        elsif (current_lives = 2) then
+                            font_col <= std_logic_vector(x_pixel - 80)(4 downto 2);
+                            font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
-                            if ((x_pixel >= 10 and x_pixel < 42) and (y_pixel >= 10 and y_pixel < 42)) then
-
-                                character_address <= "000000";
-
-                                font_col <= std_logic_vector(x_pixel - 10)(4 downto 2);
-                                font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
-
-                                heart_r <= character_output;
-                                heart_g <= '0';
-                                heart_b <= '0';
-
-                            elsif ((x_pixel >= 45 and x_pixel < 77) and (y_pixel >= 10 and y_pixel < 42)) then
-
-                                character_address <= "000000";
-
-                                font_col <= std_logic_vector(x_pixel - 45)(4 downto 2);
-                                font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
-
-                                heart_r <= character_output;
-                                heart_g <= '0';
-                                heart_b <= '0';
-
-                            end if;
-
-                        elsif (current_lives = 1) then
-
-                            if ((x_pixel >= 10 and x_pixel < 42) and (y_pixel >= 10 and y_pixel < 42)) then
-
-                                character_address <= "000000";
-
-                                font_col <= std_logic_vector(x_pixel - 10)(4 downto 2);
-                                font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
-
-                                heart_r <= character_output;
-                                heart_g <= '0';
-                                heart_b <= '0';
-
-                            end if;
+                            heart_r <= character_output;
+                            heart_g <= '0';
+                            heart_b <= '0';
 
                         end if;
 
-                    else
-                        in_heart <= '0';
-                        in_score <= '0';
+                    end if;
+
+                elsif ((x_pixel >= 10 and x_pixel < 42) and (y_pixel >= 10 and y_pixel < 42)) then
+
+                    if (display_heart = '1') then
+
+                        if (current_lives = 2) then
+
+                            character_address <= "000000";
+
+                            font_col <= std_logic_vector(x_pixel - 10)(4 downto 2);
+                            font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
+
+                            heart_r <= character_output;
+                            heart_g <= '0';
+                            heart_b <= '0';
+
+                        end if;
+                    end if;
+
+                elsif ((x_pixel >= 45 and x_pixel < 77) and (y_pixel >= 10 and y_pixel < 42)) then
+
+                    if (display_heart = '1') then
+
+                        if (current_lives = 2) then
+
+                            character_address <= "000000";
+
+                            font_col <= std_logic_vector(x_pixel - 45)(4 downto 2);
+                            font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
+
+                            heart_r <= character_output;
+                            heart_g <= '0';
+                            heart_b <= '0';
+
+                        end if;
+                    end if;
+
+                elsif ((x_pixel >= 10 and x_pixel < 42) and (y_pixel >= 10 and y_pixel < 42)) then
+
+                    if (display_heart = '1') then
+
+                        if (current_lives = 1) then
+
+                            character_address <= "000000";
+
+                            font_col <= std_logic_vector(x_pixel - 10)(4 downto 2);
+                            font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
+
+                            heart_r <= character_output;
+                            heart_g <= '0';
+                            heart_b <= '0';
+
+                        end if;
 
                     end if;
 
-                    if (bird_det = '1') then
-                        paint_r <= bird_r;
-                        paint_g <= bird_g;
-                        paint_b <= bird_b;
+                elsif (bird_det = '1') then
+                    paint_r <= bird_r;
+                    paint_g <= bird_g;
+                    paint_b <= bird_b;
 
-                    elsif (coin_det = '1' and coin_enable = '1') then
-                        paint_r <= coin_r;
-                        paint_g <= coin_g;
-                        paint_b <= coin_b;
+                elsif (coin_det = '1' and coin_enable = '1') then
+                    paint_r <= coin_r;
+                    paint_g <= coin_g;
+                    paint_b <= coin_b;
 
-                    elsif (floor_det = '1') then
-                        paint_r <= floor_r;
-                        paint_g <= floor_g;
-                        paint_b <= floor_b;
+                elsif (floor_det = '1') then
+                    paint_r <= floor_r;
+                    paint_g <= floor_g;
+                    paint_b <= floor_b;
 
-                    elsif (obs_det = '1') then
-                        paint_r <= (obs_one_r or obs_two_r);
-                        paint_g <= (obs_one_g or obs_two_g);
-                        paint_b <= (obs_one_b or obs_two_b);
+                elsif (obs_det = '1') then
+                    paint_r <= (obs_one_r or obs_two_r);
+                    paint_g <= (obs_one_g or obs_two_g);
+                    paint_b <= (obs_one_b or obs_two_b);
 
-                    else
-                        paint_r <= '0';
-                        paint_g <= '1';
-                        paint_b <= '1';
+                else
+                    paint_r <= '0';
+                    paint_g <= '1';
+                    paint_b <= '1';
 
-                    end if;
                 end if;
 
             end if;
 
         end if;
+
     end process paint_screen;
 
     --if between 100 and 540 pixels horizontally

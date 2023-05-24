@@ -25,7 +25,7 @@ end entity fsm;
 architecture state_driver of fsm is
     type game_state is (DrawMenu, TrainingModeInit, HardModeInit, Gaming, Paused, Dead);
     type mode_memory is (TrainingMode, HardMode);
-    signal state, next_state : game_state := DrawMenu;
+    signal state, next_state : game_state;
     signal difficulty : mode_memory;
 
     signal bird_died : std_logic;
@@ -66,7 +66,6 @@ begin
     decode_output : process (state, menu_navigator_1, menu_navigator_2, mouse_right, mouse_left, lives, obs_one_hit, obs_two_hit, hit_floor)
     begin
 
-        bird_hovering <= '0';
         case state is
             when DrawMenu =>
 
@@ -74,21 +73,26 @@ begin
                 bird_died <= '0';
                 menu_enable <= '1';
                 movement_enable <= '0';
+                bird_hovering <= '0';
 
             when TrainingModeInit =>
 
                 bird_hovering <= '1';
                 movement_enable <= '0';
                 menu_enable <= '0';
+                reset <= '0';
 
             when HardModeInit =>
 
                 bird_hovering <= '1';
                 movement_enable <= '0';
                 menu_enable <= '0';
+                reset <= '0';
 
             when Gaming =>
 
+                bird_hovering <= '0';
+                reset <= '0';
                 menu_enable <= '0';
                 movement_enable <= '1';
                 if (difficulty = TrainingMode) then
@@ -105,18 +109,24 @@ begin
 
             when Paused =>
 
+                bird_hovering <= '0';
                 movement_enable <= '0';
                 menu_enable <= '0';
+                reset <= '0';
 
             when Dead =>
 
+                bird_hovering <= '0';
                 movement_enable <= '0';
                 menu_enable <= '0';
+                reset <= '0';
 
             when others =>
 
+                bird_hovering <= '0';
                 movement_enable <= '0';
                 menu_enable <= '0';
+                reset <= '0';
 
         end case;
     end process decode_output;

@@ -128,10 +128,14 @@ begin
                 y_pos <= TO_SIGNED(280, 10);
                 hit_floor <= '0';
             elsif (hovering = '1') then
-                if (y_pos >= 300) then
-                    sub_pixel <= (sub_pixel - 8);
+                if (y_pos > 300) then
+                    if (sub_pixel > (-60)) then
+                        sub_pixel <= (sub_pixel - 8);
+                    end if;
                 elsif (y_pos <= 260) then
-                    sub_pixel <= (sub_pixel + 8);
+                    if (sub_pixel < 60) then
+                        sub_pixel <= (sub_pixel + 8);
+                    end if;
                 end if;
 
                 y_velocity <= shift_right(sub_pixel, 4)(11 downto 2);

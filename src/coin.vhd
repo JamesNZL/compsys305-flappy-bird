@@ -7,6 +7,7 @@ entity coin is
         clk, reset, enable, draw_enable : in std_logic;
         lfsr_seed : in std_logic_vector(8 downto 1);
         start_x_pos : in signed(10 downto 0);
+        x_velocity : in signed(9 downto 0);
         pixel_row, pixel_column : in signed(9 downto 0);
         red, green, blue, in_pixel, coin_gone : out std_logic);
 end coin;
@@ -29,7 +30,6 @@ architecture behaviour of coin is
 
     signal y_pos : signed(9 downto 0);
     signal x_pos : signed(10 downto 0) := start_x_pos;
-    signal x_velocity : signed(9 downto 0) := TO_SIGNED(3, 10); -- TODO: increase over course of game
 
 begin
 

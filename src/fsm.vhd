@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 entity fsm is
     port (
-        clk, reset : in std_logic;
+        clk, reset_input : in std_logic;
         menu_navigator_1, menu_navigator_2 : in std_logic;
         mouse_right, mouse_left : in std_logic;
         obs_one_hit, obs_two_hit : in std_logic;
@@ -15,14 +15,17 @@ entity fsm is
 
         lives_out : out unsigned(1 downto 0);
         menu_enable : out std_logic;
+        heart_display : out std_logic;
+        reset : out std_logic;
 
-        movement_enable : out std_logic);
+        movement_enable : out std_logic
+    );
 end entity fsm;
 
 architecture state_driver of fsm is
     type game_state is (DrawMenu, TrainingModeInit, HardModeInit, Gaming, Paused, Dead);
     type mode_memory is (TrainingMode, HardMode);
-    signal state, next_state : game_state;
+    signal state, next_state : game_state := DrawMenu;
     signal difficulty : mode_memory;
 
     signal bird_died : std_logic;
@@ -32,11 +35,13 @@ architecture state_driver of fsm is
 begin
 
     lives_out <= lives;
+    heart_display <= '1' when (difficulty = TrainingMode) else
+                     '0';
 
-    calculate_lives : process (clk, reset, obs_one_hit, obs_two_hit)
+    calculate_lives : process (clk, reset_input, obs_one_hit, obs_two_hit)
     begin
         if (rising_edge(clk)) then
-            if (reset = '1') then
+            if (reset_input = '1') then
                 lives <= TO_UNSIGNED(3, 2);
             elsif (obs_one_hit = '0' and obs_two_hit = '0') then
                 live_lost_flag <= '0';
@@ -50,7 +55,7 @@ begin
     sync_proc : process (clk)
     begin
         if rising_edge(clk) then
-            if (reset = '1') then
+            if (reset_input = '1') then
                 state <= DrawMenu;
             else
                 state <= next_state;
@@ -65,6 +70,7 @@ begin
         case state is
             when DrawMenu =>
 
+                reset <= '1';
                 bird_died <= '0';
                 menu_enable <= '1';
                 movement_enable <= '0';

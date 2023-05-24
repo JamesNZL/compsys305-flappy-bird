@@ -49,6 +49,7 @@ begin
 
     draw_coin <= '0' when (reset = '1') else
                  '1' when (('0' & x_pos <= '0' & pixel_column + coin_width) and ('0' & pixel_column <= '0' & x_pos + coin_width) and (('0' & y_pos <= pixel_row + coin_width) and ('0' & pixel_row <= y_pos + coin_width))) else
+                 '1' when ((x_pos <= pixel_column + coin_width) and (pixel_column <= x_pos + coin_width) and ((y_pos <= pixel_row + coin_width) and (pixel_row <= y_pos + coin_width))) else
                  '0';
 
     in_pixel <= draw_coin;

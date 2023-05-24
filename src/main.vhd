@@ -841,12 +841,12 @@ begin
 
             else
                 -- Drawing the score (tens)
-                if ((x_pixel >= 120 and x_pixel < 152) and (y_pixel >= 10 and y_pixel < 42)) then
+                if ((x_pixel >= 10 and x_pixel < 42) and (y_pixel >= 10 and y_pixel < 42)) then
 
                     int_value := to_integer(unsigned(score_tens)) + 48;
                     character_address <= std_logic_vector(to_unsigned(int_value, 6));
 
-                    font_col <= std_logic_vector(x_pixel - 120)(4 downto 2);
+                    font_col <= std_logic_vector(x_pixel - 10)(4 downto 2);
                     font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
                     if (character_output = '1') then
@@ -858,12 +858,12 @@ begin
                     score_det <= character_output;
 
                     -- Drawing the score (ones)
-                elsif ((x_pixel >= 155 and x_pixel < 187) and (y_pixel >= 10 and y_pixel < 42)) then
+                elsif ((x_pixel >= 45 and x_pixel < 77) and (y_pixel >= 10 and y_pixel < 42)) then
 
                     int_value := to_integer(unsigned(score_ones)) + 48;
                     character_address <= std_logic_vector(to_unsigned(int_value, 6));
 
-                    font_col <= std_logic_vector(x_pixel - 155)(4 downto 2);
+                    font_col <= std_logic_vector(x_pixel - 45)(4 downto 2);
                     font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
                     if (character_output = '1') then
@@ -875,10 +875,10 @@ begin
                     score_det <= character_output;
 
                     -- Heart 1
-                elsif ((x_pixel >= 10 and x_pixel < 42) and (y_pixel >= 10 and y_pixel < 42) and (display_heart = '1' and current_lives > 0)) then
+                elsif ((x_pixel >= 85 and x_pixel < 117) and (y_pixel >= 10 and y_pixel < 42) and (display_heart = '1' and current_lives > 0)) then
                     character_address <= "000000";
 
-                    font_col <= std_logic_vector(x_pixel - 10)(4 downto 2);
+                    font_col <= std_logic_vector(x_pixel - 85)(4 downto 2);
                     font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
                     heart_r <= character_output;
@@ -888,10 +888,10 @@ begin
                     heart_det <= character_output;
 
                     -- Heart 2
-                elsif ((x_pixel >= 45 and x_pixel < 77) and (y_pixel >= 10 and y_pixel < 42) and (display_heart = '1' and current_lives > 1)) then
+                elsif ((x_pixel >= 120 and x_pixel < 152) and (y_pixel >= 10 and y_pixel < 42) and (display_heart = '1' and current_lives > 1)) then
                     character_address <= "000000";
 
-                    font_col <= std_logic_vector(x_pixel - 45)(4 downto 2);
+                    font_col <= std_logic_vector(x_pixel - 120)(4 downto 2);
                     font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
                     heart_r <= character_output;
@@ -901,10 +901,10 @@ begin
                     heart_det <= character_output;
 
                     -- Heart 3
-                elsif ((x_pixel >= 80 and x_pixel < 112) and (y_pixel >= 10 and y_pixel < 42) and (display_heart = '1' and current_lives > 2)) then
+                elsif ((x_pixel >= 155 and x_pixel < 187) and (y_pixel >= 10 and y_pixel < 42) and (display_heart = '1' and current_lives > 2)) then
                     character_address <= "000000";
 
-                    font_col <= std_logic_vector(x_pixel - 80)(4 downto 2);
+                    font_col <= std_logic_vector(x_pixel - 155)(4 downto 2);
                     font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
                     heart_r <= character_output;

@@ -204,6 +204,7 @@ architecture flappy_bird of main is
 	 signal level_r, level_g, level_b : std_logic;
 	 signal level_det : std_logic;
 	 signal display_level : std_logic;
+	 signal velocity_x : signed(9 downto 0);
 
 begin
 
@@ -293,7 +294,7 @@ begin
         enable => movement_enable,
         lfsr_seed => std_logic_vector(x_pixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
         start_x_pos => TO_SIGNED(640, 11),
-        x_velocity => ("000000" & signed(score_tens)) + 2,
+        x_velocity => velocity_x,
         pixel_row => y_pixel,
         pixel_column => x_pixel,
         red => obs_one_r,
@@ -310,7 +311,7 @@ begin
         enable => movement_enable,
         lfsr_seed => std_logic_vector(y_pixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
         start_x_pos => TO_SIGNED(960, 11),
-        x_velocity => ("000000" & signed(score_tens)) + 2,
+        x_velocity => velocity_x,
         pixel_row => y_pixel,
         pixel_column => x_pixel,
         red => obs_two_r,
@@ -328,7 +329,7 @@ begin
         draw_enable => coin_enable,
         lfsr_seed => std_logic_vector(x_pixel(7 downto 0) xor y_pixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
         start_x_pos => TO_SIGNED(830, 11),
-        x_velocity => ("000000" & signed(score_tens)) + 2,
+        x_velocity => velocity_x,
         pixel_row => y_pixel,
         pixel_column => x_pixel,
         red => coin_r,
@@ -396,8 +397,12 @@ begin
         '0' when TO_UNSIGNED(3, 3), -- red
         '1' when TO_UNSIGNED(4, 3), -- white
         '1' when others; --white
+		  
+		  
+	velocity_x <= ("000000" & signed(score_tens)) + 2 when (display_level = '1') else "0000000010";
 
     -------------------------------------
+	 
 
     -------------COLLISIONS--------------
 

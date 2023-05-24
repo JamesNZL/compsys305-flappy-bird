@@ -83,7 +83,7 @@ architecture flappy_bird of main is
 
     component coin is
         port (
-            enable, coinEnable, pb1, clk, vert_sync : in std_logic;
+            enable, coin_enable, pb1, clk, vert_sync : in std_logic;
             lfsrSeed : in std_logic_vector(8 downto 1);
             start_xPos : in signed(10 downto 0);
             pixel_row, pixel_column : in signed(9 downto 0);
@@ -144,18 +144,12 @@ architecture flappy_bird of main is
             rom_mux_output : out std_logic);
     end component;
 
-    signal heartR, heartG, heartB : std_logic;
-    signal scoreR, scoreG, scoreB : std_logic;
-    signal coinR, coinG, coinB : std_logic;
-    signal coinEnable, coinGone : std_logic;
-    signal coinDet : std_logic;
-    signal coinTick : std_logic := '0';
-    signal inHeart, inScore : std_logic;
-    signal charAddress : std_logic_vector(5 downto 0);
-    signal fontrow, fontcol : std_logic_vector (2 downto 0);
-    signal charOUTPUT : std_logic;
-    signal homescreenEnable : std_logic := '0';
-    signal trainingMode : std_logic := '0';
+    signal character_address : std_logic_vector(5 downto 0);
+    signal font_row, font_col : std_logic_vector (2 downto 0);
+    signal character_output : std_logic;
+
+    signal home_screen_enable : std_logic := '0';
+    signal training_mode : std_logic := '0';
 
     signal clk : std_logic;
 
@@ -187,8 +181,18 @@ architecture flappy_bird of main is
     signal obs_one_hit_flag : std_logic := '0';
     signal obs_two_hit_flag : std_logic := '0';
 
+    signal coin_enable, coin_gone : std_logic;
+    signal coin_r, coin_g, coin_b : std_logic;
+    signal coin_det : std_logic;
+    signal coin_tick : std_logic := '0';
+
+    signal heart_r, heart_g, heart_b : std_logic;
+    signal in_heart : std_logic;
+
     signal score_tens_tick, score_hundreds_tick : std_logic;
     signal score_ones, score_tens : std_logic_vector(3 downto 0);
+    signal score_r, score_g, score_b : std_logic;
+    signal in_score : std_logic;
 
 begin
 
@@ -303,26 +307,26 @@ begin
     port map(
         clk => clk,
         enable => movement_enable,
-        coinEnable => coinEnable,
-        pb1 => pb1,
+        coin_enable => coin_enable,
+        pb1 => KEY0,
         vert_sync => vert_sync,
         lfsrSeed => std_logic_vector(x_pixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
         start_xPos => TO_SIGNED(800, 11),
         pixel_row => y_pixel,
         pixel_column => x_pixel,
-        red => coinR,
-        green => coinG,
-        blue => coinB,
-        inPixel => coinDet,
-        coinLeft => coinGone);
+        red => coin_r,
+        green => coin_g,
+        blue => coin_b,
+        inPixel => coin_det,
+        coinLeft => coin_gone);
 
     score_display : char_rom
     port map(
-        clock => clk,
-        character_address => charAddress,
-        font_row => fontrow,
-        font_col => fontcol,
-        rom_mux_output => charOUTPUT);
+        clk => clk,
+        character_address => character_address,
+        font_row => font_row,
+        font_col => font_col,
+        rom_mux_output => character_output);
 
     score_counter_ones : score_counter
     port map(
@@ -401,21 +405,21 @@ begin
     begin
         if rising_edge(clk) then
 
-            if (bird_det = '1' and coinDet = '1' and flag1 = '1') then
-                coinTick <= '1';
+            if (bird_det = '1' and coin_det = '1' and flag1 = '1') then
+                coin_tick <= '1';
                 flag := '0';
                 flag1 := '0';
-            elsif (coinGone = '1') then
+            elsif (coin_gone = '1') then
                 flag := '1';
                 flag1 := '1';
             elsif (flag1 = '0') then
-                coinTick <= '0';
+                coin_tick <= '0';
             end if;
 
             if (flag = '0') then
-                coinEnable <= '0';
+                coin_enable <= '0';
             else
-                coinEnable <= '1';
+                coin_enable <= '1';
 
             end if;
         end if;
@@ -430,7 +434,7 @@ begin
         if (rising_edge(clk)) then
 
             ---BOX PRINTED
-            if (homescreenEnable = '1') then
+            if (home_screen_enable = '1') then
 
                 if ((x_pixel >= 180 and x_pixel < 460) and (y_pixel >= 140 and y_pixel < 340)) then
 
@@ -439,12 +443,12 @@ begin
                         ---FLAPPYBIRD PRINTED
                         if ((x_pixel >= 200 and x_pixel < 216) and (y_pixel >= 150 and y_pixel < 166)) then
 
-                            charAddress <= "000110";
+                            character_address <= "000110";
 
-                            fontcol <= std_logic_vector(x_pixel - 200)(3 downto 1);
-                            fontrow <= std_logic_vector(y_pixel - 150)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 200)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
-                            if (charOUTPUT = '1') then
+                            if (character_output = '1') then
                                 paint_r <= '1';
                                 paint_g <= '1';
                                 paint_b <= '1';
@@ -455,12 +459,12 @@ begin
                             end if;
 
                         elsif ((x_pixel >= 216 and x_pixel < 232) and (y_pixel >= 150 and y_pixel < 166)) then
-                            charAddress <= "001100";
+                            character_address <= "001100";
 
-                            fontcol <= std_logic_vector(x_pixel - 216)(3 downto 1);
-                            fontrow <= std_logic_vector(y_pixel - 150)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 216)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
-                            if (charOUTPUT = '1') then
+                            if (character_output = '1') then
                                 paint_r <= '1';
                                 paint_g <= '1';
                                 paint_b <= '1';
@@ -472,12 +476,12 @@ begin
 
                         elsif ((x_pixel >= 232 and x_pixel < 248) and (y_pixel >= 150 and y_pixel < 166)) then
 
-                            charAddress <= "000001";
+                            character_address <= "000001";
 
-                            fontcol <= std_logic_vector(x_pixel - 232)(3 downto 1);
-                            fontrow <= std_logic_vector(y_pixel - 150)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 232)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
-                            if (charOUTPUT = '1') then
+                            if (character_output = '1') then
                                 paint_r <= '1';
                                 paint_g <= '1';
                                 paint_b <= '1';
@@ -489,12 +493,12 @@ begin
 
                         elsif ((x_pixel >= 248 and x_pixel < 264) and (y_pixel >= 150 and y_pixel < 166)) then
 
-                            charAddress <= "010000";
+                            character_address <= "010000";
 
-                            fontcol <= std_logic_vector(x_pixel - 248)(3 downto 1);
-                            fontrow <= std_logic_vector(y_pixel - 150)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 248)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
-                            if (charOUTPUT = '1') then
+                            if (character_output = '1') then
                                 paint_r <= '1';
                                 paint_g <= '1';
                                 paint_b <= '1';
@@ -506,12 +510,12 @@ begin
 
                         elsif ((x_pixel >= 264 and x_pixel < 280) and (y_pixel >= 150 and y_pixel < 166)) then
 
-                            charAddress <= "010000";
+                            character_address <= "010000";
 
-                            fontcol <= std_logic_vector(x_pixel - 264)(3 downto 1);
-                            fontrow <= std_logic_vector(y_pixel - 150)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 264)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
-                            if (charOUTPUT = '1') then
+                            if (character_output = '1') then
                                 paint_r <= '1';
                                 paint_g <= '1';
                                 paint_b <= '1';
@@ -523,12 +527,12 @@ begin
 
                         elsif ((x_pixel >= 280 and x_pixel < 296) and (y_pixel >= 150 and y_pixel < 166)) then
 
-                            charAddress <= "011001";
+                            character_address <= "011001";
 
-                            fontcol <= std_logic_vector(x_pixel - 280)(3 downto 1);
-                            fontrow <= std_logic_vector(y_pixel - 150)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 280)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
-                            if (charOUTPUT = '1') then
+                            if (character_output = '1') then
                                 paint_r <= '1';
                                 paint_g <= '1';
                                 paint_b <= '1';
@@ -539,12 +543,12 @@ begin
                             end if;
 
                         elsif ((x_pixel >= 320 and x_pixel < 336) and (y_pixel >= 150 and y_pixel < 166)) then
-                            charAddress <= "000010";
+                            character_address <= "000010";
 
-                            fontcol <= std_logic_vector(x_pixel - 320)(3 downto 1);
-                            fontrow <= std_logic_vector(y_pixel - 150)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 320)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
-                            if (charOUTPUT = '1') then
+                            if (character_output = '1') then
                                 paint_r <= '1';
                                 paint_g <= '1';
                                 paint_b <= '1';
@@ -556,12 +560,12 @@ begin
 
                         elsif ((x_pixel >= 336 and x_pixel < 352) and (y_pixel >= 150 and y_pixel < 166)) then
 
-                            charAddress <= "001001";
+                            character_address <= "001001";
 
-                            fontcol <= std_logic_vector(x_pixel - 336)(3 downto 1);
-                            fontrow <= std_logic_vector(y_pixel - 150)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 336)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
-                            if (charOUTPUT = '1') then
+                            if (character_output = '1') then
                                 paint_r <= '1';
                                 paint_g <= '1';
                                 paint_b <= '1';
@@ -573,12 +577,12 @@ begin
 
                         elsif ((x_pixel >= 352 and x_pixel < 368) and (y_pixel >= 150 and y_pixel < 166)) then
 
-                            charAddress <= "010010";
+                            character_address <= "010010";
 
-                            fontcol <= std_logic_vector(x_pixel - 368)(3 downto 1);
-                            fontrow <= std_logic_vector(y_pixel - 150)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 368)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
-                            if (charOUTPUT = '1') then
+                            if (character_output = '1') then
                                 paint_r <= '1';
                                 paint_g <= '1';
                                 paint_b <= '1';
@@ -590,12 +594,12 @@ begin
 
                         elsif ((x_pixel >= 368 and x_pixel < 384) and (y_pixel >= 150 and y_pixel < 166)) then
 
-                            charAddress <= "000100";
+                            character_address <= "000100";
 
-                            fontcol <= std_logic_vector(x_pixel - 368)(3 downto 1);
-                            fontrow <= std_logic_vector(y_pixel - 150)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 368)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 150)(3 downto 1);
 
-                            if (charOUTPUT = '1') then
+                            if (character_output = '1') then
                                 paint_r <= '1';
                                 paint_g <= '1';
                                 paint_b <= '1';
@@ -608,12 +612,12 @@ begin
                             ----TRAIN PRINTED--------
 
                         elsif ((x_pixel >= 190 and x_pixel < 206) and (y_pixel >= 200 and y_pixel < 216)) then
-                            charAddress <= "010100";
+                            character_address <= "010100";
 
-                            fontcol <= std_logic_vector(x_pixel - 190)(3 downto 1);
-                            fontrow <= std_logic_vector(y_pixel - 200)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 190)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 200)(3 downto 1);
 
-                            if (charOUTPUT = '1') then
+                            if (character_output = '1') then
                                 paint_r <= '1';
                                 paint_g <= '1';
                                 paint_b <= '1';
@@ -624,12 +628,12 @@ begin
                             end if;
 
                         elsif ((x_pixel >= 206 and x_pixel < 222) and (y_pixel >= 200 and y_pixel < 216)) then
-                            charAddress <= "010010";
+                            character_address <= "010010";
 
-                            fontcol <= std_logic_vector(x_pixel - 206)(3 downto 1);
-                            fontrow <= std_logic_vector(y_pixel - 200)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 206)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 200)(3 downto 1);
 
-                            if (charOUTPUT = '1') then
+                            if (character_output = '1') then
                                 paint_r <= '1';
                                 paint_g <= '1';
                                 paint_b <= '1';
@@ -640,12 +644,12 @@ begin
                             end if;
 
                         elsif ((x_pixel >= 222 and x_pixel < 238) and (y_pixel >= 200 and y_pixel < 216)) then
-                            charAddress <= "000001";
+                            character_address <= "000001";
 
-                            fontcol <= std_logic_vector(x_pixel - 222)(3 downto 1);
-                            fontrow <= std_logic_vector(y_pixel - 200)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 222)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 200)(3 downto 1);
 
-                            if (charOUTPUT = '1') then
+                            if (character_output = '1') then
                                 paint_r <= '1';
                                 paint_g <= '1';
                                 paint_b <= '1';
@@ -656,12 +660,12 @@ begin
                             end if;
 
                         elsif ((x_pixel >= 238 and x_pixel < 254) and (y_pixel >= 200 and y_pixel < 216)) then
-                            charAddress <= "001001";
+                            character_address <= "001001";
 
-                            fontcol <= std_logic_vector(x_pixel - 238)(3 downto 1);
-                            fontrow <= std_logic_vector(y_pixel - 200)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 238)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 200)(3 downto 1);
 
-                            if (charOUTPUT = '1') then
+                            if (character_output = '1') then
                                 paint_r <= '1';
                                 paint_g <= '1';
                                 paint_b <= '1';
@@ -672,12 +676,12 @@ begin
                             end if;
 
                         elsif ((x_pixel >= 254 and x_pixel < 270) and (y_pixel >= 200 and y_pixel < 216)) then
-                            charAddress <= "001110";
+                            character_address <= "001110";
 
-                            fontcol <= std_logic_vector(x_pixel - 254)(3 downto 1);
-                            fontrow <= std_logic_vector(y_pixel - 200)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 254)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 200)(3 downto 1);
 
-                            if (charOUTPUT = '1') then
+                            if (character_output = '1') then
                                 paint_r <= '1';
                                 paint_g <= '1';
                                 paint_b <= '1';
@@ -690,12 +694,12 @@ begin
                             ----PRINT GAME-----
 
                         elsif ((x_pixel >= 190 and x_pixel < 206) and (y_pixel >= 250 and y_pixel < 268)) then
-                            charAddress <= "000111";
+                            character_address <= "000111";
 
-                            fontcol <= std_logic_vector(x_pixel - 190)(3 downto 1);
-                            fontrow <= std_logic_vector(y_pixel - 250)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 190)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 250)(3 downto 1);
 
-                            if (charOUTPUT = '1') then
+                            if (character_output = '1') then
                                 paint_r <= '1';
                                 paint_g <= '1';
                                 paint_b <= '1';
@@ -706,12 +710,12 @@ begin
                             end if;
 
                         elsif ((x_pixel >= 206 and x_pixel < 222) and (y_pixel >= 250 and y_pixel < 268)) then
-                            charAddress <= "000001";
+                            character_address <= "000001";
 
-                            fontcol <= std_logic_vector(x_pixel - 206)(3 downto 1);
-                            fontrow <= std_logic_vector(y_pixel - 250)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 206)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 250)(3 downto 1);
 
-                            if (charOUTPUT = '1') then
+                            if (character_output = '1') then
                                 paint_r <= '1';
                                 paint_g <= '1';
                                 paint_b <= '1';
@@ -722,12 +726,12 @@ begin
                             end if;
 
                         elsif ((x_pixel >= 222 and x_pixel < 238) and (y_pixel >= 250 and y_pixel < 268)) then
-                            charAddress <= "001101";
+                            character_address <= "001101";
 
-                            fontcol <= std_logic_vector(x_pixel - 222)(3 downto 1);
-                            fontrow <= std_logic_vector(y_pixel - 250)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 222)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 250)(3 downto 1);
 
-                            if (charOUTPUT = '1') then
+                            if (character_output = '1') then
                                 paint_r <= '1';
                                 paint_g <= '1';
                                 paint_b <= '1';
@@ -738,12 +742,12 @@ begin
                             end if;
 
                         elsif ((x_pixel >= 238 and x_pixel < 254) and (y_pixel >= 250 and y_pixel < 268)) then
-                            charAddress <= "000101";
+                            character_address <= "000101";
 
-                            fontcol <= std_logic_vector(x_pixel - 238)(3 downto 1);
-                            fontrow <= std_logic_vector(y_pixel - 250)(3 downto 1);
+                            font_col <= std_logic_vector(x_pixel - 238)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 250)(3 downto 1);
 
-                            if (charOUTPUT = '1') then
+                            if (character_output = '1') then
                                 paint_r <= '1';
                                 paint_g <= '1';
                                 paint_b <= '1';
@@ -771,9 +775,9 @@ begin
                 else
 
                     if (bird_det = '1') then
-                        paint_r <= birdR;
-                        paint_g <= birdG;
-                        paint_b <= birdB;
+                        paint_r <= bird_r;
+                        paint_g <= bird_g;
+                        paint_b <= bird_b;
                     elsif (obs_det = '1') then
                         paint_r <= (obs_one_r or obs_two_r);
                         paint_g <= (obs_one_g or obs_two_g);
@@ -790,25 +794,25 @@ begin
 
             else
 
-                if (inHeart = '1') then
-                    paint_r <= heartR;
-                    paint_g <= heartG;
-                    paint_b <= heartB;
+                if (in_heart = '1') then
+                    paint_r <= heart_r;
+                    paint_g <= heart_g;
+                    paint_b <= heart_b;
 
-                elsif (inScore = '1') then
-                    paint_r <= ScoreR;
-                    paint_g <= ScoreG;
-                    paint_b <= ScoreB;
+                elsif (in_score = '1') then
+                    paint_r <= score_r;
+                    paint_g <= score_g;
+                    paint_b <= score_b;
 
                 elsif (bird_det = '1') then
-                    paint_r <= birdR;
-                    paint_g <= birdG;
-                    paint_b <= birdB;
+                    paint_r <= bird_r;
+                    paint_g <= bird_g;
+                    paint_b <= bird_b;
 
-                elsif (coinDet = '1' and coinEnable = '1') then
-                    paint_r <= coinR;
-                    paint_g <= coinG;
-                    paint_b <= coinB;
+                elsif (coin_det = '1' and coin_enable = '1') then
+                    paint_r <= coin_r;
+                    paint_g <= coin_g;
+                    paint_b <= coin_b;
 
                 elsif (floor_det = '1') then
                     paint_r <= floor_r;
@@ -837,86 +841,86 @@ begin
 
     begin
 
-        if (homescreenEnable = '0') then
+        if (home_screen_enable = '0') then
 
             if (rising_edge(clk)) then
 
                 if ((x_pixel >= 10 and x_pixel < 42) and (y_pixel >= 10 and y_pixel < 42)) then
 
-                    charAddress <= "000000";
+                    character_address <= "000000";
 
-                    fontcol <= std_logic_vector(x_pixel - 10)(4 downto 2);
-                    fontrow <= std_logic_vector(y_pixel - 10)(4 downto 2);
+                    font_col <= std_logic_vector(x_pixel - 10)(4 downto 2);
+                    font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
-                    heartR <= charOUTPUT;
-                    heartG <= '0';
-                    heartB <= '0';
+                    heart_r <= character_output;
+                    heart_g <= '0';
+                    heart_b <= '0';
 
-                    inHeart <= charOUTPUT;
+                    in_heart <= character_output;
 
                 elsif ((x_pixel >= 45 and x_pixel < 77) and (y_pixel >= 10 and y_pixel < 42)) then
 
-                    charAddress <= "000000";
+                    character_address <= "000000";
 
-                    fontcol <= std_logic_vector(x_pixel - 45)(4 downto 2);
-                    fontrow <= std_logic_vector(y_pixel - 10)(4 downto 2);
+                    font_col <= std_logic_vector(x_pixel - 45)(4 downto 2);
+                    font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
-                    heartR <= charOUTPUT;
-                    heartG <= '0';
-                    heartB <= '0';
+                    heart_r <= character_output;
+                    heart_g <= '0';
+                    heart_b <= '0';
 
-                    inHeart <= charOUTPUT;
+                    in_heart <= character_output;
 
                 elsif ((x_pixel >= 80 and x_pixel < 112) and (y_pixel >= 10 and y_pixel < 42)) then
 
-                    charAddress <= "000000";
+                    character_address <= "000000";
 
-                    fontcol <= std_logic_vector(x_pixel - 80)(4 downto 2);
-                    fontrow <= std_logic_vector(y_pixel - 10)(4 downto 2);
+                    font_col <= std_logic_vector(x_pixel - 80)(4 downto 2);
+                    font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
-                    heartR <= charOUTPUT;
-                    heartG <= '0';
-                    heartB <= '0';
+                    heart_r <= character_output;
+                    heart_g <= '0';
+                    heart_b <= '0';
 
-                    inHeart <= charOUTPUT;
+                    in_heart <= character_output;
 
                 elsif ((x_pixel >= 120 and x_pixel < 152) and (y_pixel >= 10 and y_pixel < 42)) then
 
-                    int_value := to_integer(unsigned(scoreTens)) + 48;
-                    charAddress <= std_logic_vector(to_unsigned(int_value, 6));
+                    int_value := to_integer(unsigned(score_tens)) + 48;
+                    character_address <= std_logic_vector(to_unsigned(int_value, 6));
 
-                    fontcol <= std_logic_vector(x_pixel - 120)(4 downto 2);
-                    fontrow <= std_logic_vector(y_pixel - 10)(4 downto 2);
+                    font_col <= std_logic_vector(x_pixel - 120)(4 downto 2);
+                    font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
-                    if (charOUTPUT = '1') then
-                        scoreR <= '0';
-                        scoreG <= '0';
-                        scoreB <= '0';
+                    if (character_output = '1') then
+                        score_r <= '0';
+                        score_g <= '0';
+                        score_b <= '0';
 
                     end if;
 
-                    inScore <= charOUTPUT;
+                    in_score <= character_output;
 
                 elsif ((x_pixel >= 155 and x_pixel < 187) and (y_pixel >= 10 and y_pixel < 42)) then
 
-                    int_value := to_integer(unsigned(scoreOnes)) + 48;
-                    charAddress <= std_logic_vector(to_unsigned(int_value, 6));
+                    int_value := to_integer(unsigned(score_ones)) + 48;
+                    character_address <= std_logic_vector(to_unsigned(int_value, 6));
 
-                    fontcol <= std_logic_vector(x_pixel - 155)(4 downto 2);
-                    fontrow <= std_logic_vector(y_pixel - 10)(4 downto 2);
+                    font_col <= std_logic_vector(x_pixel - 155)(4 downto 2);
+                    font_row <= std_logic_vector(y_pixel - 10)(4 downto 2);
 
-                    if (charOUTPUT = '1') then
-                        scoreR <= '0';
-                        scoreG <= '0';
-                        scoreB <= '0';
+                    if (character_output = '1') then
+                        score_r <= '0';
+                        score_g <= '0';
+                        score_b <= '0';
 
                     end if;
 
-                    inScore <= charOUTPUT;
+                    in_score <= character_output;
 
                 else
-                    inHeart <= '0';
-                    inscore <= '0';
+                    in_heart <= '0';
+                    in_score <= '0';
 
                 end if;
 

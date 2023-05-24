@@ -60,14 +60,13 @@ begin
     move_coin : process (clk)
     begin
         if (rising_edge(clk)) then
-            if (enable = '1') then
+            if (reset = '1') then
+                x_pos <= start_x_pos + coin_width;
+                lfsr_clk <= '0';
+            elsif (enable = '1') then
 
                 if ((reset = '0') and (x_pos > (-coin_width))) then
                     x_pos <= x_pos - x_velocity;
-                    lfsr_clk <= '0';
-                    coin_gone <= '0';
-                elsif (reset = '1') then
-                    x_pos <= start_x_pos + coin_width;
                     lfsr_clk <= '0';
                     coin_gone <= '0';
                 else

@@ -322,7 +322,7 @@ begin
         enable => movement_enable,
         draw_enable => coin_enable,
         lfsr_seed => std_logic_vector(x_pixel(7 downto 0) xor y_pixel(7 downto 0)) or "0000001", -- or to ensure seed is never 0
-        start_x_pos => TO_SIGNED(800, 11),
+        start_x_pos => TO_SIGNED(830, 11),
         x_velocity => ("000000" & signed(score_tens)) + 2,
         pixel_row => y_pixel,
         pixel_column => x_pixel,
@@ -528,9 +528,9 @@ begin
             if (menu_enable = '1') then
 
                 -- Drawing the menu
-                if ((x_pixel >= 180 and x_pixel < 460) and (y_pixel >= 140 and y_pixel < 340)) then
+                if ((x_pixel >= 170 and x_pixel < 470) and (y_pixel >= 130 and y_pixel < 350)) then
 
-                    if ((x_pixel >= 185 and x_pixel < 455) and (y_pixel >= 145 and y_pixel < 335)) then
+                    if ((x_pixel >= 175 and x_pixel < 465) and (y_pixel >= 135 and y_pixel < 345)) then
 
                         ---FLAPPYBIRD PRINTED
                         if ((x_pixel >= 200 and x_pixel < 216) and (y_pixel >= 150 and y_pixel < 166)) then

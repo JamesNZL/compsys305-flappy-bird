@@ -495,11 +495,6 @@ begin
                 paint_g <= bird_g;
                 paint_b <= bird_b;
 
-            elsif (coin_det = '1' and coin_enable = '1') then
-                paint_r <= coin_r;
-                paint_g <= coin_g;
-                paint_b <= coin_b;
-
             elsif (floor_det = '1') then
                 paint_r <= floor_r;
                 paint_g <= floor_g;
@@ -509,6 +504,11 @@ begin
                 paint_r <= (obs_one_r or obs_two_r);
                 paint_g <= (obs_one_g or obs_two_g);
                 paint_b <= (obs_one_b or obs_two_b);
+
+            elsif (coin_det = '1' and coin_enable = '1') then
+                paint_r <= coin_r;
+                paint_g <= coin_g;
+                paint_b <= coin_b;
 
             else
                 paint_r <= '0';

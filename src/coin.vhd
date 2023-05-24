@@ -61,17 +61,17 @@ begin
     begin
         if (rising_edge(clk)) then
             if (reset = '1') then
-                x_pos <= start_x_pos + coin_width;
+                x_pos <= start_x_pos + 25;
                 lfsr_clk <= '0';
             elsif (enable = '1') then
 
-                if ((reset = '0') and (x_pos > (-coin_width))) then
+                if ((reset = '0') and (x_pos > (-25))) then
                     x_pos <= x_pos - x_velocity;
                     lfsr_clk <= '0';
                     coin_gone <= '0';
                 else
                     -- Wrap around
-                    x_pos <= TO_SIGNED(639, 11) + coin_width;
+                    x_pos <= TO_SIGNED(639, 11) + 25;
                     lfsr_clk <= '1';
                     coin_gone <= '1';
                 end if;

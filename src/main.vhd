@@ -1192,16 +1192,16 @@ begin
 									 
 								elsif ((x_pixel >= 106 and x_pixel < 122) and (y_pixel >= 442 and y_pixel < 458)) then
                             
-									 if (level = 1) then
+									 if (level = 0) then
 									 character_address <= "110001";
-									 elsif (level = 2) then 
+									 elsif (level = 1) then 
 									 character_address <= "110010";
-									 elsif(level = 3) then 
+									 elsif(level = 2) then 
 									 character_address <= "110011";
-									 elsif(level = 4) then
+									 elsif(level = 3) then
 									 character_address <= "110100";
-									 else
-									 character_address <= "110001";
+									 elsif(level = 4 ) then 
+									 character_address <= "110101";
 									 end if;
 
                             font_col <= std_logic_vector(x_pixel - 106)(3 downto 1);

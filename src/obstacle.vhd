@@ -42,7 +42,7 @@ begin
         seed => lfsr_seed,
         lfsr_out => lfsr_out);
 
-    gap_size <= TO_SIGNED(35, 10);
+    gap_size <= TO_SIGNED(45, 10);
     pipe_width <= TO_SIGNED(25, 10);
 
     -- Use a 7-bit LFSR with 255 loop size to generate a signed offset about the middle of the screen

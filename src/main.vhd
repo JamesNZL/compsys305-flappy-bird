@@ -205,6 +205,7 @@ architecture flappy_bird of main is
 	 signal level_det : std_logic;
 	 signal display_level : std_logic;
 	 signal velocity_x : signed(9 downto 0);
+	 signal high_score_ones, high_score_tens : unsigned(3 downto 0);
 
 begin
 
@@ -375,6 +376,12 @@ begin
     ----------------LEVEL----------------
 
     level <= unsigned(score_tens)(2 downto 0);
+	 high_score_ones <= TO_UNSIGNED(0,4) when score_tens_tick = '1' else
+	 (unsigned(score_ones)) when ((high_score_ones < unsigned(score_ones))) 
+	 else high_score_ones;
+	 high_score_tens <= (unsigned(score_tens)) when (high_score_tens < unsigned(score_tens)) else
+	 high_score_tens;
+	 
 
     with level select
         score_colour_r <= '0' when TO_UNSIGNED(0, 3), -- black
@@ -538,6 +545,8 @@ begin
 
     get_characters : process (clk)
         variable int_value : integer;
+		  variable ones_score : integer;
+		  variable tens_score : integer;
     begin
 
         if (rising_edge(clk)) then
@@ -717,6 +726,205 @@ begin
                                 menu_g <= '0';
                                 menu_b <= '0';
                             end if;
+									 
+							---HIGHSCORE------
+							
+					
+                        elsif ((x_pixel >= 225 and x_pixel < 241) and (y_pixel >=180 and y_pixel < 196)) then
+
+                            character_address <= "001000";
+
+                            font_col <= std_logic_vector(x_pixel - 225)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 180)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+
+                        elsif ((x_pixel >= 241 and x_pixel < 257) and (y_pixel >=180 and y_pixel < 196)) then
+                            character_address <= "001001";
+
+                            font_col <= std_logic_vector(x_pixel - 241)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 180)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+
+                        elsif ((x_pixel >= 257 and x_pixel < 273) and (y_pixel >=180 and y_pixel < 196)) then
+
+                            character_address <= "000111";
+
+                            font_col <= std_logic_vector(x_pixel - 257)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 180)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+
+                        elsif ((x_pixel >= 273 and x_pixel < 289) and (y_pixel >=180 and y_pixel < 196)) then
+
+                            character_address <= "001000";
+
+                            font_col <= std_logic_vector(x_pixel - 273)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 180)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+
+                        elsif ((x_pixel >= 289 and x_pixel < 305) and (y_pixel >=180 and y_pixel < 196)) then
+
+                            character_address <= "010011";
+
+                            font_col <= std_logic_vector(x_pixel - 289)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 180)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+
+                        elsif ((x_pixel >= 305 and x_pixel < 321) and (y_pixel >=180 and y_pixel < 196)) then
+
+                            character_address <= "000011";
+
+                            font_col <= std_logic_vector(x_pixel - 305)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 180)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+
+                        elsif ((x_pixel >= 321 and x_pixel < 337) and (y_pixel >=180 and y_pixel < 196)) then
+                            character_address <= "001111";
+
+                            font_col <= std_logic_vector(x_pixel - 321)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 180)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+
+                        elsif ((x_pixel >= 337 and x_pixel < 353) and (y_pixel >=180 and y_pixel < 196)) then
+
+                            character_address <= "010010";
+
+                            font_col <= std_logic_vector(x_pixel - 337)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 180)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+
+                        elsif ((x_pixel >= 353 and x_pixel < 369) and (y_pixel >=180 and y_pixel < 196)) then
+
+                            character_address <= "000101";
+
+                            font_col <= std_logic_vector(x_pixel - 353)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 180)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+									 
+									 
+								---NUMBERS
+
+                        elsif ((x_pixel >= 393 and x_pixel < 409) and (y_pixel >=180 and y_pixel < 196)) then
+
+                            ones_score := to_integer(high_score_tens) + 48;
+									 
+                            character_address <= std_logic_vector(to_unsigned(ones_score, 6));
+
+                            font_col <= std_logic_vector(x_pixel - 393)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 180)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+									 
+									 
+									elsif ((x_pixel >= 409 and x_pixel < 425) and  (y_pixel >=180 and y_pixel < 196)) then
+
+                            tens_score := to_integer(high_score_ones) + 48;
+									 
+                            character_address <= std_logic_vector(to_unsigned(tens_score, 6));
+
+                            font_col <= std_logic_vector(x_pixel - 409)(3 downto 1);
+                            font_row <= std_logic_vector(y_pixel - 180)(3 downto 1);
+
+                            if (character_output = '1') then
+                                menu_r <= '1';
+                                menu_g <= '1';
+                                menu_b <= '1';
+                            else
+                                menu_r <= '0';
+                                menu_g <= '0';
+                                menu_b <= '0';
+                            end if;
+									  
+									 
+									 
 
                             ----TRAIN PRINTED--------
 

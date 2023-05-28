@@ -6,7 +6,7 @@ set_global_assignment -entity "pll" -library "pll" -name IP_TARGETED_DEVICE_FAMI
 set_global_assignment -entity "pll" -library "pll" -name IP_GENERATED_DEVICE_FAMILY "{Cyclone V}"
 set_global_assignment -entity "pll" -library "pll" -name IP_QSYS_MODE "UNKNOWN"
 set_global_assignment -name SYNTHESIS_ONLY_QIP ON
-set_global_assignment -entity "pll" -library "pll" -name IP_COMPONENT_NAME "cGxs"
+  set_global_assignment -entity "pll" -library "pll" -name IP_COMPONENT_NAME "cGxs"
 set_global_assignment -entity "pll" -library "pll" -name IP_COMPONENT_DISPLAY_NAME "UExMIEludGVsIEZQR0EgSVA="
 set_global_assignment -entity "pll" -library "pll" -name IP_COMPONENT_REPORT_HIERARCHY "Off"
 set_global_assignment -entity "pll" -library "pll" -name IP_COMPONENT_INTERNAL "Off"

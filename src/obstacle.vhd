@@ -7,6 +7,7 @@ entity obstacle is
         clk, reset, enable : in std_logic;
         lfsr_seed : in std_logic_vector(8 downto 1);
         start_x_pos : in signed(10 downto 0);
+        x_velocity : in signed(9 downto 0);
         pixel_row, pixel_column : in signed(9 downto 0);
         red, green, blue, in_pixel, score_tick, collision_tick : out std_logic);
 end obstacle;
@@ -30,7 +31,6 @@ architecture behaviour of obstacle is
     signal gap_centre : signed(9 downto 0);
 
     signal x_pos : signed(10 downto 0) := start_x_pos;
-    signal x_velocity : signed(9 downto 0) := TO_SIGNED(3, 10); -- TODO: increase over course of game
 
 begin
 
@@ -42,7 +42,7 @@ begin
         seed => lfsr_seed,
         lfsr_out => lfsr_out);
 
-    gap_size <= TO_SIGNED(35, 10);
+    gap_size <= TO_SIGNED(45, 10);
     pipe_width <= TO_SIGNED(25, 10);
 
     -- Use a 7-bit LFSR with 255 loop size to generate a signed offset about the middle of the screen
@@ -50,6 +50,8 @@ begin
     gap_centre <= signed(lfsr_out) + TO_SIGNED(240, 10);
 
     draw_obs <= '0' when (reset = '1') else
+                '1' when (('0' & x_pos <= '0' & pixel_column + pipe_width + 3) and ('0' & pixel_column <= '0' & x_pos + pipe_width + 3) and ((('0' & pixel_row <= gap_centre - gap_size) and('0' & pixel_row >= gap_centre - gap_size - 30)) or (('0' & pixel_row >= gap_centre + gap_size) and ('0' & pixel_row <= gap_centre + gap_size + 30)))) else
+                '1' when ((x_pos <= pixel_column + pipe_width + 3) and (pixel_column <= x_pos + pipe_width + 3) and (((pixel_row <= gap_centre - gap_size) and(pixel_row >= gap_centre - gap_size - 30)) or ((pixel_row >= gap_centre + gap_size) and (pixel_row <= gap_centre + gap_size + 30)))) else
                 '1' when (('0' & x_pos <= '0' & pixel_column + pipe_width) and ('0' & pixel_column <= '0' & x_pos + pipe_width) and (('0' & gap_centre >= pixel_row + gap_size) or ('0' & pixel_row >= gap_centre + gap_size))) else
                 '1' when ((x_pos <= pixel_column + pipe_width) and (pixel_column <= x_pos + pipe_width) and ((gap_centre >= pixel_row + gap_size) or (pixel_row >= gap_centre + gap_size))) else
                 '0';

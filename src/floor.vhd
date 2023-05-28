@@ -15,12 +15,12 @@ architecture behaviour of floor is
 
 begin
 
-    draw_floor <= '1' when (('0' & pixel_row >= TO_SIGNED(420, 10))) else
+    draw_floor <= '1' when (('0' & pixel_row >= TO_SIGNED(420, 10)) or ('0' & pixel_row <= TO_SIGNED(1, 10))) else
                   '0';
 
     in_pixel <= draw_floor;
 
-    red <= draw_floor;
+    red <= '0';
     green <= '0';
     blue <= '0';
 

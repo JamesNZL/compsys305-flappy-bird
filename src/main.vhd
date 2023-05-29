@@ -75,7 +75,7 @@ architecture flappy_bird of main is
 
             lives_out : out unsigned(1 downto 0);
             heart_display : out std_logic;
-				level_display : out std_logic;
+            level_display : out std_logic;
             menu_enable : out std_logic;
             reset : out std_logic;
 
@@ -201,11 +201,11 @@ architecture flappy_bird of main is
     signal score_det : std_logic;
 
     signal level : unsigned(2 downto 0);
-	 signal level_r, level_g, level_b : std_logic;
-	 signal level_det : std_logic;
-	 signal display_level : std_logic;
-	 signal velocity_x : signed(9 downto 0);
-	 signal high_score_ones, high_score_tens : unsigned(3 downto 0);
+    signal level_r, level_g, level_b : std_logic;
+    signal level_det : std_logic;
+    signal display_level : std_logic;
+    signal velocity_x : signed(9 downto 0);
+    signal high_score_ones, high_score_tens : unsigned(3 downto 0);
 
 begin
 
@@ -247,7 +247,7 @@ begin
         lives_out => current_lives,
         menu_enable => menu_enable,
         heart_display => display_heart,
-		  level_display => display_level,
+        level_display => display_level,
         reset => reset,
         movement_enable => movement_enable);
 
@@ -376,12 +376,11 @@ begin
     ----------------LEVEL----------------
 
     level <= unsigned(score_tens)(2 downto 0);
-	 high_score_ones <= TO_UNSIGNED(0,4) when score_tens_tick = '1' else
-	 (unsigned(score_ones)) when ((high_score_ones < unsigned(score_ones))) 
-	 else high_score_ones;
-	 high_score_tens <= (unsigned(score_tens)) when (high_score_tens < unsigned(score_tens)) else
-	 high_score_tens;
-	 
+    high_score_ones <= TO_UNSIGNED(0, 4) when (score_tens_tick = '1') else
+                       unsigned(score_ones) when (high_score_ones < unsigned(score_ones)) else
+                       high_score_ones;
+    high_score_tens <= unsigned(score_tens) when (high_score_tens < unsigned(score_tens)) else
+                       high_score_tens;
 
     with level select
         score_colour_r <= '0' when TO_UNSIGNED(0, 3), -- black
@@ -404,12 +403,11 @@ begin
         '0' when TO_UNSIGNED(3, 3), -- red
         '1' when TO_UNSIGNED(4, 3), -- white
         '1' when others; --white
-		  
-		  
-	velocity_x <= ("000000" & signed(score_tens)) + 2 when (display_level = '1') else "0000000010";
+
+    velocity_x <= ("000000" & signed(score_tens)) + 2 when (display_level = '1') else
+        "0000000010";
 
     -------------------------------------
-	 
 
     -------------COLLISIONS--------------
 
@@ -506,13 +504,12 @@ begin
                 paint_r <= heart_r;
                 paint_g <= heart_g;
                 paint_b <= heart_b;
-					 
-				elsif (level_det = '1') then
-				
-					 paint_r <= level_r;
+
+            elsif (level_det = '1') then
+
+                paint_r <= level_r;
                 paint_g <= level_g;
                 paint_b <= level_b;
-					 
 
             elsif (bird_det = '1') then
                 paint_r <= bird_r;
@@ -545,8 +542,8 @@ begin
 
     get_characters : process (clk)
         variable int_value : integer;
-		  variable ones_score : integer;
-		  variable tens_score : integer;
+        variable ones_score : integer;
+        variable tens_score : integer;
     begin
 
         if (rising_edge(clk)) then
@@ -726,11 +723,10 @@ begin
                                 menu_g <= '0';
                                 menu_b <= '0';
                             end if;
-									 
-							---HIGHSCORE------
-							
-					
-                        elsif ((x_pixel >= 225 and x_pixel < 241) and (y_pixel >=180 and y_pixel < 196)) then
+
+                            ---HIGHSCORE------
+
+                        elsif ((x_pixel >= 225 and x_pixel < 241) and (y_pixel >= 180 and y_pixel < 196)) then
 
                             character_address <= "001000";
 
@@ -747,7 +743,7 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 241 and x_pixel < 257) and (y_pixel >=180 and y_pixel < 196)) then
+                        elsif ((x_pixel >= 241 and x_pixel < 257) and (y_pixel >= 180 and y_pixel < 196)) then
                             character_address <= "001001";
 
                             font_col <= std_logic_vector(x_pixel - 241)(3 downto 1);
@@ -763,7 +759,7 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 257 and x_pixel < 273) and (y_pixel >=180 and y_pixel < 196)) then
+                        elsif ((x_pixel >= 257 and x_pixel < 273) and (y_pixel >= 180 and y_pixel < 196)) then
 
                             character_address <= "000111";
 
@@ -780,7 +776,7 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 273 and x_pixel < 289) and (y_pixel >=180 and y_pixel < 196)) then
+                        elsif ((x_pixel >= 273 and x_pixel < 289) and (y_pixel >= 180 and y_pixel < 196)) then
 
                             character_address <= "001000";
 
@@ -797,7 +793,7 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 289 and x_pixel < 305) and (y_pixel >=180 and y_pixel < 196)) then
+                        elsif ((x_pixel >= 289 and x_pixel < 305) and (y_pixel >= 180 and y_pixel < 196)) then
 
                             character_address <= "010011";
 
@@ -814,7 +810,7 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 305 and x_pixel < 321) and (y_pixel >=180 and y_pixel < 196)) then
+                        elsif ((x_pixel >= 305 and x_pixel < 321) and (y_pixel >= 180 and y_pixel < 196)) then
 
                             character_address <= "000011";
 
@@ -831,7 +827,7 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 321 and x_pixel < 337) and (y_pixel >=180 and y_pixel < 196)) then
+                        elsif ((x_pixel >= 321 and x_pixel < 337) and (y_pixel >= 180 and y_pixel < 196)) then
                             character_address <= "001111";
 
                             font_col <= std_logic_vector(x_pixel - 321)(3 downto 1);
@@ -847,7 +843,7 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 337 and x_pixel < 353) and (y_pixel >=180 and y_pixel < 196)) then
+                        elsif ((x_pixel >= 337 and x_pixel < 353) and (y_pixel >= 180 and y_pixel < 196)) then
 
                             character_address <= "010010";
 
@@ -864,7 +860,7 @@ begin
                                 menu_b <= '0';
                             end if;
 
-                        elsif ((x_pixel >= 353 and x_pixel < 369) and (y_pixel >=180 and y_pixel < 196)) then
+                        elsif ((x_pixel >= 353 and x_pixel < 369) and (y_pixel >= 180 and y_pixel < 196)) then
 
                             character_address <= "000101";
 
@@ -880,14 +876,13 @@ begin
                                 menu_g <= '0';
                                 menu_b <= '0';
                             end if;
-									 
-									 
-								---NUMBERS
 
-                        elsif ((x_pixel >= 393 and x_pixel < 409) and (y_pixel >=180 and y_pixel < 196)) then
+                            ---NUMBERS
+
+                        elsif ((x_pixel >= 393 and x_pixel < 409) and (y_pixel >= 180 and y_pixel < 196)) then
 
                             ones_score := to_integer(high_score_tens) + 48;
-									 
+
                             character_address <= std_logic_vector(to_unsigned(ones_score, 6));
 
                             font_col <= std_logic_vector(x_pixel - 393)(3 downto 1);
@@ -902,12 +897,11 @@ begin
                                 menu_g <= '0';
                                 menu_b <= '0';
                             end if;
-									 
-									 
-									elsif ((x_pixel >= 409 and x_pixel < 425) and  (y_pixel >=180 and y_pixel < 196)) then
+
+                        elsif ((x_pixel >= 409 and x_pixel < 425) and (y_pixel >= 180 and y_pixel < 196)) then
 
                             tens_score := to_integer(high_score_ones) + 48;
-									 
+
                             character_address <= std_logic_vector(to_unsigned(tens_score, 6));
 
                             font_col <= std_logic_vector(x_pixel - 409)(3 downto 1);
@@ -922,9 +916,6 @@ begin
                                 menu_g <= '0';
                                 menu_b <= '0';
                             end if;
-									  
-									 
-									 
 
                             ----TRAIN PRINTED--------
 
@@ -1007,11 +998,10 @@ begin
                                 menu_g <= '0';
                                 menu_b <= '0';
                             end if;
-									 
-									 ----PRINY[KEY3]------
-									 
-									 
-									 elsif ((x_pixel >= 354 and x_pixel < 370) and (y_pixel >= 215 and y_pixel < 231)) then
+
+                            ----PRINY[KEY3]------
+
+                        elsif ((x_pixel >= 354 and x_pixel < 370) and (y_pixel >= 215 and y_pixel < 231)) then
                             character_address <= "011011";
 
                             font_col <= std_logic_vector(x_pixel - 354)(3 downto 1);
@@ -1090,9 +1080,8 @@ begin
                                 menu_g <= '0';
                                 menu_b <= '0';
                             end if;
-									 
-									 
-								elsif ((x_pixel >= 434 and x_pixel < 450) and (y_pixel >= 215 and y_pixel < 231)) then
+
+                        elsif ((x_pixel >= 434 and x_pixel < 450) and (y_pixel >= 215 and y_pixel < 231)) then
                             character_address <= "011101";
 
                             font_col <= std_logic_vector(x_pixel - 434)(3 downto 1);
@@ -1107,8 +1096,6 @@ begin
                                 menu_g <= '0';
                                 menu_b <= '0';
                             end if;
-
-
 
                             ----PRINT GAME-----
 
@@ -1175,10 +1162,9 @@ begin
                                 menu_g <= '0';
                                 menu_b <= '0';
                             end if;
-							-----PRINT [KEY2]------
-							
-							
-									 elsif ((x_pixel >= 354 and x_pixel < 370) and (y_pixel >= 280 and y_pixel < 296)) then
+                            -----PRINT [KEY2]------
+
+                        elsif ((x_pixel >= 354 and x_pixel < 370) and (y_pixel >= 280 and y_pixel < 296)) then
                             character_address <= "011011";
 
                             font_col <= std_logic_vector(x_pixel - 354)(3 downto 1);
@@ -1257,9 +1243,8 @@ begin
                                 menu_g <= '0';
                                 menu_b <= '0';
                             end if;
-									 
-									 
-								elsif ((x_pixel >= 434 and x_pixel < 450) and (y_pixel >= 280 and y_pixel < 296)) then
+
+                        elsif ((x_pixel >= 434 and x_pixel < 450) and (y_pixel >= 280 and y_pixel < 296)) then
                             character_address <= "011101";
 
                             font_col <= std_logic_vector(x_pixel - 434)(3 downto 1);
@@ -1274,7 +1259,6 @@ begin
                                 menu_g <= '0';
                                 menu_b <= '0';
                             end if;
-
 
                         else
                             menu_r <= '0';
@@ -1331,107 +1315,105 @@ begin
                     end if;
 
                     score_det <= character_output;
-						  
-					---print level--------
-						  
-					elsif ((x_pixel >= 10 and x_pixel < 26) and (y_pixel >= 442 and y_pixel < 458) and (display_level = '1')) then
-                            character_address <= "001100";
 
-                            font_col <= std_logic_vector(x_pixel - 10)(3 downto 1);
-                            font_row <= std_logic_vector(y_pixel - 442)(3 downto 1);
+                    ---print level--------
 
-                            if (character_output = '1') then
-										level_r <= '1';
-										level_g <= '1';
-										level_b <= '1';
-								    end if;
-									 
-									  level_det <= character_output;
+                elsif ((x_pixel >= 10 and x_pixel < 26) and (y_pixel >= 442 and y_pixel < 458) and (display_level = '1')) then
+                    character_address <= "001100";
 
-                        elsif ((x_pixel >= 26 and x_pixel < 42) and (y_pixel >= 442 and y_pixel < 458) and (display_level = '1')) then
-                            character_address <= "000101";
+                    font_col <= std_logic_vector(x_pixel - 10)(3 downto 1);
+                    font_row <= std_logic_vector(y_pixel - 442)(3 downto 1);
 
-                            font_col <= std_logic_vector(x_pixel - 26)(3 downto 1);
-                            font_row <= std_logic_vector(y_pixel - 442)(3 downto 1);
+                    if (character_output = '1') then
+                        level_r <= '1';
+                        level_g <= '1';
+                        level_b <= '1';
+                    end if;
 
-                            if (character_output = '1') then
-										level_r <= '1';
-										level_g <= '1';
-										level_b <= '1';
-								    end if;
-									 
-									 level_det <= character_output;
+                    level_det <= character_output;
 
-                        elsif ((x_pixel >= 42 and x_pixel < 58) and (y_pixel >= 442 and y_pixel < 458) and (display_level = '1')) then
-                            character_address <= "010110";
+                elsif ((x_pixel >= 26 and x_pixel < 42) and (y_pixel >= 442 and y_pixel < 458) and (display_level = '1')) then
+                    character_address <= "000101";
 
-                            font_col <= std_logic_vector(x_pixel - 42)(3 downto 1);
-                            font_row <= std_logic_vector(y_pixel - 442)(3 downto 1);
+                    font_col <= std_logic_vector(x_pixel - 26)(3 downto 1);
+                    font_row <= std_logic_vector(y_pixel - 442)(3 downto 1);
 
-                            if (character_output = '1') then
-										level_r <= '1';
-										level_g <= '1';
-										level_b <= '1';
-								    end if;
-									 
-									 level_det <= character_output;
+                    if (character_output = '1') then
+                        level_r <= '1';
+                        level_g <= '1';
+                        level_b <= '1';
+                    end if;
 
-                        elsif ((x_pixel >= 58 and x_pixel < 74) and (y_pixel >= 442 and y_pixel < 458) and (display_level = '1')) then
-                            character_address <= "000101";
+                    level_det <= character_output;
 
-                            font_col <= std_logic_vector(x_pixel - 58)(3 downto 1);
-                            font_row <= std_logic_vector(y_pixel - 442)(3 downto 1);
+                elsif ((x_pixel >= 42 and x_pixel < 58) and (y_pixel >= 442 and y_pixel < 458) and (display_level = '1')) then
+                    character_address <= "010110";
 
-                            if (character_output = '1') then
-										level_r <= '1';
-										level_g <= '1';
-										level_b <= '1';
-								    end if;
-									 
-									 level_det <= character_output;
+                    font_col <= std_logic_vector(x_pixel - 42)(3 downto 1);
+                    font_row <= std_logic_vector(y_pixel - 442)(3 downto 1);
 
-                        elsif ((x_pixel >= 74 and x_pixel < 90) and (y_pixel >= 442 and y_pixel < 458) and (display_level = '1')) then
-                            character_address <= "001100";
+                    if (character_output = '1') then
+                        level_r <= '1';
+                        level_g <= '1';
+                        level_b <= '1';
+                    end if;
 
-                            font_col <= std_logic_vector(x_pixel - 74)(3 downto 1);
-                            font_row <= std_logic_vector(y_pixel - 442)(3 downto 1);
-									 
-									 if (character_output = '1') then
-										level_r <= '1';
-										level_g <= '1';
-										level_b <= '1';
-								    end if;
-									 
-									 level_det <= character_output;
+                    level_det <= character_output;
 
-							 ---LEVEL ---- 
-									 
-								elsif ((x_pixel >= 106 and x_pixel < 122) and (y_pixel >= 442 and y_pixel < 458) and (display_level = '1')) then
-                            
-									 if (level = 0) then
-									 character_address <= "110001";
-									 elsif (level = 1) then 
-									 character_address <= "110010";
-									 elsif(level = 2) then 
-									 character_address <= "110011";
-									 elsif(level = 3) then
-									 character_address <= "110100";
-									 elsif(level = 4 ) then 
-									 character_address <= "110101";
-									 end if;
+                elsif ((x_pixel >= 58 and x_pixel < 74) and (y_pixel >= 442 and y_pixel < 458) and (display_level = '1')) then
+                    character_address <= "000101";
 
-                            font_col <= std_logic_vector(x_pixel - 106)(3 downto 1);
-                            font_row <= std_logic_vector(y_pixel - 442)(3 downto 1);
+                    font_col <= std_logic_vector(x_pixel - 58)(3 downto 1);
+                    font_row <= std_logic_vector(y_pixel - 442)(3 downto 1);
 
-                            if (character_output = '1') then
-										level_r <= '1';
-										level_g <= '1';
-										level_b <= '1';
-								    end if;
-									 
-									 level_det <= character_output;
+                    if (character_output = '1') then
+                        level_r <= '1';
+                        level_g <= '1';
+                        level_b <= '1';
+                    end if;
 
-					
+                    level_det <= character_output;
+
+                elsif ((x_pixel >= 74 and x_pixel < 90) and (y_pixel >= 442 and y_pixel < 458) and (display_level = '1')) then
+                    character_address <= "001100";
+
+                    font_col <= std_logic_vector(x_pixel - 74)(3 downto 1);
+                    font_row <= std_logic_vector(y_pixel - 442)(3 downto 1);
+
+                    if (character_output = '1') then
+                        level_r <= '1';
+                        level_g <= '1';
+                        level_b <= '1';
+                    end if;
+
+                    level_det <= character_output;
+
+                    ---LEVEL ---- 
+
+                elsif ((x_pixel >= 106 and x_pixel < 122) and (y_pixel >= 442 and y_pixel < 458) and (display_level = '1')) then
+
+                    if (level = 0) then
+                        character_address <= "110001";
+                    elsif (level = 1) then
+                        character_address <= "110010";
+                    elsif (level = 2) then
+                        character_address <= "110011";
+                    elsif (level = 3) then
+                        character_address <= "110100";
+                    elsif (level = 4) then
+                        character_address <= "110101";
+                    end if;
+
+                    font_col <= std_logic_vector(x_pixel - 106)(3 downto 1);
+                    font_row <= std_logic_vector(y_pixel - 442)(3 downto 1);
+
+                    if (character_output = '1') then
+                        level_r <= '1';
+                        level_g <= '1';
+                        level_b <= '1';
+                    end if;
+
+                    level_det <= character_output;
 
                     -- Heart 1
                 elsif ((x_pixel >= 85 and x_pixel < 117) and (y_pixel >= 10 and y_pixel < 42) and (display_heart = '1' and current_lives > 0)) then

@@ -9,3 +9,9 @@ dist/
 *.qws
 *_pin_model_dump.txt
 *.srf
+
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz

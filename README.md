@@ -1,6 +1,6 @@
 # `COMPSYS 305` Flappy Bird
 
-An FPGA implementation of Flappy Bird, played using a PS/2 mouse, DIP switches, and push-buttons on the DE0-CV board.
+> An FPGA implementation of Flappy Bird, played using a PS/2 mouse, DIP switches, and push-buttons on the DE0-CV board.
 
 - :memo: [**Project Report**](./docs/final-report.pdf)
 
